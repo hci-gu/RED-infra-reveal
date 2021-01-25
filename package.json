@@ -1,0 +1,29 @@
+{
+  "name": "RED-testing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./lib/index",
+    "reverse-proxy": "node ./reverse-proxy/index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@elastic/elasticsearch": "^7.10.0",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "esniffer": "^1.0.1",
+    "express": "^4.17.1",
+    "geoip-lite": "^1.4.2",
+    "hoxy": "^3.3.1",
+    "http-mitm-proxy": "^0.9.0",
+    "sequelize": "^6.3.5",
+    "socket.io": "^3.1.0",
+    "sqlite3": "^5.0.1",
+    "uuid": "^8.3.2"
+  }
+}
