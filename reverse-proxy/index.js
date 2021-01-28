@@ -1,7 +1,5 @@
 require('dotenv').config()
 
-const geoip = require('geoip-lite')
-const dns = require('dns')
 const Proxy = require('http-mitm-proxy')
 const proxy = Proxy()
 const axios = require('axios')
@@ -10,16 +8,26 @@ const client = axios.create({
   timeout: 5000,
 })
 
-const startProxy = (sessionId) => {
-  proxy.onError(function (ctx, err) {
+let currentSession
+
+const start = () => {
+  proxy.onError((ctx, err) => {
     console.error('proxy error:', err)
   })
 
   proxy.onRequest((ctx, callback) => {
-    const host = ctx.proxyToServerRequestOptions.host
+    if (!currentSession) return callback()
+    const { host, agent, method, headers } = ctx.proxyToServerRequestOptions
+    const { protocol } = agent
+    const { accept } = headers
 
     try {
-      client.post(`/session/${sessionId}/packet`, { host })
+      client.post(`/session/${currentSession.id}/packet`, {
+        host,
+        method,
+        protocol,
+        accept,
+      })
     } catch (e) {
       console.log(e)
     }
@@ -34,14 +42,16 @@ const startProxy = (sessionId) => {
   proxy.listen({ port: 8888 })
 }
 
-const start = async () => {
-  try {
-    const session = (await client.post('/session', {})).data
-    console.log('session', session)
-    startProxy(session.id)
-  } catch (e) {
-    console.log(e)
-  }
+const startSession = async (session) => {
+  currentSession = session
 }
 
-start()
+const endSession = () => {
+  currentSession = null
+}
+
+module.exports = {
+  start,
+  startSession,
+  endSession,
+}
