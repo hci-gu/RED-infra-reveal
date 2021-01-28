@@ -1,28 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
 import { RecoilRoot } from 'recoil'
-import styled from 'styled-components'
 import App from './App'
-import { useSocket } from './hooks/socket'
-
-const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
-`
-
-const Root = () => {
-  useSocket()
-  return (
-    <Container>
-      <App />
-    </Container>
-  )
-}
+import 'antd/dist/antd.less'
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <Root />
+      <App />
     </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root')

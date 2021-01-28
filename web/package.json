@@ -1,16 +1,21 @@
 {
-  "name": "web",
+  "name": "RED-infra-reveal-web",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "react-scripts start"
+    "start": "craco start",
+    "build": "craco build"
   },
   "dependencies": {
+    "@ant-design/charts": "^1.0.16",
+    "@ant-design/icons": "^4.3.0",
     "antd": "^4.9.4",
+    "axios": "^0.21.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-map-gl": "^6.0.3",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "recoil": "^0.1.2",
     "styled-components": "^5.2.1"
@@ -29,5 +34,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@craco/craco": "^5.9.0",
+    "craco-less": "^1.17.1"
   }
 }
