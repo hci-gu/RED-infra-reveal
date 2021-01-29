@@ -20,8 +20,6 @@ const Container = styled.div`
   align-items: center;
 `
 
-const Test = styled.div``
-
 const Landing = () => {
   const history = useHistory()
   const [sessions, setSessions] = useRecoilState(sessionsAtom)

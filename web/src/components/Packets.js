@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { List } from 'antd'
+import { Card, List } from 'antd'
 import styled from 'styled-components'
 import { packetsFeed } from '../state'
 
@@ -16,7 +16,7 @@ const Packets = () => {
   }))
 
   return (
-    <Container>
+    <Card title={`Packets - ${packets.length}`}>
       <List
         bordered
         itemLayout="vertical"
@@ -31,7 +31,7 @@ const Packets = () => {
           </List.Item>
         )}
       />
-    </Container>
+    </Card>
   )
 }
 

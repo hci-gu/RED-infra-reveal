@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import { Card, Col, Row } from 'antd'
 
@@ -6,6 +6,13 @@ import Map from '../components/Map'
 import Packets from '../components/Packets'
 import Panel from '../components/Panel'
 import Categories from '../components/Categories'
+import TimeHistogram from '../components/TimeHistogram'
+import SelectFilter from '../components/SelectFilter'
+import HostCloud from '../components/HostCloud'
+import { useRecoilState } from 'recoil'
+import { packetsAtom } from '../state'
+import * as api from '../api'
+import { useParams } from 'react-router-dom'
 
 const Container = styled.div`
   width: 100%;
@@ -15,23 +22,41 @@ const Container = styled.div`
 `
 
 const Dashboard = () => {
+  const { id } = useParams()
+  const [_, setPackets] = useRecoilState(packetsAtom)
+  useEffect(() => {
+    console.log('GET PACKETS FOR ' + id)
+    const run = async () => {
+      const packets = await api.getPacketsForSession(id)
+      setPackets(packets)
+    }
+    run()
+  }, [id, setPackets])
   const defaultGutter = [12, 12]
 
   return (
     <Container>
-      {/* <Row gutter={defaultGutter}>
-        <Col span={8}>
-          <Panel>hejsan</Panel>
+      <Row gutter={defaultGutter}>
+        <Col span={4}>
+          <SelectFilter field="method" />
+          <br></br>
+          <SelectFilter field="accept" />
         </Col>
-        <Col span={8}>
+        <Col span={14}>
+          <TimeHistogram />
+        </Col>
+        <Col span={4}>
+          <HostCloud />
+        </Col>
+        {/* <Col span={8}>
           <Panel>
             <Categories />
           </Panel>
         </Col>
         <Col span={8}>
           <Panel>sdasdsd</Panel>
-        </Col>
-      </Row> */}
+        </Col> */}
+      </Row>
       <Row gutter={defaultGutter}>
         <Col span={18}>
           <Panel>
@@ -39,9 +64,7 @@ const Dashboard = () => {
           </Panel>
         </Col>
         <Col span={6}>
-          <Panel>
-            <Packets />
-          </Panel>
+          <Packets />
         </Col>
       </Row>
     </Container>

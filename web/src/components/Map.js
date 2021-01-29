@@ -3,20 +3,20 @@ import ReactMapGL, { Source, Layer } from 'react-map-gl'
 import styled from 'styled-components'
 import { Card } from 'antd'
 import { useRecoilValue } from 'recoil'
-import { packetsAtom } from '../state'
+import { packetsAtom, packetsFeed } from '../state'
 import { heatmapLayer } from '../mapStyle'
 
 const Container = styled.div`
   width: 100%;
-  height: 800px;
+  height: 600px;
 `
 
 const Map = () => {
-  const packets = useRecoilValue(packetsAtom)
+  const packets = useRecoilValue(packetsFeed)
   const [viewport, setViewport] = useState({
     latitude: 57.70887,
     longitude: 11.97456,
-    zoom: 2,
+    zoom: 1.6,
   })
   const geojson = {
     type: 'FeatureCollection',
