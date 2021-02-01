@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import styled from 'styled-components'
 import { packetsFilters, packetValuesForKey } from '../state'
 
 import { Card, Select } from 'antd'
 const { Option } = Select
 
-const Container = styled.div``
-
-const SelectFilter = ({ field }) => {
+const SelectFilter = ({ field, exclude = false }) => {
   const [filter, setFilter] = useRecoilState(packetsFilters)
   const values = useRecoilValue(packetValuesForKey(field))
 
@@ -20,7 +17,7 @@ const SelectFilter = ({ field }) => {
   }
 
   return (
-    <Card title={field}>
+    <Card title={`${exclude ? 'Exclude ' : ''}${field}`}>
       <Select
         mode="multiple"
         allowClear

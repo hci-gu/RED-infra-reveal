@@ -23,7 +23,7 @@ export const sessionsAtom = atom({
 */
 export const packetsAtom = atom({
   key: 'packets',
-  default: [],
+  default: packetsJSON,
 })
 
 export const packetsFilters = atom({
@@ -33,6 +33,7 @@ export const packetsFilters = atom({
     protocol: [],
     method: [],
     accept: [],
+    host: [],
     timeRange: [0, 1],
   },
 })
@@ -65,9 +66,7 @@ export const packetsFeed = selector({
         )
       })
       .filter((p) => {
-        return (
-          filter.accept.length === 0 || filter.accept.indexOf(p.accept) != -1
-        )
+        return filter.host.length === 0 || filter.host.indexOf(p.host) == -1
       })
   },
 })

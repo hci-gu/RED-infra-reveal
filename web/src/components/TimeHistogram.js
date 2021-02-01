@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import moment from 'moment'
-import { packetsAtom, packetsFilters, packetTimeBuckets } from '../state'
+import { packetsFilters, packetTimeBuckets } from '../state'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { Line } from '@ant-design/charts'
 import { debounce } from '../utils'
@@ -11,7 +10,6 @@ const TimeHistogram = () => {
   const ref = useRef()
 
   const onSliderChange = (val) => {
-    console.log('SLIDER', val)
     setFilter({
       ...filter,
       timeRange: val,
@@ -27,7 +25,6 @@ const TimeHistogram = () => {
         chartOnChange(e)
       }
       chart.controllers[4].onChangeFn = debounce(onChange, 100)
-      console.log(chart.getEvents())
       ref.current.on('click', () => {
         console.log(chart)
       })

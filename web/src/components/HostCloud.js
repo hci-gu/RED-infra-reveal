@@ -1,5 +1,4 @@
 import React from 'react'
-import { Card } from 'antd'
 import { WordCloud } from '@ant-design/charts'
 import { useRecoilValue } from 'recoil'
 import { packetsFeed } from '../state'
@@ -27,7 +26,7 @@ const HostCloud = () => {
     colorField: 'name',
     wordStyle: {
       fontFamily: 'Verdana',
-      fontSize: [6, 32],
+      fontSize: [6, 40],
       rotation: 0,
     },
     random: () => 0.5,

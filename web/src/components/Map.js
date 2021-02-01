@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import ReactMapGL, { Source, Layer } from 'react-map-gl'
 import styled from 'styled-components'
-import { Card } from 'antd'
 import { useRecoilValue } from 'recoil'
-import { packetsAtom, packetsFeed } from '../state'
+import { packetsFeed } from '../state'
 import { heatmapLayer } from '../mapStyle'
 
 const Container = styled.div`
   width: 100%;
-  height: 600px;
+  height: 800px;
 `
 
 const Map = () => {

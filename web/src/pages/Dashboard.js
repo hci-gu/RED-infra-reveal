@@ -24,14 +24,13 @@ const Container = styled.div`
 const Dashboard = () => {
   const { id } = useParams()
   const [_, setPackets] = useRecoilState(packetsAtom)
-  useEffect(() => {
-    console.log('GET PACKETS FOR ' + id)
-    const run = async () => {
-      const packets = await api.getPacketsForSession(id)
-      setPackets(packets)
-    }
-    run()
-  }, [id, setPackets])
+  // useEffect(() => {
+  //   const run = async () => {
+  //     const packets = await api.getPacketsForSession(id)
+  //     setPackets(packets)
+  //   }
+  //   run()
+  // }, [id, setPackets])
   const defaultGutter = [12, 12]
 
   return (
@@ -40,12 +39,12 @@ const Dashboard = () => {
         <Col span={4}>
           <SelectFilter field="method" />
           <br></br>
-          <SelectFilter field="accept" />
+          <SelectFilter field="host" exclude />
         </Col>
         <Col span={14}>
           <TimeHistogram />
         </Col>
-        <Col span={4}>
+        <Col span={6}>
           <HostCloud />
         </Col>
         {/* <Col span={8}>
