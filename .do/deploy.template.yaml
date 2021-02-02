@@ -1,0 +1,22 @@
+spec:
+  name: red-infra-reveal
+
+  static_sites:
+    - name: web
+      environment_slug: html
+      git:
+        branch: main
+        repo_clone_url: https://github.com/hci-gu/RED-infra-reveal.git
+      source_dir: web
+      index_document: build/index.html
+      routes:
+        - path: /
+
+  services:
+    - name: api
+      environment_slug: node-js
+      git:
+        branch: main
+        repo_clone_url: https://github.com/hci-gu/RED-infra-reveal.git
+      routes:
+        - path: /

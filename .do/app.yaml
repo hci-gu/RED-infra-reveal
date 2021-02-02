@@ -1,9 +1,9 @@
-name: infra-reveal
+name: red-infra-reveal
 
 static_sites:
   - name: web
-    environment_slug: node-js
-    build_command: npm build
+    environment_slug: html
+    build_command: npm run build
     github:
       repo: hci-gu/RED-infra-reveal
       branch: main
@@ -17,9 +17,11 @@ static_sites:
 services:
   - name: api
     environment_slug: node-js
+    build_command: npm run build-admin
+    run_command: npm start
     github:
       repo: hci-gu/RED-infra-reveal
       branch: main
       deploy_on_push: true
     routes:
-      -path: /
+      - path: /api
