@@ -5,26 +5,32 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./lib/index",
-    "reverse-proxy": "node ./reverse-proxy/index"
+    "reverse-proxy": "node ./reverse-proxy/index",
+    "build-admin": "cross-env NODE_ENV=production keystone build --entry=./lib/adminUI.js --out=./dist",
+    "create-tables": "cross-env CREATE_TABLES=true keystone create-tables --entry=./lib/keystone.js",
+    "initialize": "npm run create-tables && npm run build-admin && npm start"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@elastic/elasticsearch": "^7.10.0",
+    "@keystonejs/adapter-knex": "^13.0.0",
+    "@keystonejs/app-admin-ui": "^7.3.12",
+    "@keystonejs/app-graphql": "^6.2.0",
+    "@keystonejs/auth-password": "^6.0.0",
+    "@keystonejs/fields": "^21.1.0",
+    "@keystonejs/keystone": "^19.0.0",
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "esniffer": "^1.0.1",
     "express": "^4.17.1",
     "geoip-lite": "^1.4.2",
-    "hoxy": "^3.3.1",
     "http-mitm-proxy": "^0.9.0",
-    "pg": "^8.5.1",
-    "sequelize": "^6.3.5",
     "socket.io": "^3.1.0",
-    "sqlite3": "^5.0.1",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

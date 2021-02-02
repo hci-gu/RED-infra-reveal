@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { sessionsAtom } from '../state'
-import * as api from '../api'
+import * as api from '../hooks/api'
 import { useHistory } from 'react-router-dom'
 
 import { PlusOutlined } from '@ant-design/icons'
@@ -22,15 +22,9 @@ const Container = styled.div`
 
 const Landing = () => {
   const history = useHistory()
-  const [sessions, setSessions] = useRecoilState(sessionsAtom)
-  const [refresh, setRefresh] = useState(new Date())
-  useEffect(() => {
-    const run = async () => {
-      const _sessions = await api.getSessions()
-      setSessions(_sessions)
-    }
-    run()
-  }, [refresh, setSessions])
+  const [, setRefresh] = useState(new Date())
+  const sessions = api.useSessions()
+  const [, createSession] = api.useCreateSession()
 
   return (
     <Container>
@@ -52,7 +46,7 @@ const Landing = () => {
         shape="round"
         icon={<PlusOutlined />}
         onClick={async () => {
-          await api.createSession()
+          createSession({ data: { start: new Date().toISOString() } })
           setRefresh(new Date())
         }}
         size="large"

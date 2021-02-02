@@ -10,19 +10,19 @@ const client = axios.create({
 
 let currentSession
 
-const start = () => {
+const start = (packetCb) => {
   proxy.onError((ctx, err) => {
     console.error('proxy error:', err)
   })
 
   proxy.onRequest((ctx, callback) => {
-    if (!currentSession) return callback()
+    // if (!currentSession) return callback()
     const { host, agent, method, headers } = ctx.proxyToServerRequestOptions
     const { protocol } = agent
     const { accept } = headers
 
     try {
-      client.post(`/session/${currentSession.id}/packet`, {
+      packetCb(1, {
         host,
         method,
         protocol,

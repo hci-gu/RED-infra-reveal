@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Card, Col, Row } from 'antd'
+import { Col, Row } from 'antd'
 
 import Map from '../components/Map'
 import Packets from '../components/Packets'
 import Panel from '../components/Panel'
-import Categories from '../components/Categories'
 import TimeHistogram from '../components/TimeHistogram'
 import SelectFilter from '../components/SelectFilter'
 import HostCloud from '../components/HostCloud'
 import { useRecoilState } from 'recoil'
 import { packetsAtom } from '../state'
-import * as api from '../api'
+import * as api from '../hooks/api'
 import { useParams } from 'react-router-dom'
 
 const Container = styled.div`
@@ -23,14 +22,7 @@ const Container = styled.div`
 
 const Dashboard = () => {
   const { id } = useParams()
-  const [_, setPackets] = useRecoilState(packetsAtom)
-  // useEffect(() => {
-  //   const run = async () => {
-  //     const packets = await api.getPacketsForSession(id)
-  //     setPackets(packets)
-  //   }
-  //   run()
-  // }, [id, setPackets])
+  api.usePackets(id)
   const defaultGutter = [12, 12]
 
   return (
