@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./lib/index",
-    "reverse-proxy": "node ./reverse-proxy/index",
+    "start": "DISABLE_LOGGING=true node ./lib/index",
     "build-admin": "cross-env NODE_ENV=production keystone build --entry=./lib/adminUI.js --out=./dist",
     "create-tables": "cross-env CREATE_TABLES=true keystone create-tables --entry=./lib/keystone.js",
     "initialize": "npm run create-tables && npm run build-admin && npm start"

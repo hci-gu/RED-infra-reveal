@@ -1,6 +1,5 @@
 import { atom, selector, selectorFamily } from 'recoil'
 import moment from 'moment'
-import packetsJSON from './packets.json'
 
 export const sessionsAtom = atom({
   key: 'sessions',
@@ -23,7 +22,7 @@ export const sessionsAtom = atom({
 */
 export const packetsAtom = atom({
   key: 'packets',
-  default: packetsJSON,
+  default: [],
 })
 
 export const packetsFilters = atom({
@@ -44,14 +43,6 @@ export const packetsFeed = selector({
     const packets = get(packetsAtom)
     const filter = get(packetsFilters)
     const [minDate, maxDate] = get(packetsTimeRange)
-    console.log('feed', packets.length, minDate, maxDate)
-    console.log(
-      'feed',
-      moment(minDate).format('HH:mm:ss'),
-      moment(maxDate).format('HH:mm:ss')
-    )
-
-    const filtered = []
 
     return packets
       .slice()

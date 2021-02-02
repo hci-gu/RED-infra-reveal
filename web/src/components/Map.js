@@ -12,7 +12,6 @@ const Container = styled.div`
 
 const Map = () => {
   const packets = useRecoilValue(packetsFeed)
-  console.log(packets)
   const [viewport, setViewport] = useState({
     latitude: 57.70887,
     longitude: 11.97456,

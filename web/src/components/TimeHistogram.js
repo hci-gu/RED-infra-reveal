@@ -25,9 +25,6 @@ const TimeHistogram = () => {
         chartOnChange(e)
       }
       chart.controllers[4].onChangeFn = debounce(onChange, 100)
-      ref.current.on('click', () => {
-        console.log(chart)
-      })
     }
   }, [])
 

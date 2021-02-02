@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { sessionsAtom } from '../state'
+import moment from 'moment'
 import * as api from '../hooks/api'
 import { useHistory } from 'react-router-dom'
 
@@ -22,7 +21,6 @@ const Container = styled.div`
 
 const Landing = () => {
   const history = useHistory()
-  const [, setRefresh] = useState(new Date())
   const sessions = api.useSessions()
   const [, createSession] = api.useCreateSession()
 
@@ -37,7 +35,8 @@ const Landing = () => {
             style={{ cursor: 'pointer' }}
           >
             <Card>
-              {item.id} - {item.start}
+              Session {item.id} -{' '}
+              {moment(item.start).format('YYYY-MM-DD HH:mm')}
             </Card>
           </List.Item>
         )}
@@ -45,10 +44,9 @@ const Landing = () => {
       <Button
         shape="round"
         icon={<PlusOutlined />}
-        onClick={async () => {
+        onClick={() =>
           createSession({ data: { start: new Date().toISOString() } })
-          setRefresh(new Date())
-        }}
+        }
         size="large"
       >
         Create session

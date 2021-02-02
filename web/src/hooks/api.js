@@ -18,13 +18,12 @@ export const useSessions = () => {
   const [result] = useQuery({
     query: SessionQuery,
   })
-  const { data } = result
 
   useEffect(() => {
-    if (!!data) {
-      setSessions(data.allSessions)
+    if (!!result.data) {
+      setSessions(result.data.allSessions)
     }
-  }, [data, setSessions])
+  }, [result, setSessions])
 
   return sessions
 }
@@ -69,12 +68,21 @@ const CreateSessionQuery = `
 mutation create($data: SessionCreateInput!) {
   createSession(data: $data) {
     id
+    start
+    end
   }
 }
 `
 
 export const useCreateSession = () => {
-  const [createSessionResult, createSession] = useMutation(CreateSessionQuery)
+  const [result, createSession] = useMutation(CreateSessionQuery)
+  const [sessions, setSessions] = useRecoilState(sessionsAtom)
 
-  return [createSessionResult, createSession]
+  useEffect(() => {
+    if (!!result.data) {
+      setSessions([...sessions, result.data.createSession])
+    }
+  }, [result])
+
+  return [result, createSession]
 }
