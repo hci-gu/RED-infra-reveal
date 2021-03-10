@@ -1,4 +1,9 @@
 import { atom, selector, selectorFamily } from 'recoil'
+import {
+  packetOrigin,
+  pointAlongTrajectory,
+  trajectoryForPacket,
+} from './utils/geo'
 import moment from 'moment'
 
 export const sessionsAtom = atom({
@@ -23,6 +28,11 @@ export const sessionsAtom = atom({
 export const packetsAtom = atom({
   key: 'packets',
   default: [],
+})
+
+export const timeAtom = atom({
+  key: 'time',
+  default: null,
 })
 
 export const packetsFilters = atom({
@@ -59,6 +69,46 @@ export const packetsFeed = selector({
       .filter((p) => {
         return filter.host.length === 0 || filter.host.indexOf(p.host) == -1
       })
+  },
+})
+
+const pastTenSecondsFilter = (p, timestamp) => {
+  const timeDiff = moment(timestamp).diff(moment(p.timestamp), 'milliseconds')
+
+  return timeDiff < 15000
+}
+
+export const packetOrigins = selector({
+  key: 'packet-origins',
+  get: ({ get }) => {
+    const packets = get(packetsFeed)
+
+    return packets.map(packetOrigin)
+  },
+})
+
+export const packetTrajectories = selector({
+  key: 'packet-trajectories',
+  get: ({ get }) => {
+    const time = get(timeAtom)
+    const packets = get(packetsFeed)
+
+    // TODO: filter out unique points, dont draw multiple lines on top of eachother
+    return packets
+      .filter((p) => pastTenSecondsFilter(p, time))
+      .map(trajectoryForPacket)
+  },
+})
+
+export const packetsAlongTrajectories = selector({
+  key: 'packets-along-trajectories',
+  get: ({ get }) => {
+    const time = get(timeAtom)
+    const packets = get(packetsFeed)
+
+    return packets
+      .filter((p) => pastTenSecondsFilter(p, time))
+      .map((p) => pointAlongTrajectory(p, time))
   },
 })
 

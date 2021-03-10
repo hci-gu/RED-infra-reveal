@@ -6,7 +6,7 @@ import App from './App'
 import 'antd/dist/antd.less'
 
 const client = createClient({
-  url: 'http://localhost:4000/admin/api',
+  url: `${process.env.REACT_APP_API_URL}/admin/api`,
 })
 
 ReactDOM.render(

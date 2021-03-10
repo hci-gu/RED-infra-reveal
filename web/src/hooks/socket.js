@@ -6,11 +6,12 @@ export const useSocket = () => {
   const [_, setPackets] = useRecoilState(packetsAtom)
 
   useEffect(() => {
-    const socket = io('http://localhost:4000')
-
-    socket.on('packet', (packet) =>
-      setPackets((packets) => [...packets, packet])
-    )
+    const socket = io(process.env.REACT_APP_API_URL, {
+      transports: ['websocket'],
+    })
+    socket.on('packets', (incomingPackets) => {
+      setPackets((packets) => [...packets, ...incomingPackets])
+    })
     return () => {}
   }, [setPackets])
 }

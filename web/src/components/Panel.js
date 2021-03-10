@@ -9,7 +9,7 @@ const PanelContainer = styled.div`
 
 const Panel = ({ children }) => {
   return (
-    <Card>
+    <Card style={{ height: '100%', overflow: 'hidden' }}>
       <PanelContainer>{children}</PanelContainer>
     </Card>
   )

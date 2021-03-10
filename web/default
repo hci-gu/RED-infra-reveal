@@ -1,0 +1,24 @@
+server {
+    listen 3000;
+    root /var/www;
+    index index.html index.htm;
+
+    # Make site accessible from http://localhost/
+    server_name localhost;
+
+    # Add 1 week expires header for static assets
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+        expires 1w;
+    }
+
+    location / {
+        try_files $uri $uri/index.html @rewrite;
+    }
+    location @rewrite {
+        rewrite ^(.*)/.+ $1/ last;
+    }
+
+    error_page 404 =200 /;
+
+    include /etc/nginx/basic.conf;
+}

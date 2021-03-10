@@ -86,3 +86,27 @@ export const useCreateSession = () => {
 
   return [result, createSession]
 }
+
+const UpdateSessionQuery = `
+mutation update($id: ID!, $data: SessionUpdateInput) {
+  updateSession(id: $id, data: $data) {
+    id
+    start
+    end
+  }
+}
+
+`
+
+export const useUpdateSession = () => {
+  const [result, updateSession] = useMutation(UpdateSessionQuery)
+  const [sessions, setSessions] = useRecoilState(sessionsAtom)
+
+  useEffect(() => {
+    if (!!result.data) {
+      setSessions([...sessions])
+    }
+  }, [result])
+
+  return [result, updateSession]
+}

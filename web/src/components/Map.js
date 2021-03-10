@@ -1,9 +1,104 @@
-import React, { useState } from 'react'
-import ReactMapGL, { Source, Layer } from 'react-map-gl'
+import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
+import { AMapScene, LineLayer, PointLayer, HeatmapLayer } from '@antv/l7-react'
 import { useRecoilValue } from 'recoil'
-import { packetsFeed } from '../state'
-import { heatmapLayer } from '../mapStyle'
+import {
+  packetTrajectories,
+  packetOrigins,
+  packetsAlongTrajectories,
+} from '../state'
+
+const Trajectories = () => {
+  const features = useRecoilValue(packetTrajectories)
+
+  return (
+    <LineLayer
+      source={{
+        data: {
+          type: 'FeatureCollection',
+          features,
+        },
+      }}
+      shape={{ values: 'line' }}
+      color={{
+        values: ['#FF7C6A'],
+      }}
+      scale={{
+        value: 0.1,
+      }}
+      size={{
+        values: 1,
+      }}
+      style={{
+        opacity: 0.8,
+      }}
+    />
+  )
+}
+
+const HeatMap = () => {
+  const features = useRecoilValue(packetOrigins)
+
+  return (
+    <HeatmapLayer
+      source={{
+        data: {
+          type: 'FeatureCollection',
+          features: [],
+        },
+      }}
+      shape={{ values: 'heatmap3D' }}
+      size={['mag', [0, 1.0]]}
+      // style={{
+      //   intensity: 2,
+      //   radius: 20,
+      //   opacity: 1.0,
+      //   rampColors: {
+      //     colors: [
+      //       '#FF4818',
+      //       '#F7B74A',
+      //       '#FFF598',
+      //       '#91EABC',
+      //       '#2EA9A1',
+      //       '#206C7C',
+      //     ].reverse(),
+      //     positions: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
+      //   },
+      // }}
+    />
+  )
+}
+
+const Points = () => {
+  const features = useRecoilValue(packetsAlongTrajectories)
+
+  return (
+    <>
+      <PointLayer
+        source={{
+          data: {
+            type: 'FeatureCollection',
+            features,
+          },
+        }}
+        shape={{
+          values: 'dot',
+        }}
+        color={{
+          values: '#FF7C6A',
+        }}
+        size={{
+          values: 2,
+        }}
+        style={{
+          values: {
+            opacity: 0.75,
+          },
+        }}
+      />
+    </>
+  )
+}
 
 const Container = styled.div`
   width: 100%;
@@ -11,44 +106,33 @@ const Container = styled.div`
 `
 
 const Map = () => {
-  const packets = useRecoilValue(packetsFeed)
-  const [viewport, setViewport] = useState({
-    latitude: 57.70887,
-    longitude: 11.97456,
-    zoom: 1.6,
-  })
-  const geojson = {
-    type: 'FeatureCollection',
-    features: packets.map((p) => ({
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        crs: {
-          type: 'name',
-          properties: {
-            name: 'EPSG:4326',
-          },
-        },
-        type: 'Point',
-        coordinates: [p.lat, p.lon],
-      },
-    })),
-  }
-
   return (
     <Container>
-      <ReactMapGL
-        {...viewport}
-        mapboxApiAccessToken="pk.eyJ1Ijoic2ViYXN0aWFuYWl0IiwiYSI6ImNrZWlvaXlhMTI3dm8ycm1peHlwOW0yNGMifQ.hXGRGr7WQWwyrvMfUaNiCQ"
-        mapStyle="mapbox://styles/sebastianait/ckk2kmvvq3jji17lnlahq2ijx"
-        width="100%"
-        height="100%"
-        onViewportChange={(viewport) => setViewport(viewport)}
+      <AMapScene
+        map={{
+          center: [11.91737, 57.69226],
+          pitch: 45,
+          style: 'dark',
+          zoom: 1,
+          features: ['bg'],
+        }}
+        option={{
+          logoVisible: false,
+        }}
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '100%',
+        }}
       >
-        <Source type="geojson" data={geojson}>
-          <Layer {...heatmapLayer} />
-        </Source>
-      </ReactMapGL>
+        <Trajectories />
+        <Points />
+        {/* <HeatMap /> */}
+      </AMapScene>
     </Container>
   )
 }

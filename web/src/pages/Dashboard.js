@@ -8,8 +8,6 @@ import Panel from '../components/Panel'
 import TimeHistogram from '../components/TimeHistogram'
 import SelectFilter from '../components/SelectFilter'
 import HostCloud from '../components/HostCloud'
-import { useRecoilState } from 'recoil'
-import { packetsAtom } from '../state'
 import * as api from '../hooks/api'
 import { useParams } from 'react-router-dom'
 
@@ -58,6 +56,11 @@ const Dashboard = () => {
           <Packets />
         </Col>
       </Row>
+      {/* <Row>
+        <Panel>
+          <DebugButton></DebugButton>
+        </Panel>
+      </Row> */}
     </Container>
   )
 }
