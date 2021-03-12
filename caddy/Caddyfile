@@ -1,0 +1,7 @@
+import caddy.conf
+
+:80
+redir 301 {
+	if {>X-Forwarded-Proto} is http
+	/  https://{host}{uri}
+}
