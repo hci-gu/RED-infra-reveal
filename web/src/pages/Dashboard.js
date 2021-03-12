@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Col, Row } from 'antd'
+import { Col, Row, Space } from 'antd'
 
 import Map from '../components/Map'
 import Packets from '../components/Packets'
+import Tags from '../components/Tags'
 import Panel from '../components/Panel'
 import TimeHistogram from '../components/TimeHistogram'
 import SelectFilter from '../components/SelectFilter'
@@ -18,9 +19,15 @@ const Container = styled.div`
   padding: 16px;
 `
 
+const Spacer = styled.div`
+  width: 10px;
+  height: 10px;
+`
+
 const Dashboard = () => {
   const { id } = useParams()
   api.usePackets(id)
+  api.useTags()
   const defaultGutter = [12, 12]
 
   return (
@@ -37,14 +44,6 @@ const Dashboard = () => {
         <Col span={6}>
           <HostCloud />
         </Col>
-        {/* <Col span={8}>
-          <Panel>
-            <Categories />
-          </Panel>
-        </Col>
-        <Col span={8}>
-          <Panel>sdasdsd</Panel>
-        </Col> */}
       </Row>
       <Row gutter={defaultGutter}>
         <Col span={18}>
@@ -54,6 +53,8 @@ const Dashboard = () => {
         </Col>
         <Col span={6}>
           <Packets />
+          <Spacer />
+          <Tags />
         </Col>
       </Row>
       {/* <Row>

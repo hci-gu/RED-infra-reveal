@@ -150,7 +150,11 @@ const CertificateDownloader = () => {
         </Header>
       )}
       {!clicked && (
-        <a href="http://localhost:4000/cert" download target="_self">
+        <a
+          href={`${process.env.REACT_APP_API_URL}/cert`}
+          download
+          target="_self"
+        >
           <Button
             onClick={onDownloadClick}
             type="primary"

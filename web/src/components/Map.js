@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import { AMapScene, LineLayer, PointLayer, HeatmapLayer } from '@antv/l7-react'
-import { useRecoilValue } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   packetTrajectories,
   packetOrigins,
   packetsAlongTrajectories,
+  mapToggles,
 } from '../state'
+import MapToggles from './MapToggles'
 
 const Trajectories = () => {
   const features = useRecoilValue(packetTrajectories)
@@ -30,7 +32,7 @@ const Trajectories = () => {
         values: 1,
       }}
       style={{
-        opacity: 0.8,
+        opacity: 0.25,
       }}
     />
   )
@@ -44,27 +46,28 @@ const HeatMap = () => {
       source={{
         data: {
           type: 'FeatureCollection',
-          features: [],
+          features,
         },
       }}
-      shape={{ values: 'heatmap3D' }}
-      size={['mag', [0, 1.0]]}
-      // style={{
-      //   intensity: 2,
-      //   radius: 20,
-      //   opacity: 1.0,
-      //   rampColors: {
-      //     colors: [
-      //       '#FF4818',
-      //       '#F7B74A',
-      //       '#FFF598',
-      //       '#91EABC',
-      //       '#2EA9A1',
-      //       '#206C7C',
-      //     ].reverse(),
-      //     positions: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
-      //   },
-      // }}
+      shape={{
+        values: 'heatmap3d',
+      }}
+      style={{
+        intensity: 0.25,
+        radius: 15,
+        opacity: 0.75,
+        rampColors: {
+          colors: [
+            '#FF4818',
+            '#F7B74A',
+            '#FFF598',
+            '#91EABC',
+            '#2EA9A1',
+            '#206C7C',
+          ].reverse(),
+          positions: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
+        },
+      }}
     />
   )
 }
@@ -102,12 +105,15 @@ const Points = () => {
 
 const Container = styled.div`
   width: 100%;
-  height: 800px;
+  height: 1000px;
 `
 
 const Map = () => {
+  const { heatmap, trajectories, packets } = useRecoilValue(mapToggles)
+
   return (
     <Container>
+      <MapToggles />
       <AMapScene
         map={{
           center: [11.91737, 57.69226],
@@ -129,9 +135,9 @@ const Map = () => {
           height: '100%',
         }}
       >
-        <Trajectories />
-        <Points />
-        {/* <HeatMap /> */}
+        {trajectories && <Trajectories />}
+        {packets && <Points />}
+        {heatmap && <HeatMap />}
       </AMapScene>
     </Container>
   )

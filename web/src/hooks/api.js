@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import { useMutation, useQuery } from 'urql'
-import { packetsAtom, sessionsAtom } from '../state'
+import { packetsAtom, sessionsAtom, tagsAtom } from '../state'
 
 const SessionQuery = `
 {
@@ -64,6 +64,40 @@ export const usePackets = (sessionId) => {
   return packets
 }
 
+const TagsQuery = `
+query getList($where: TagWhereInput) {
+  allTags(where: $where) {
+    id
+    name
+    domains {
+      id
+      name
+    }
+    domainFilters {
+      id
+      name
+    }
+    tagType
+  }
+}
+`
+
+export const useTags = () => {
+  const [tags, setTags] = useRecoilState(tagsAtom)
+  const [result] = useQuery({
+    query: TagsQuery,
+    variables: {
+      where: {},
+    },
+  })
+  const { data } = result
+  useEffect(() => {
+    if (!!data) setTags(data.allTags)
+  }, [data, setTags])
+
+  return tags
+}
+
 const CreateSessionQuery = `
 mutation create($data: SessionCreateInput!) {
   createSession(data: $data) {
@@ -95,7 +129,6 @@ mutation update($id: ID!, $data: SessionUpdateInput) {
     end
   }
 }
-
 `
 
 export const useUpdateSession = () => {

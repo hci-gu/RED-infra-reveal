@@ -12,9 +12,6 @@ function clamp(number, min, max) {
 export const packetOrigin = (p) => {
   return {
     type: 'Feature',
-    properties: {
-      mag: 1.0,
-    },
     geometry: {
       crs: {
         type: 'name',
@@ -23,7 +20,7 @@ export const packetOrigin = (p) => {
         },
       },
       type: 'Point',
-      coordinates: [p.lat, p.lon],
+      coordinates: [p.lat, p.lon, 0.0],
     },
   }
 }

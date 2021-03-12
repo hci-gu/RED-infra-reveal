@@ -29,7 +29,6 @@ const DebugButton = () => {
       timestamp: '2021-03-09T10:38:57.449Z',
       // timestamp: moment().format('YYYY-MM-DDTHH:mm:ss'),
     }
-    console.log(packet.timestamp)
 
     setPackets((packets) => [...packets, wigglePacketLocation(packet)])
     // setTimeout(() => {

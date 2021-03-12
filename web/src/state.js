@@ -5,6 +5,7 @@ import {
   trajectoryForPacket,
 } from './utils/geo'
 import moment from 'moment'
+import { packetsInTag } from './utils/tag'
 
 export const sessionsAtom = atom({
   key: 'sessions',
@@ -30,9 +31,32 @@ export const packetsAtom = atom({
   default: [],
 })
 
+export const tagsAtom = atom({
+  key: 'tags',
+  default: [],
+})
+
+export const tagsOfType = selectorFamily({
+  key: 'tags-of-type',
+  get: (key) => ({ get }) => {
+    const tags = get(tagsAtom)
+
+    return tags.filter((t) => t.tagType === key)
+  },
+})
+
 export const timeAtom = atom({
   key: 'time',
   default: null,
+})
+
+export const mapToggles = atom({
+  key: 'map-toggles',
+  default: {
+    heatmap: true,
+    trajectories: true,
+    packets: true,
+  },
 })
 
 export const packetsFilters = atom({
@@ -93,10 +117,22 @@ export const packetTrajectories = selector({
     const time = get(timeAtom)
     const packets = get(packetsFeed)
 
-    // TODO: filter out unique points, dont draw multiple lines on top of eachother
-    return packets
+    const trajectoryMap = {}
+    const trajectories = packets
       .filter((p) => pastTenSecondsFilter(p, time))
       .map(trajectoryForPacket)
+
+    let uniqueTrajectories = []
+    trajectories.forEach((t) => {
+      const coords = t.geometry.coordinates
+      const key = `${coords[0]}${coords[coords.length - 1]}`
+      if (!trajectoryMap[key]) {
+        trajectoryMap[key] = true
+        uniqueTrajectories.push(t)
+      }
+    })
+
+    return uniqueTrajectories
   },
 })
 
@@ -112,19 +148,41 @@ export const packetsAlongTrajectories = selector({
   },
 })
 
-export const packetCategories = selector({
-  key: 'packet-categories',
+export const packetTags = selector({
+  key: 'packet-tags',
   get: ({ get }) => {
-    const packets = get(packetsAtom)
+    const packets = get(packetsFeed)
+    const tags = get(tagsOfType('provider'))
+
+    if (!tags.length || !packets.length) {
+      return [
+        {
+          type: 'other',
+          value: 100,
+        },
+      ]
+    }
+
+    const packetsMap = packets.reduce((acc, curr) => {
+      if (acc[curr.host]) {
+        acc[curr.host] += 1
+      } else {
+        acc[curr.host] = 1
+      }
+      return acc
+    }, {})
+
+    const values = tags.map((t) => ({
+      value: packetsInTag(t, packetsMap),
+      type: t.name,
+    }))
 
     return [
+      ...values,
       {
-        type: 'yes',
-        value: 27,
-      },
-      {
-        type: 'no',
-        value: 100 - 27,
+        type: 'other',
+        value:
+          packets.length - values.reduce((acc, curr) => acc + curr.value, 0),
       },
     ]
   },

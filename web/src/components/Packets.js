@@ -7,6 +7,7 @@ import moment from 'moment'
 
 const Container = styled.div`
   color: white;
+  max-height: 600px;
 `
 
 const Packets = () => {
@@ -19,27 +20,31 @@ const Packets = () => {
   }))
 
   return (
-    <Card
-      title={`Packets - ${packets.length} - ${moment(time).format('HH:mm:ss')}`}
-    >
-      <List
-        bordered
-        itemLayout="vertical"
-        dataSource={items}
-        pagination={{
-          pageSize: 20,
-        }}
-        size={items.length}
-        renderItem={(item) => (
-          <List.Item key={`${item.title} ${item.index}`}>
-            <Space>
-              <span>{item.title}</span>
-              <span>{item.timestamp}</span>
-            </Space>
-          </List.Item>
-        )}
-      />
-    </Card>
+    <Container>
+      <Card
+        title={`Packets - ${packets.length} - ${moment(time).format(
+          'HH:mm:ss'
+        )}`}
+      >
+        <List
+          bordered
+          itemLayout="vertical"
+          dataSource={items}
+          pagination={{
+            pageSize: 13,
+          }}
+          size={items.length}
+          renderItem={(item) => (
+            <List.Item key={`${item.title} ${item.index}`}>
+              <Space>
+                <span>{item.title}</span>
+                <span>{item.timestamp}</span>
+              </Space>
+            </List.Item>
+          )}
+        />
+      </Card>
+    </Container>
   )
 }
 

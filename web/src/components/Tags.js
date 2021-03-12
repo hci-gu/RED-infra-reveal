@@ -1,17 +1,20 @@
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
-import { packetCategories } from '../state'
+import { packetTags } from '../state'
 import { Pie } from '@ant-design/charts'
+import { Card } from 'antd'
 
-const Container = styled.div``
+const Container = styled.div`
+  height: 200px;
+`
 
-const Categories = () => {
-  const data = useRecoilValue(packetCategories)
+const Tags = () => {
+  const data = useRecoilValue(packetTags)
   const config = {
     data,
     angleField: 'value',
     colorField: 'type',
-    radius: 0.8,
+    radius: 0.7,
     label: {
       type: 'outer',
       content: '{name} {percentage}',
@@ -21,9 +24,11 @@ const Categories = () => {
 
   return (
     <Container>
-      <Pie {...config} />
+      <Card>
+        <Pie {...config} />
+      </Card>
     </Container>
   )
 }
 
-export default Categories
+export default Tags
