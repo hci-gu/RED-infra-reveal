@@ -1,0 +1,56 @@
+version: '3'
+services:
+  caddy:
+    image: 'sebastianandreas/red-caddy:latest'
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - web
+      - api
+    volumes:
+      - /data/caddy:/root/.caddy
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: '5'
+        max-size: '50m'
+  postgres:
+    image: 'sebastianandreas/red-postgres:latest'
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: infrauser
+      POSTGRES_PASSWORD: cyklatillmorgonkaffetgudvagott
+      POSTGRES_DB: infra-reveal
+  web:
+    image: 'sebastianandreas/red-web:latest'
+    restart: always
+    ports:
+      - 3000:3000
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: '5'
+        max-size: '50m'
+  api:
+    image: 'sebastianandreas/red-api:latest'
+    restart: always
+    links:
+      - postgres
+    volumes:
+      - /data/proxy:/.http-mitm-proxy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: infrauser
+      DB_PASSWORD: cyklatillmorgonkaffetgudvagott
+      DB: infra-reveal
+      COOKIE_SECRET: supersecret2
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: '5'
+        max-size: '50m'

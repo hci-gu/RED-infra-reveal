@@ -55,6 +55,7 @@ export const usePackets = (sessionId) => {
     },
   })
   const { data } = result
+
   useEffect(() => {
     if (!!data) {
       setPackets(data.allPackets)
@@ -70,10 +71,6 @@ query getList($where: TagWhereInput) {
     id
     name
     domains {
-      id
-      name
-    }
-    domainFilters {
       id
       name
     }

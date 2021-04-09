@@ -1,6 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react'
+import moment from 'moment'
 import styled from 'styled-components'
-import { AMapScene, LineLayer, PointLayer, HeatmapLayer } from '@antv/l7-react'
+import {
+  AMapScene,
+  LineLayer,
+  PointLayer,
+  HeatmapLayer,
+  Popup,
+  LayerEvent,
+} from '@antv/l7-react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import {
   packetTrajectories,
@@ -9,6 +17,7 @@ import {
   mapToggles,
 } from '../state'
 import MapToggles from './MapToggles'
+import { Card } from 'antd'
 
 const Trajectories = () => {
   const features = useRecoilValue(packetTrajectories)
@@ -72,8 +81,15 @@ const HeatMap = () => {
   )
 }
 
-const Points = () => {
+const Points = ({ setPopupInfo }) => {
   const features = useRecoilValue(packetsAlongTrajectories)
+
+  const showPopup = (args) => {
+    setPopupInfo({
+      lnglat: args.lngLat,
+      feature: args.feature.properties,
+    })
+  }
 
   return (
     <>
@@ -98,7 +114,9 @@ const Points = () => {
             opacity: 0.75,
           },
         }}
-      />
+      >
+        <LayerEvent type="mousedown" handler={showPopup}></LayerEvent>
+      </PointLayer>
     </>
   )
 }
@@ -110,6 +128,7 @@ const Container = styled.div`
 
 const Map = () => {
   const { heatmap, trajectories, packets } = useRecoilValue(mapToggles)
+  const [popupInfo, setPopupInfo] = useState()
 
   return (
     <Container>
@@ -136,8 +155,29 @@ const Map = () => {
         }}
       >
         {trajectories && <Trajectories />}
-        {packets && <Points />}
+        {packets && <Points setPopupInfo={setPopupInfo} />}
         {heatmap && <HeatMap />}
+        {popupInfo && (
+          <Popup lnglat={popupInfo.lnglat}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                margin: 0,
+                color: '#000',
+              }}
+            >
+              <strong>
+                {moment(popupInfo.feature.timestamp).format(
+                  'YYYY-MM-DD HH:mm:ss'
+                )}
+              </strong>
+              <span>Host: {popupInfo.feature.host}</span>
+              <span>Method: {popupInfo.feature.method}</span>
+            </div>
+          </Popup>
+        )}
       </AMapScene>
     </Container>
   )

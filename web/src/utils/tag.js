@@ -5,13 +5,6 @@ export const packetsInTag = (tag, packetsMap) => {
       found += packetsMap[name]
     }
   })
-  tag.domainFilters.forEach(({ name }) => {
-    Object.keys(packetsMap).forEach((key) => {
-      if (key.indexOf(name.replace('*.', '')) !== -1) {
-        found += packetsMap[key]
-      }
-    })
-  })
 
   return found
 }

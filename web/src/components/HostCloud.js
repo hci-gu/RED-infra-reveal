@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil'
 import { packetsFeed } from '../state'
 
 const HostCloud = () => {
-  const packets = useRecoilValue(packetsFeed)
+  const { packets } = useRecoilValue(packetsFeed)
   const hosts = packets.reduce((acc, curr) => {
     if (!acc[curr.host]) {
       acc[curr.host] = {
@@ -31,6 +31,7 @@ const HostCloud = () => {
     },
     random: () => 0.5,
     padding: 0,
+    animation: false,
   }
   return <WordCloud {...config} height={200} />
 }

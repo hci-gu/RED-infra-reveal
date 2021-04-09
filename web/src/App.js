@@ -5,6 +5,7 @@ import { useSocket } from './hooks/socket'
 import CertificateDownloader from './pages/Certificate'
 import Dashboard from './pages/Dashboard'
 import Landing from './pages/Landing'
+import * as api from './hooks/api'
 
 const DashboardWrapper = () => {
   useSocket()
@@ -12,6 +13,8 @@ const DashboardWrapper = () => {
 }
 
 const App = () => {
+  api.useSessions()
+
   return (
     <Router>
       <Switch>

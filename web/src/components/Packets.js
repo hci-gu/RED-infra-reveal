@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { Card, List, Space } from 'antd'
 import styled from 'styled-components'
-import { packetsFeed, timeAtom } from '../state'
+import { packetsFeed } from '../state'
 import moment from 'moment'
 
 const Container = styled.div`
@@ -11,8 +11,7 @@ const Container = styled.div`
 `
 
 const Packets = () => {
-  const time = useRecoilValue(timeAtom)
-  const packets = useRecoilValue(packetsFeed)
+  const { packets } = useRecoilValue(packetsFeed)
   const items = packets.map((p, i) => ({
     title: p.host,
     timestamp: moment(p.timestamp).format('HH:mm:ss'),
@@ -21,11 +20,7 @@ const Packets = () => {
 
   return (
     <Container>
-      <Card
-        title={`Packets - ${packets.length} - ${moment(time).format(
-          'HH:mm:ss'
-        )}`}
-      >
+      <Card title={`Packets - ${packets.length}`}>
         <List
           bordered
           itemLayout="vertical"

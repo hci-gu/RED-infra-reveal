@@ -11,6 +11,8 @@ import SelectFilter from '../components/SelectFilter'
 import HostCloud from '../components/HostCloud'
 import * as api from '../hooks/api'
 import { useParams } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
+import { activeSessionIdAtom } from '../state'
 
 const Container = styled.div`
   width: 100%;
@@ -26,6 +28,12 @@ const Spacer = styled.div`
 
 const Dashboard = () => {
   const { id } = useParams()
+  const [, setSessionId] = useRecoilState(activeSessionIdAtom)
+
+  useEffect(() => {
+    setSessionId(id)
+  }, [])
+
   api.usePackets(id)
   api.useTags()
   const defaultGutter = [12, 12]

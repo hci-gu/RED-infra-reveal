@@ -1,4 +1,4 @@
-import { atom, selector, selectorFamily } from 'recoil'
+import { atom, selector, selectorFamily, constSelector } from 'recoil'
 import {
   packetOrigin,
   pointAlongTrajectory,
@@ -10,6 +10,22 @@ import { packetsInTag } from './utils/tag'
 export const sessionsAtom = atom({
   key: 'sessions',
   default: [],
+})
+export const activeSessionIdAtom = atom({
+  key: 'active-session-id',
+  default: null,
+})
+export const activeSession = selector({
+  key: 'active-session',
+  get: ({ get }) => {
+    const sessions = get(sessionsAtom)
+    const id = get(activeSessionIdAtom)
+
+    if (id && sessions.length) {
+      return sessions.find((s) => s.id === id)
+    }
+    return null
+  },
 })
 
 /*
@@ -47,7 +63,12 @@ export const tagsOfType = selectorFamily({
 
 export const timeAtom = atom({
   key: 'time',
-  default: null,
+  default: new Date(),
+})
+
+export const delayedTime = atom({
+  key: 'delayed-time',
+  default: new Date(),
 })
 
 export const mapToggles = atom({
@@ -76,14 +97,14 @@ export const packetsFeed = selector({
   get: ({ get }) => {
     const packets = get(packetsAtom)
     const filter = get(packetsFilters)
-    const [minDate, maxDate] = get(packetsTimeRange)
+    const time = get(delayedTime)
 
-    return packets
+    const filteredPackets = packets
       .slice()
       .reverse()
       .filter((p) => {
         const date = new Date(p.timestamp)
-        return date > minDate && date < maxDate
+        return date < time
       })
       .filter((p) => {
         return (
@@ -93,19 +114,24 @@ export const packetsFeed = selector({
       .filter((p) => {
         return filter.host.length === 0 || filter.host.indexOf(p.host) == -1
       })
+
+    return {
+      time,
+      packets: filteredPackets,
+    }
   },
 })
 
 const pastTenSecondsFilter = (p, timestamp) => {
   const timeDiff = moment(timestamp).diff(moment(p.timestamp), 'milliseconds')
 
-  return timeDiff < 15000
+  return timeDiff < 10000
 }
 
 export const packetOrigins = selector({
   key: 'packet-origins',
   get: ({ get }) => {
-    const packets = get(packetsFeed)
+    const { packets } = get(packetsFeed)
 
     return packets.map(packetOrigin)
   },
@@ -114,8 +140,7 @@ export const packetOrigins = selector({
 export const packetTrajectories = selector({
   key: 'packet-trajectories',
   get: ({ get }) => {
-    const time = get(timeAtom)
-    const packets = get(packetsFeed)
+    const { packets, time } = get(packetsFeed)
 
     const trajectoryMap = {}
     const trajectories = packets
@@ -131,7 +156,6 @@ export const packetTrajectories = selector({
         uniqueTrajectories.push(t)
       }
     })
-
     return uniqueTrajectories
   },
 })
@@ -139,8 +163,8 @@ export const packetTrajectories = selector({
 export const packetsAlongTrajectories = selector({
   key: 'packets-along-trajectories',
   get: ({ get }) => {
+    const { packets } = get(packetsFeed)
     const time = get(timeAtom)
-    const packets = get(packetsFeed)
 
     return packets
       .filter((p) => pastTenSecondsFilter(p, time))
@@ -151,7 +175,7 @@ export const packetsAlongTrajectories = selector({
 export const packetTags = selector({
   key: 'packet-tags',
   get: ({ get }) => {
-    const packets = get(packetsFeed)
+    const { packets } = get(packetsFeed)
     const tags = get(tagsOfType('provider'))
 
     if (!tags.length || !packets.length) {
@@ -164,18 +188,25 @@ export const packetTags = selector({
     }
 
     const packetsMap = packets.reduce((acc, curr) => {
-      if (acc[curr.host]) {
-        acc[curr.host] += 1
+      const parts = curr.host.split('.')
+      const domain = [parts[parts.length - 2], parts[parts.length - 1]].join(
+        '.'
+      )
+      console.log(domain)
+      if (acc[domain]) {
+        acc[domain] += 1
       } else {
-        acc[curr.host] = 1
+        acc[domain] = 1
       }
       return acc
     }, {})
 
-    const values = tags.map((t) => ({
-      value: packetsInTag(t, packetsMap),
-      type: t.name,
-    }))
+    const values = tags
+      .map((t) => ({
+        value: packetsInTag(t, packetsMap),
+        type: t.name,
+      }))
+      .filter((t) => t.value > 0)
 
     return [
       ...values,

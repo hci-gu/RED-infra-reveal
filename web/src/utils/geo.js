@@ -34,6 +34,11 @@ export const pointAlongTrajectory = (p, timestamp) => {
 
   return {
     type: 'Feature',
+    properties: {
+      host: p.host,
+      method: p.method,
+      timestamp: p.timestamp,
+    },
     geometry: {
       type: 'Point',
       coordinates: points[index],
