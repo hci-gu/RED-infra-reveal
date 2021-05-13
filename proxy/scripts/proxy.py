@@ -7,8 +7,12 @@ import threading
 import traceback
 import sys
 import struct
+import os
+import time
 import websockets
 from mitmproxy import ctx
+
+websocket_host = os.getenv('WEBSOCKET_HOST', 'localhost')
 
 
 def convert_body_to_bytes(body):
@@ -39,6 +43,10 @@ class WebSocketAdapter:
     def request(self, flow):
         request = flow.request
         self.send_message({
+            'client': {
+                'address': flow.client_conn.address,
+                'ip': flow.client_conn.ip_address
+            },
             'method': request.method,
             'url': request.url,
             'scheme': request.scheme,
@@ -57,30 +65,29 @@ class WebSocketAdapter:
         Processes messages from self.queue until mitmproxy shuts us down.
         """
         while not self.finished:
+            time.sleep(1)
             try:
-                async with websockets.connect('ws://api:8765', max_size=None) as websocket:
+                async with websockets.connect(f'ws://{websocket_host}:8765', max_size=None) as ws:
                     while True:
-                        # Make sure connection is still live.
-                        await websocket.ping()
                         try:
                             msg = self.queue.get(timeout=1)
                             if msg is None:
                                 break
                             try:
-                                await websocket.send(msg)
+                                await asyncio.wait_for(ws.send(msg), 10)
                             except:
-                                pass
+                                break
                         except queue.Empty:
                             pass
             except websockets.exceptions.ConnectionClosed:
                 # disconnected from server
-                pass
+                continue
             except BrokenPipeError:
                 # Connect failed
-                pass
+                continue
             except IOError:
                 # disconnected from server mis-transfer
-                pass
+                continue
             except:
                 ctx.log.error(
                     "[mitmproxy-websocket] Unexpected error:")

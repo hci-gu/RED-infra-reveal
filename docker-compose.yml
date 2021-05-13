@@ -14,27 +14,25 @@ services:
   #   restart: always
   #   ports:
   #     - 3000:3000
-  api:
-    build: '.'
-    restart: always
-    ports:
-      - 8765:8765
-      - 4000:4000
-    links:
-      - postgres
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_USERNAME: infrauser
-      DB_PASSWORD: cyklatillmorgonkaffetgudvagott
-      DB: infra-reveal
-      COOKIE_SECRET: supersecret2
+  # api:
+  #   build: '.'
+  #   restart: always
+  #   ports:
+  #     - 8765:8765
+  #     - 4000:4000
+  #   links:
+  #     - postgres
+  #   environment:
+  #     DB_HOST: postgres
+  #     DB_PORT: 5432
+  #     DB_USERNAME: infrauser
+  #     DB_PASSWORD: cyklatillmorgonkaffetgudvagott
+  #     DB: infra-reveal
+  #     COOKIE_SECRET: supersecret2
   proxy:
     build: './proxy'
-    depends_on:
-      - api
     environment:
-      WEBSOCKET_HOST: api
+      WEBSOCKET_HOST: host.docker.internal
     # volumes:
     #   - /data:/tmp/mitm-proxy
     # privileged: true

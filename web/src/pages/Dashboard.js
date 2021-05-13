@@ -53,6 +53,7 @@ const Dashboard = () => {
           <HostCloud />
         </Col>
       </Row>
+      <Spacer />
       <Row gutter={defaultGutter}>
         <Col span={18}>
           <Panel>
