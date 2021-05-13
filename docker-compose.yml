@@ -1,21 +1,5 @@
 version: '3'
 services:
-  caddy:
-    image: 'sebastianandreas/red-caddy:latest'
-    restart: always
-    ports:
-      - 80:80
-      - 443:443
-    links:
-      - web
-      - api
-    volumes:
-      - /data/caddy:/root/.caddy
-    logging:
-      driver: 'json-file'
-      options:
-        max-file: '5'
-        max-size: '50m'
   postgres:
     image: 'sebastianandreas/red-postgres:latest'
     restart: always
@@ -25,23 +9,19 @@ services:
       POSTGRES_USER: infrauser
       POSTGRES_PASSWORD: cyklatillmorgonkaffetgudvagott
       POSTGRES_DB: infra-reveal
-  web:
-    image: 'sebastianandreas/red-web:latest'
+  # web:
+  #   image: 'sebastianandreas/red-web:latest'
+  #   restart: always
+  #   ports:
+  #     - 3000:3000
+  api:
+    build: '.'
     restart: always
     ports:
-      - 3000:3000
-    logging:
-      driver: 'json-file'
-      options:
-        max-file: '5'
-        max-size: '50m'
-  api:
-    image: 'sebastianandreas/red-api:latest'
-    restart: always
+      - 8765:8765
+      - 4000:4000
     links:
       - postgres
-    volumes:
-      - /data/proxy:/.http-mitm-proxy
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -49,8 +29,14 @@ services:
       DB_PASSWORD: cyklatillmorgonkaffetgudvagott
       DB: infra-reveal
       COOKIE_SECRET: supersecret2
-    logging:
-      driver: 'json-file'
-      options:
-        max-file: '5'
-        max-size: '50m'
+  proxy:
+    build: './proxy'
+    depends_on:
+      - api
+    environment:
+      WEBSOCKET_HOST: api
+    # volumes:
+    #   - /data:/tmp/mitm-proxy
+    # privileged: true
+    ports:
+      - 8080:8080
