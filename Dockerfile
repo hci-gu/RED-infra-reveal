@@ -9,4 +9,4 @@ RUN yarn
 EXPOSE 4000
 EXPOSE 8888
 
-CMD npm run initialize
+CMD npm run prod-start
