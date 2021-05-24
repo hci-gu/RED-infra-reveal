@@ -38,6 +38,7 @@ export const pointAlongTrajectory = (p, timestamp) => {
       host: p.host,
       method: p.method,
       timestamp: p.timestamp,
+      client: p.userId,
     },
     geometry: {
       type: 'Point',

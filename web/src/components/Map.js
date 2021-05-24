@@ -17,7 +17,8 @@ import {
   mapToggles,
 } from '../state'
 import MapToggles from './MapToggles'
-import { Card } from 'antd'
+import { getColorFromId } from '../utils'
+import Clients from './Clients'
 
 const Trajectories = () => {
   const features = useRecoilValue(packetTrajectories)
@@ -32,7 +33,7 @@ const Trajectories = () => {
       }}
       shape={{ values: 'line' }}
       color={{
-        values: ['#FF7C6A'],
+        values: ['#fff'],
       }}
       scale={{
         value: 0.1,
@@ -41,7 +42,7 @@ const Trajectories = () => {
         values: 1,
       }}
       style={{
-        opacity: 0.25,
+        opacity: 0.1,
       }}
     />
   )
@@ -97,14 +98,17 @@ const Points = ({ setPopupInfo }) => {
         source={{
           data: {
             type: 'FeatureCollection',
-            features,
+            features: features.filter((f) => !!f.properties),
           },
         }}
         shape={{
           values: 'dot',
         }}
         color={{
-          values: '#FF7C6A',
+          field: 'client',
+          values: (arg) => {
+            return getColorFromId(arg)
+          },
         }}
         size={{
           values: 2,
@@ -133,6 +137,7 @@ const Map = () => {
   return (
     <Container>
       <MapToggles />
+      <Clients />
       <AMapScene
         map={{
           center: [11.91737, 57.69226],
@@ -169,12 +174,15 @@ const Map = () => {
               }}
             >
               <strong>
-                {moment(popupInfo.feature.timestamp).format(
-                  'YYYY-MM-DD HH:mm:ss'
-                )}
+                {popupInfo.feature &&
+                  moment(popupInfo.feature.timestamp).format(
+                    'YYYY-MM-DD HH:mm:ss'
+                  )}
               </strong>
-              <span>Host: {popupInfo.feature.host}</span>
-              <span>Method: {popupInfo.feature.method}</span>
+              <span>Host: {popupInfo.feature && popupInfo.feature.host}</span>
+              <span>
+                Method: {popupInfo.feature && popupInfo.feature.method}
+              </span>
             </div>
           </Popup>
         )}

@@ -137,6 +137,24 @@ export const packetOrigins = selector({
   },
 })
 
+export const packetClients = selector({
+  key: 'packet-clients',
+  get: ({ get }) => {
+    const { packets } = get(packetsFeed)
+    return Object.keys(
+      packets
+        .filter((p) => p.userId)
+        .reduce((map, packet) => {
+          if (!map[packet.userId]) {
+            console.log(packet)
+            map[packet.userId] = true
+          }
+          return map
+        }, {})
+    )
+  },
+})
+
 export const packetTrajectories = selector({
   key: 'packet-trajectories',
   get: ({ get }) => {

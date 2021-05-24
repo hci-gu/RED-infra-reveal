@@ -19,3 +19,13 @@ export function debounce(func, wait, immediate) {
     if (callNow) func.apply(context, args)
   }
 }
+
+export function getColorFromId(id) {
+  var hash = 0
+  for (var i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 3) - hash)
+  }
+  var color = Math.abs(hash).toString(16).substring(0, 6)
+
+  return '#' + '000000'.substring(0, 6 - color.length) + color
+}
