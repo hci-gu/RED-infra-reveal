@@ -3,6 +3,8 @@ import {
   packetOrigin,
   pointAlongTrajectory,
   trajectoryForPacket,
+  isValidCoordinate,
+  packetIsInFilters,
 } from './utils/geo'
 import moment from 'moment'
 import { packetsInTag } from './utils/tag'
@@ -92,10 +94,16 @@ export const packetsFilters = atom({
   },
 })
 
+export const mapFiltersAtom = atom({
+  key: 'map-filters',
+  default: null,
+})
+
 export const packetsFeed = selector({
   key: 'packets-feed',
   get: ({ get }) => {
     const packets = get(packetsAtom)
+    const mapFilters = get(mapFiltersAtom)
     const filter = get(packetsFilters)
     const time = get(delayedTime)
 
@@ -113,6 +121,12 @@ export const packetsFeed = selector({
       })
       .filter((p) => {
         return filter.host.length === 0 || filter.host.indexOf(p.host) == -1
+      })
+      .filter((p) => {
+        if (mapFilters) {
+          return packetIsInFilters(p, mapFilters)
+        }
+        return true
       })
 
     return {
@@ -146,7 +160,6 @@ export const packetClients = selector({
         .filter((p) => p.userId)
         .reduce((map, packet) => {
           if (!map[packet.userId]) {
-            console.log(packet)
             map[packet.userId] = true
           }
           return map
@@ -163,6 +176,7 @@ export const packetTrajectories = selector({
     const trajectoryMap = {}
     const trajectories = packets
       .filter((p) => pastTenSecondsFilter(p, time))
+      .filter((p) => isValidCoordinate(p))
       .map(trajectoryForPacket)
 
     let uniqueTrajectories = []
@@ -184,9 +198,11 @@ export const packetsAlongTrajectories = selector({
     const { packets } = get(packetsFeed)
     const time = get(timeAtom)
 
-    return packets
+    const filteredPackets = packets
       .filter((p) => pastTenSecondsFilter(p, time))
-      .map((p) => pointAlongTrajectory(p, time))
+      .filter((p) => isValidCoordinate(p))
+
+    return filteredPackets.map((p) => pointAlongTrajectory(p, time))
   },
 })
 
@@ -210,7 +226,6 @@ export const packetTags = selector({
       const domain = [parts[parts.length - 2], parts[parts.length - 1]].join(
         '.'
       )
-      console.log(domain)
       if (acc[domain]) {
         acc[domain] += 1
       } else {

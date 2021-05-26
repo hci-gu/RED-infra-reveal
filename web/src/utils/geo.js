@@ -2,8 +2,11 @@ import * as turf from '@turf/turf'
 import moment from 'moment'
 
 const myPos = [11.91737, 57.69226]
-const positionsForPacket = (p, date) =>
-  p.method !== 'GET' ? [myPos, [p.lat, p.lon]] : [[p.lat, p.lon], myPos]
+const packetPosition = (p) => (p.clientLat ? [p.clientLon, p.clientLat] : myPos)
+const positionsForPacket = (p) =>
+  p.method !== 'GET'
+    ? [packetPosition(p), [p.lon, p.lat]]
+    : [[p.lon, p.lat], packetPosition(p)]
 
 function clamp(number, min, max) {
   return Math.floor(Math.max(min, Math.min(number, max)))
@@ -20,7 +23,7 @@ export const packetOrigin = (p) => {
         },
       },
       type: 'Point',
-      coordinates: [p.lat, p.lon, 0.0],
+      coordinates: [p.lon, p.lat, 0.0],
     },
   }
 }
@@ -49,22 +52,30 @@ export const pointAlongTrajectory = (p, timestamp) => {
 
 export const trajectoryForPacket = (p) => {
   const [origin, destination] = positionsForPacket(p)
-  const route = {
-    type: 'Feature',
-    properties: {},
-    geometry: {
-      type: 'LineString',
-      coordinates: [origin, destination],
-    },
-  }
-  var lineDistance = turf.length(route)
-  let arc = []
-  const steps = 50
-  for (let i = 0; i < lineDistance; i += lineDistance / steps) {
-    const segment = turf.along(route, i)
-    arc.push(segment.geometry.coordinates)
-  }
-  route.geometry.coordinates = arc
+  return turf.greatCircle(origin, destination, {
+    npoints: 25,
+  })
+}
 
-  return route
+const isLatitude = (num) => isFinite(num) && Math.abs(num) <= 90
+const isLongitude = (num) => isFinite(num) && Math.abs(num) <= 180
+
+export const isValidCoordinate = (p) => {
+  const validDestination = isLatitude(p.lat) && isLongitude(p.lon)
+
+  if (p.clientLat) {
+    return (
+      validDestination && isLatitude(p.clientLat) && isLongitude(p.clientLon)
+    )
+  }
+
+  return validDestination
+}
+
+export const packetIsInFilters = (p, filters) => {
+  const points = turf.pointsWithinPolygon(
+    turf.points([[p.lon, p.lat]]),
+    filters.rect
+  )
+  return points.features.length > 0
 }

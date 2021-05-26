@@ -42,6 +42,9 @@ query getList($where: PacketWhereInput) {
     accept
     lat
     lon
+    userId
+    clientLat
+    clientLon
   }
 }
 `
@@ -58,7 +61,15 @@ export const usePackets = (sessionId) => {
 
   useEffect(() => {
     if (!!data) {
-      setPackets(data.allPackets)
+      setPackets(
+        data.allPackets.map((p) => ({
+          ...p,
+          lat: p.lon,
+          lon: p.lat,
+          clientLat: p.clientLon,
+          clientLon: p.clientLat,
+        }))
+      )
     }
   }, [data, setPackets])
 

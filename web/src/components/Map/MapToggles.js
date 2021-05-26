@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRecoilState } from 'recoil'
-import { mapToggles } from '../state'
+import { mapToggles } from '../../state'
 
 import { Card, Checkbox, Space } from 'antd'
 import styled from 'styled-components'
