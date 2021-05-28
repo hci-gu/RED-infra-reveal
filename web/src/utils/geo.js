@@ -79,3 +79,9 @@ export const packetIsInFilters = (p, filters) => {
   )
   return points.features.length > 0
 }
+
+export const centerOfPositions = (positions) => {
+  var features = turf.points(positions.map((p) => [p.lon, p.lat]))
+
+  return turf.center(features)
+}

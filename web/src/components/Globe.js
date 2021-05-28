@@ -10,6 +10,7 @@ const GlobeContainer = styled.div`
   width: 50vw;
   height: 175vh;
   z-index: -1;
+  pointer-events: auto;
 `
 
 function GlobeElement({ size }) {
@@ -18,13 +19,11 @@ function GlobeElement({ size }) {
   const globeEl = useRef()
 
   useEffect(() => {
-    globeEl.current.pointOfView({ lat: 57.69226, lng: 11.91737, altitude: 3.5 })
+    globeEl.current.pointOfView({ altitude: 3.5 })
     globeEl.current.controls().autoRotate = true
     globeEl.current.controls().autoRotateSpeed = 0.25
     setRoutes(routesJSON)
   }, [])
-
-  console.log(routes)
 
   return (
     <GlobeGl
@@ -33,7 +32,7 @@ function GlobeElement({ size }) {
       height={size.height}
       showGlobe={true}
       backgroundColor={'rgba(0, 0, 0, 0)'}
-      backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+      // backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
       globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
       bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
       arcsData={routes}

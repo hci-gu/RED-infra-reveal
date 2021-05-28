@@ -2,13 +2,19 @@ import { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
 import { useMutation, useQuery } from 'urql'
 import { packetsAtom, sessionsAtom, tagsAtom } from '../state'
+import { calculateSessionPositions } from '../utils/session'
 
 const SessionQuery = `
 {
   allSessions {
     id
+    name
     start
     end
+    clientPositions {
+      lat
+      lon
+    }
   }
 }
 `
@@ -21,7 +27,7 @@ export const useSessions = () => {
 
   useEffect(() => {
     if (!!result.data) {
-      setSessions(result.data.allSessions)
+      setSessions(result.data.allSessions.map(calculateSessionPositions))
     }
   }, [result, setSessions])
 
@@ -110,8 +116,13 @@ const CreateSessionQuery = `
 mutation create($data: SessionCreateInput!) {
   createSession(data: $data) {
     id
+    name
     start
     end
+    clientPositions {
+      lat
+      lon
+    }
   }
 }
 `
@@ -133,8 +144,13 @@ const UpdateSessionQuery = `
 mutation update($id: ID!, $data: SessionUpdateInput) {
   updateSession(id: $id, data: $data) {
     id
+    name
     start
     end
+    clientPositions {
+      lat
+      lon
+    }
   }
 }
 `

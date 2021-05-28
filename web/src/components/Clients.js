@@ -18,6 +18,10 @@ const ClientList = styled.div`
   display: flex;
   flex-wrap: wrap;
   overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const Client = styled.div`
