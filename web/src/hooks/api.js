@@ -67,15 +67,7 @@ export const usePackets = (sessionId) => {
 
   useEffect(() => {
     if (!!data) {
-      setPackets(
-        data.allPackets.map((p) => ({
-          ...p,
-          lat: p.lon,
-          lon: p.lat,
-          clientLat: p.clientLon,
-          clientLon: p.clientLat,
-        }))
-      )
+      setPackets(data.allPackets)
     }
   }, [data, setPackets])
 
