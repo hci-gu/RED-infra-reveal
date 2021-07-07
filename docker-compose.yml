@@ -37,4 +37,4 @@ services:
     #   - /data:/tmp/mitm-proxy
     # privileged: true
     ports:
-      - 8080:8080
+      - 8888:8888

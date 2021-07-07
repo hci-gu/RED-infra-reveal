@@ -61,6 +61,7 @@ const Guide = styled.div`
     color: #fff;
     height: 600px;
     text-align: center;
+    font-size: 18px;
   }
   > button {
     position: absolute;
@@ -109,65 +110,29 @@ const MacInstallationGuide = () => {
       <Carousel dots={{ className: 'carousel-dots' }} ref={carouselRef}>
         <GuideStep
           img="/img/mac-cert-1.jpg"
-          text="double click the certificate to open it with keychain"
+          text="Open Network settings in System preferences, and select advanced settings"
         />
         <GuideStep
           img="/img/mac-cert-2.jpg"
-          text={`Select the certifacte named "NodeMITMProxyCA" and change it to "Always trust"`}
+          text={`Here you can input 161.35.209.9 with port 8888 as your HTTP and HTTPS proxy`}
         />
         <GuideStep
           img="/img/mac-cert-3.jpg"
-          text="Then open Network settings in System preferences, and select advanced settings"
-        />
-        <GuideStep
-          img="/img/mac-cert-4.jpg"
-          text={`Here you can input 161.35.209.9 with port 8888 as your HTTP and HTTPS proxy`}
+          text={`Then go to mitm.it in your browser and follow the instructions to install the certificate on your platform`}
         />
       </Carousel>
     </Guide>
   )
 }
 
-const CertificateDownloader = () => {
-  const [clicked, setClicked] = useState(false)
-
-  const onDownloadClick = () => {
-    setClicked(true)
-  }
-
+const ProxyGuide = () => {
   return (
     <Container>
-      {clicked ? (
-        <Header>
-          <MacInstallationGuide />
-        </Header>
-      ) : (
-        <Header>
-          <h1>
-            To use the proxy you need to download and install a certificate.
-          </h1>
-          <ReactSVG src="/svg/certificate.svg" />
-        </Header>
-      )}
-      {!clicked && (
-        <a
-          href={`${process.env.REACT_APP_API_URL}/cert`}
-          download
-          target="_self"
-        >
-          <Button
-            onClick={onDownloadClick}
-            type="primary"
-            size="large"
-            shape="round"
-            icon={<DownloadOutlined />}
-          >
-            Download
-          </Button>
-        </a>
-      )}
+      <Header>
+        <MacInstallationGuide />
+      </Header>
     </Container>
   )
 }
 
-export default CertificateDownloader
+export default ProxyGuide

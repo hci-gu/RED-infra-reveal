@@ -8,6 +8,7 @@ import { PlusOutlined, CheckOutlined } from '@ant-design/icons'
 import { Card, Button, List, Space } from 'antd'
 
 const Container = styled.div`
+  z-index: 2;
   width: 100%;
   height: 100%;
   padding: 32px 0;
@@ -80,6 +81,7 @@ const Session = ({ session }) => {
               icon={<CheckOutlined />}
               onClick={(e) => {
                 e.preventDefault()
+                e.stopPropagation()
                 updateSession({
                   id: session.id,
                   data: { end: new Date().toISOString() },

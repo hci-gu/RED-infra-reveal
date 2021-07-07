@@ -7,10 +7,12 @@ import routesJSON from '../data/routes.json'
 const GlobeContainer = styled.div`
   position: absolute;
   top: -150px;
-  width: 50vw;
+  left: -25vw;
+  width: 100vw;
   height: 175vh;
-  z-index: -1;
   pointer-events: auto;
+  background: none;
+  z-index: 1;
 `
 
 function GlobeElement({ size }) {
@@ -20,6 +22,7 @@ function GlobeElement({ size }) {
 
   useEffect(() => {
     globeEl.current.pointOfView({ altitude: 3.5 })
+    globeEl.current.controls().enableZoom = false
     globeEl.current.controls().autoRotate = true
     globeEl.current.controls().autoRotateSpeed = 0.25
     setRoutes(routesJSON)

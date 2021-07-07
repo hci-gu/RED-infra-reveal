@@ -25,6 +25,13 @@ services:
       POSTGRES_USER: infrauser
       POSTGRES_PASSWORD: cyklatillmorgonkaffetgudvagott
       POSTGRES_DB: infra-reveal
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data
+    logging:
+      driver: 'json-file'
+      options:
+        max-file: '5'
+        max-size: '50m'
   web:
     image: 'sebastianandreas/red-web:latest'
     restart: always
@@ -47,6 +54,8 @@ services:
       DB_PASSWORD: cyklatillmorgonkaffetgudvagott
       DB: infra-reveal
       COOKIE_SECRET: supersecret2
+      ADMIN_USERNAME: admin
+      ADMIN_PASSWORD: skrivbordetförkaffepausen
     logging:
       driver: 'json-file'
       options:

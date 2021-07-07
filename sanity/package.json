@@ -1,0 +1,34 @@
+{
+  "name": "redinfrareveal",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Start Postgres",
+  "main": "package.json",
+  "author": "Sebastian Andreasson <sebastian.andreasson93@gmail.com>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "sanity start",
+    "build": "sanity build"
+  },
+  "keywords": [
+    "sanity"
+  ],
+  "dependencies": {
+    "@sanity/base": "^2.10.5",
+    "@sanity/components": "^2.2.6",
+    "@sanity/core": "^2.10.5",
+    "@sanity/default-layout": "^2.10.5",
+    "@sanity/default-login": "^2.10.5",
+    "@sanity/desk-tool": "^2.10.5",
+    "@sanity/vision": "^2.10.5",
+    "prop-types": "^15.7",
+    "react": "^17.0",
+    "react-dom": "^17.0",
+    "sanity-plugin-intl-input": "^5.1.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:hci-gu/RED-infra-reveal.git"
+  }
+}

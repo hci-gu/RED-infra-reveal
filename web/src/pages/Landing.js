@@ -3,9 +3,12 @@ import styled from 'styled-components'
 import SessionList from '../components/SessionList'
 import Globe from '../components/Globe'
 
-const Container = styled.div``
+const Container = styled.div`
+  background: none;
+`
 
 const Header = styled.div`
+  z-index: 1;
   margin: auto;
   margin-top: 50px;
   width: 90%;
@@ -35,6 +38,7 @@ const GlobeContainer = styled.div`
 `
 
 const AboutContainer = styled.div`
+  z-index: 2;
   width: 70%;
 
   > h1 {
@@ -71,12 +75,14 @@ const About = () => {
 }
 
 const SectionsContainer = styled.div`
+  position: relative;
   margin-top: 150px;
   width: 100%;
   height: 1000px;
   background-color: black;
-  z-index: 100 !important;
+  z-index: 100;
   border-top: 2px solid #a71d31;
+  /* background-color: orange; */
   padding: 32px 64px;
 
   display: flex;
@@ -110,7 +116,7 @@ const Sections = () => {
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum."
         </p>
-        <a href="/certificate">Setup the proxy</a>
+        <a href="/proxy-guide">Setup the proxy</a>
       </Section>
     </SectionsContainer>
   )
