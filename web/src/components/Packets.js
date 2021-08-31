@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { Card, List, Space } from 'antd'
 import styled from 'styled-components'
-import { packetsFeed } from '../state'
+import { filteredPackets, mutationAtom } from '../state'
 import moment from 'moment'
 
 const Container = styled.div`
@@ -11,11 +11,21 @@ const Container = styled.div`
 `
 
 const Packets = () => {
-  const { packets } = useRecoilValue(packetsFeed)
-  const items = packets.map((p, i) => ({
+  const mutation = useRecoilValue(mutationAtom)
+  const packets = useRecoilValue(filteredPackets)
+
+  useEffect(() => {
+    mutation.packets = packets
+    mutation.recentPackets = mutation.packets.filter((p) => {
+      const diff = mutation.time - new Date(p.timestamp)
+      return diff < 15000
+    })
+  }, [packets])
+
+  const items = packets.map((p, index) => ({
     title: p.host,
     timestamp: moment(p.timestamp).format('HH:mm:ss'),
-    index: i,
+    index,
   }))
 
   return (

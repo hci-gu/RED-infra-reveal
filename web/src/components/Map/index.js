@@ -29,6 +29,7 @@ const Map = () => {
         map={{
           center: [11.91737, 57.69226],
           pitch: 45,
+          // rotation: 180,
           style: 'dark',
           zoom: 1,
           features: ['bg'],
@@ -44,6 +45,7 @@ const Map = () => {
           bottom: 0,
           width: '100%',
           height: '100%',
+          // transform: 'scaleY(-1)',
         }}
         onSceneLoaded={(scene) => setMapScene(scene)}
       >

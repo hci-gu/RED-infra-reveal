@@ -56,6 +56,9 @@ query getList($where: PacketWhereInput) {
 `
 
 export const usePackets = (sessionId) => {
+  if (sessionId === 'simulate') {
+    return []
+  }
   const [packets, setPackets] = useRecoilState(packetsAtom)
   const [result] = useQuery({
     query: PacketQuery,

@@ -4,7 +4,6 @@ export const calculateSessionPositions = (session) => {
   if (session.clientPositions && session.clientPositions.length) {
     const center = centerOfPositions(session.clientPositions)
 
-    console.log(center)
     return {
       ...session,
       center: {

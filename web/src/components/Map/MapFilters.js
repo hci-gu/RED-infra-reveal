@@ -1,10 +1,10 @@
 const { useEffect } = require('react')
 import { DrawControl } from '@antv/l7-draw'
-import { useRecoilState } from 'recoil'
-import { mapFiltersAtom } from '../../state'
+import { useRecoilValue } from 'recoil'
+import { mutationAtom } from '../../state'
 
 const MapFilters = ({ scene }) => {
-  const [mapFilters, setMapFilters] = useRecoilState(mapFiltersAtom)
+  const mutation = useRecoilValue(mutationAtom)
 
   useEffect(() => {
     const drawControl = new DrawControl(scene, {
@@ -15,13 +15,19 @@ const MapFilters = ({ scene }) => {
         delete: true,
       },
     })
-    drawControl.on('draw.create', () => setMapFilters(drawControl.getAllData()))
-    drawControl.on('draw.update', () => setMapFilters(drawControl.getAllData()))
-    drawControl.on('draw.delete', (obj) => {
+    drawControl.on('draw.create', () => {
+      mutation.filters = drawControl.getAllData()
+    })
+    drawControl.on('draw.update', () => {
+      mutation.filters = drawControl.getAllData()
+    })
+    drawControl.on('draw.delete', () => {
+      mutation.filters = []
       drawControl.removeAllData()
-      setMapFilters(null)
     })
     scene.addControl(drawControl)
+
+    return () => scene.removeControl(drawControl)
   }, [])
 
   return null

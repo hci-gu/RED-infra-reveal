@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import SessionList from '../components/SessionList'
 import Globe from '../components/Globe'
+import { useCmsContent } from '../hooks/cmsContent'
 
 const Container = styled.div`
   background: none;

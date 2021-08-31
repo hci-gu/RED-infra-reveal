@@ -1,12 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import {
-  activeSession,
-  delayedTime,
-  packetsFilters,
-  packetTimeBuckets,
-  timeAtom,
-} from '../state'
-import { useRecoilState, useRecoilValue } from 'recoil'
+import React, { useEffect, useMemo, useState } from 'react'
+import { activeSession, mutationAtom } from '../state'
+import { useRecoilValue } from 'recoil'
 import { Line } from '@ant-design/charts'
 import { Button, Slider, Space } from 'antd'
 import {
@@ -16,7 +10,6 @@ import {
 } from '@ant-design/icons'
 import styled from 'styled-components'
 import moment from 'moment'
-import { debounce } from '../utils'
 
 const Container = styled.div`
   height: 180px;
@@ -37,52 +30,86 @@ const SliderHandle = styled.div`
   justify-content: center;
 `
 
+const packetsToBuckets = (packets) => {
+  const buckets = packets.reduce((acc, curr) => {
+    const start = moment(curr.timestamp)
+    const remainder = 15 - (start.second() % 15)
+
+    const time = moment(start).add(remainder, 'seconds').format('HH:mm:ss')
+    if (!acc[time]) {
+      acc[time] = {
+        value: 1,
+      }
+    } else {
+      acc[time].value++
+    }
+    return acc
+  }, {})
+
+  return Object.keys(buckets).map((time) => ({
+    time,
+    value: buckets[time].value,
+  }))
+}
+
 const LineChart = () => {
-  const data = useRecoilValue(packetTimeBuckets)
+  const [graph, setGraph] = useState()
+  const mutation = useRecoilValue(mutationAtom)
+
+  useEffect(() => {
+    let interval = setInterval(() => {
+      graph.changeData(packetsToBuckets(mutation.packets))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [graph])
 
   const config = {
-    data,
+    data: packetsToBuckets(mutation.packets),
     padding: 'auto',
     xField: 'time',
     yField: 'value',
     theme: 'dark',
   }
 
-  return <Line {...config} />
+  return <Line {...config} onReady={setGraph} />
 }
 
-let lastUpdate = new Date()
+const TIME_INC = 100
 const TimeSlider = ({ session }) => {
-  const [now, setNow] = useRecoilState(timeAtom)
-  const [, setDelayedTime] = useRecoilState(delayedTime)
+  const mutation = useRecoilValue(mutationAtom)
+  const [time, setTime] = useState(Date.now())
   const [isPlaying, setIsPlaying] = useState(session.end ? false : true)
 
   useEffect(() => {
     let interval = setInterval(() => {
       if (isPlaying && !!session.end) {
-        setNow((now) => moment(now).add(100, 'milliseconds').valueOf())
+        setTime((s) => s + TIME_INC)
       } else if (isPlaying) {
-        setNow(moment().valueOf())
+        setTime(Date.now())
       }
-    }, 100)
+    }, TIME_INC)
 
     return () => clearInterval(interval)
-  }, [isPlaying, setNow])
+  }, [isPlaying, setTime])
 
   useEffect(() => {
-    if (new Date().getTime() - lastUpdate > 1000) {
-      setDelayedTime(now)
-      lastUpdate = new Date()
-    }
-  }, [now])
+    mutation.time = time
+    mutation.recentPackets = mutation.packets.filter((p) => {
+      const diff = mutation.time - new Date(p.timestamp)
+      return diff < 15000
+    })
+  }, [time])
+
+  const min = session.start ? new Date(session.start) : new Date()
+  const max = session.end ? new Date(session.end) : new Date()
 
   return (
     <SliderContainer>
       <Slider
-        value={moment(now).valueOf()}
-        onChange={(val) => setNow(val)}
-        min={moment(session.start).valueOf()}
-        max={moment(session.end ? session.end : new Date()).valueOf()}
+        value={time}
+        onChange={setTime}
+        min={min.valueOf()}
+        max={max.valueOf()}
         tooltipVisible
         tipFormatter={(value) => (
           <SliderHandle>{moment(value).format('HH:mm:ss')}</SliderHandle>
@@ -93,7 +120,12 @@ const TimeSlider = ({ session }) => {
           {isPlaying ? <PauseOutlined /> : <CaretRightOutlined />}
         </Button>
         {session.end && (
-          <Button size="small" onClick={() => setNow(moment().valueOf())}>
+          <Button
+            size="small"
+            onClick={() => {
+              mutation.time = Date.now()
+            }}
+          >
             <FastForwardOutlined />
           </Button>
         )}

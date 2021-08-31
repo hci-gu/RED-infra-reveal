@@ -3,7 +3,7 @@ import { useRecoilState } from 'recoil'
 import { packetsAtom } from '../state'
 
 export const useSocket = () => {
-  const [_, setPackets] = useRecoilState(packetsAtom)
+  const [, setPackets] = useRecoilState(packetsAtom)
 
   useEffect(() => {
     const socket = io(process.env.REACT_APP_API_URL, {

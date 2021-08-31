@@ -1,16 +1,30 @@
 import { LineLayer } from '@antv/l7-react'
+import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { packetTrajectories } from '../../state'
+import { mutationAtom } from '../../state'
+import { trajectoriesForPackets } from '../../utils/geo'
 
 const Trajectories = () => {
-  const features = useRecoilValue(packetTrajectories)
+  const [layer, setLayer] = useState()
+  const mutation = useRecoilValue(mutationAtom)
+
+  useEffect(() => {
+    let interval = setInterval(() => {
+      layer.setData({
+        type: 'FeatureCollection',
+        features: trajectoriesForPackets(mutation.recentPackets),
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [layer])
 
   return (
     <LineLayer
+      onLayerLoaded={setLayer}
       source={{
         data: {
           type: 'FeatureCollection',
-          features,
+          features: trajectoriesForPackets(mutation.recentPackets),
         },
       }}
       shape={{ values: 'line' }}

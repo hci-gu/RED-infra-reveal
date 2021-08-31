@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { WordCloud } from '@ant-design/charts'
 import { useRecoilValue } from 'recoil'
-import { packetsFeed } from '../state'
+import { mutationAtom } from '../state'
 
-const HostCloud = () => {
-  const { packets } = useRecoilValue(packetsFeed)
+const hostsFromPackets = (packets) => {
   const hosts = packets.reduce((acc, curr) => {
     if (!acc[curr.host]) {
       acc[curr.host] = {
@@ -16,11 +15,25 @@ const HostCloud = () => {
     return acc
   }, {})
 
+  return Object.keys(hosts).map((host) => ({
+    name: host,
+    value: hosts[host].value,
+  }))
+}
+
+const HostCloud = () => {
+  const [graph, setGraph] = useState()
+  const mutation = useRecoilValue(mutationAtom)
+
+  useEffect(() => {
+    let interval = setInterval(() => {
+      graph.changeData(hostsFromPackets(mutation.packets))
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [graph])
+
   const config = {
-    data: Object.keys(hosts).map((host) => ({
-      name: host,
-      value: hosts[host].value,
-    })),
+    data: hostsFromPackets(mutation.packets),
     wordField: 'name',
     weightField: 'value',
     colorField: 'name',
@@ -31,8 +44,8 @@ const HostCloud = () => {
     },
     random: () => 0.5,
     padding: 0,
-    animation: false,
+    animation: true,
   }
-  return <WordCloud {...config} height={200} />
+  return <WordCloud onReady={setGraph} {...config} height={200} />
 }
 export default HostCloud

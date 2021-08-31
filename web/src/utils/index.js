@@ -1,3 +1,5 @@
+import { packetIsInFilters } from './geo'
+
 export function debounce(func, wait, immediate) {
   let timeout
 
@@ -28,4 +30,16 @@ export function getColorFromId(id) {
   var color = Math.abs(hash).toString(16).substring(0, 6)
 
   return '#' + '000000'.substring(0, 6 - color.length) + color
+}
+
+export function applyFiltersToPackets(packets, filter) {
+  return packets
+    .slice()
+    .reverse()
+    .filter((p) => {
+      return filter.method.length === 0 || filter.method.indexOf(p.method) != -1
+    })
+    .filter((p) => {
+      return filter.host.length === 0 || filter.host.indexOf(p.host) == -1
+    })
 }

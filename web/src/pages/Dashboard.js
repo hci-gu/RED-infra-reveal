@@ -12,7 +12,10 @@ import HostCloud from '../components/HostCloud'
 import * as api from '../hooks/api'
 import { useParams } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
+import { useSocket } from '../hooks/socket'
 import { activeSessionIdAtom } from '../state'
+import DebugButton from '../components/DebugButton'
+import useApplyFilters from '../hooks/useApplyFilters'
 
 const Container = styled.div`
   width: 100%;
@@ -26,6 +29,23 @@ const Spacer = styled.div`
   height: 10px;
 `
 
+const PacketsColumn = ({ id }) => {
+  api.usePackets(id)
+
+  return (
+    <Col span={6}>
+      <Packets />
+      <Spacer />
+      <Tags />
+    </Col>
+  )
+}
+
+const SocketListener = () => {
+  useSocket()
+  return null
+}
+
 const Dashboard = () => {
   const { id } = useParams()
   const [, setSessionId] = useRecoilState(activeSessionIdAtom)
@@ -34,7 +54,6 @@ const Dashboard = () => {
     setSessionId(id)
   }, [])
 
-  api.usePackets(id)
   api.useTags()
   const defaultGutter = [12, 12]
 
@@ -60,17 +79,9 @@ const Dashboard = () => {
             <Map />
           </Panel>
         </Col>
-        <Col span={6}>
-          <Packets />
-          <Spacer />
-          <Tags />
-        </Col>
+        <PacketsColumn id={id} />
       </Row>
-      {/* <Row>
-        <Panel>
-          <DebugButton></DebugButton>
-        </Panel>
-      </Row> */}
+      <SocketListener />
     </Container>
   )
 }

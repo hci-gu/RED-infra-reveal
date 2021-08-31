@@ -1,13 +1,12 @@
 import { atom, selector, selectorFamily, constSelector } from 'recoil'
-import {
-  packetOrigin,
-  pointAlongTrajectory,
-  trajectoryForPacket,
-  isValidCoordinate,
-  packetIsInFilters,
-} from './utils/geo'
+import { packetIsInFilters } from './utils/geo'
 import moment from 'moment'
 import { packetsInTag } from './utils/tag'
+
+export const cmsContentAtom = atom({
+  key: 'cms-content',
+  default: {},
+})
 
 export const sessionsAtom = atom({
   key: 'sessions',
@@ -22,6 +21,16 @@ export const activeSession = selector({
   get: ({ get }) => {
     const sessions = get(sessionsAtom)
     const id = get(activeSessionIdAtom)
+
+    if (id == 'simulate') {
+      return {
+        clientPositions: [],
+        end: null,
+        id: 'simulate',
+        name: 'Session',
+        start: moment().format('YYYY-MM-DDTHH:mm:ss'),
+      }
+    }
 
     if (id && sessions.length) {
       return sessions.find((s) => s.id === id)
@@ -63,6 +72,17 @@ export const tagsOfType = selectorFamily({
   },
 })
 
+export const mutationAtom = atom({
+  key: 'mutation',
+  default: {
+    allPackets: [],
+    time: new Date(),
+    packets: [],
+    filters: [],
+    recentPackets: [],
+  },
+})
+
 export const timeAtom = atom({
   key: 'time',
   default: new Date(),
@@ -99,20 +119,20 @@ export const mapFiltersAtom = atom({
   default: null,
 })
 
-export const packetsFeed = selector({
-  key: 'packets-feed',
+export const filteredPackets = selector({
+  key: 'filtered-packets',
   get: ({ get }) => {
+    const mutation = get(mutationAtom)
     const packets = get(packetsAtom)
     const mapFilters = get(mapFiltersAtom)
     const filter = get(packetsFilters)
-    const time = get(delayedTime)
 
     const filteredPackets = packets
       .slice()
       .reverse()
       .filter((p) => {
         const date = new Date(p.timestamp)
-        return date < time
+        return date < mutation.time
       })
       .filter((p) => {
         return (
@@ -129,32 +149,14 @@ export const packetsFeed = selector({
         return true
       })
 
-    return {
-      time,
-      packets: filteredPackets,
-    }
-  },
-})
-
-const pastTenSecondsFilter = (p, timestamp) => {
-  const timeDiff = moment(timestamp).diff(moment(p.timestamp), 'milliseconds')
-
-  return timeDiff < 10000
-}
-
-export const packetOrigins = selector({
-  key: 'packet-origins',
-  get: ({ get }) => {
-    const { packets } = get(packetsFeed)
-
-    return packets.map(packetOrigin)
+    return filteredPackets
   },
 })
 
 export const packetClients = selector({
   key: 'packet-clients',
   get: ({ get }) => {
-    const { packets } = get(packetsFeed)
+    const packets = get(filteredPackets)
     return Object.keys(
       packets
         .filter((p) => p.userId)
@@ -168,48 +170,10 @@ export const packetClients = selector({
   },
 })
 
-export const packetTrajectories = selector({
-  key: 'packet-trajectories',
-  get: ({ get }) => {
-    const { packets, time } = get(packetsFeed)
-
-    const trajectoryMap = {}
-    const trajectories = packets
-      .filter((p) => pastTenSecondsFilter(p, time))
-      .filter((p) => isValidCoordinate(p))
-      .map(trajectoryForPacket)
-
-    let uniqueTrajectories = []
-    trajectories.forEach((t) => {
-      const coords = t.geometry.coordinates
-      const key = `${coords[0]}${coords[coords.length - 1]}`
-      if (!trajectoryMap[key]) {
-        trajectoryMap[key] = true
-        uniqueTrajectories.push(t)
-      }
-    })
-    return uniqueTrajectories
-  },
-})
-
-export const packetsAlongTrajectories = selector({
-  key: 'packets-along-trajectories',
-  get: ({ get }) => {
-    const { packets } = get(packetsFeed)
-    const time = get(timeAtom)
-
-    const filteredPackets = packets
-      .filter((p) => pastTenSecondsFilter(p, time))
-      .filter((p) => isValidCoordinate(p))
-
-    return filteredPackets.map((p) => pointAlongTrajectory(p, time))
-  },
-})
-
 export const packetTags = selector({
   key: 'packet-tags',
   get: ({ get }) => {
-    const { packets } = get(packetsFeed)
+    const packets = get(filteredPackets)
     const tags = get(tagsOfType('provider'))
 
     if (!tags.length || !packets.length) {
@@ -258,48 +222,5 @@ export const packetValuesForKey = selectorFamily({
     const packets = get(packetsAtom)
 
     return [...new Set(packets.map((packet) => packet[key]))]
-  },
-})
-
-export const packetsTimeRange = selector({
-  key: 'packets-time-range',
-  get: ({ get }) => {
-    const dates = get(packetValuesForKey('timestamp')).map((t) => new Date(t))
-    const { timeRange } = get(packetsFilters)
-    const minIndex = Math.round(dates.length * timeRange[0])
-    const maxIndex = Math.round(dates.length * timeRange[1])
-    const filtered = dates.slice(minIndex, maxIndex)
-
-    const minDate = Math.min(...filtered)
-    const maxDate = Math.max(...filtered)
-
-    return [minDate, maxDate]
-  },
-})
-
-export const packetTimeBuckets = selector({
-  key: 'packet-time-buckets',
-  get: ({ get }) => {
-    const packets = get(packetsAtom)
-
-    const buckets = packets.reduce((acc, curr) => {
-      const start = moment(curr.timestamp)
-      const remainder = 15 - (start.second() % 15)
-
-      const time = moment(start).add(remainder, 'seconds').format('HH:mm:ss')
-      if (!acc[time]) {
-        acc[time] = {
-          value: 1,
-        }
-      } else {
-        acc[time].value++
-      }
-      return acc
-    }, {})
-
-    return Object.keys(buckets).map((time) => ({
-      time,
-      value: buckets[time].value,
-    }))
   },
 })

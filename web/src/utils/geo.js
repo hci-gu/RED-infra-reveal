@@ -31,8 +31,7 @@ export const packetOrigin = (p) => {
 export const pointAlongTrajectory = (p, timestamp) => {
   const trajectory = trajectoryForPacket(p)
   const points = trajectory.geometry.coordinates
-  const timeDiff = moment(timestamp).diff(moment(p.timestamp), 'milliseconds')
-
+  const timeDiff = timestamp - new Date(p.timestamp)
   const index = clamp(timeDiff / 100, 0, points.length)
 
   return {
@@ -53,7 +52,7 @@ export const pointAlongTrajectory = (p, timestamp) => {
 export const trajectoryForPacket = (p) => {
   const [origin, destination] = positionsForPacket(p)
   return turf.greatCircle(origin, destination, {
-    npoints: 25,
+    npoints: 75,
   })
 }
 
@@ -61,6 +60,7 @@ const isLatitude = (num) => isFinite(num) && Math.abs(num) <= 90
 const isLongitude = (num) => isFinite(num) && Math.abs(num) <= 180
 
 export const isValidCoordinate = (p) => {
+  if (!p.lat || !p.lon) return false
   const validDestination = isLatitude(p.lat) && isLongitude(p.lon)
 
   if (p.clientLat) {
@@ -73,6 +73,8 @@ export const isValidCoordinate = (p) => {
 }
 
 export const packetIsInFilters = (p, filters) => {
+  if (!filters.length) return true
+  if (!isValidCoordinate(p)) return false
   const points = turf.pointsWithinPolygon(
     turf.points([[p.lon, p.lat]]),
     filters.rect
@@ -84,4 +86,20 @@ export const centerOfPositions = (positions) => {
   var features = turf.points(positions.map((p) => [p.lon, p.lat]))
 
   return turf.center(features)
+}
+
+export const trajectoriesForPackets = (packets) => {
+  const trajectoryMap = {}
+  const trajectories = packets.map(trajectoryForPacket)
+
+  let uniqueTrajectories = []
+  trajectories.forEach((t) => {
+    const coords = t.geometry.coordinates
+    const key = `${coords[0]}${coords[coords.length - 1]}`
+    if (!trajectoryMap[key]) {
+      trajectoryMap[key] = true
+      uniqueTrajectories.push(t)
+    }
+  })
+  return uniqueTrajectories
 }

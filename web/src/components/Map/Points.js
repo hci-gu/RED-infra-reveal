@@ -1,10 +1,13 @@
 import { LayerEvent, PointLayer } from '@antv/l7-react'
+import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { packetsAlongTrajectories } from '../../state'
+import { mutationAtom } from '../../state'
 import { getColorFromId } from '../../utils'
+import { pointAlongTrajectory } from '../../utils/geo'
 
 const Points = ({ setPopupInfo }) => {
-  const features = useRecoilValue(packetsAlongTrajectories)
+  const [layer, setLayer] = useState()
+  const mutation = useRecoilValue(mutationAtom)
 
   const showPopup = (args) => {
     setPopupInfo({
@@ -13,13 +16,28 @@ const Points = ({ setPopupInfo }) => {
     })
   }
 
+  useEffect(() => {
+    let interval = setInterval(() => {
+      layer.setData({
+        type: 'FeatureCollection',
+        features: mutation.recentPackets.map((p) =>
+          pointAlongTrajectory(p, mutation.time)
+        ),
+      })
+    }, 50)
+    return () => clearInterval(interval)
+  }, [layer])
+
   return (
     <>
       <PointLayer
+        onLayerLoaded={setLayer}
         source={{
           data: {
             type: 'FeatureCollection',
-            features: features.filter((f) => !!f.properties),
+            features: mutation.recentPackets.map((p) =>
+              pointAlongTrajectory(p, mutation.time)
+            ),
           },
         }}
         shape={{
