@@ -2,7 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import SessionList from '../components/SessionList'
 import Globe from '../components/Globe'
-import { useCmsContent } from '../hooks/cmsContent'
+import BlockContent from '@sanity/block-content-to-react'
+import { useRecoilValue } from 'recoil'
+import { cmsContentAtom } from '../state'
+import LanguageSelect from '../components/LanguageSelect'
 
 const Container = styled.div`
   background: none;
@@ -53,31 +56,18 @@ const AboutContainer = styled.div`
   }
 `
 
-const About = () => {
+const About = ({ title, description }) => {
   return (
     <AboutContainer>
-      <h1>
-        RECONFIGURATIONS OF EDUCATIONAL IN/EQUALITY IN A DIGITAL WORLD (RED)
-      </h1>
-      <p>
-        Digital data flows are of increasing global relevance, with data privacy
-        a fundamental human right. But data’s role in sharpening and/or
-        mitigating inequality and fostering global justice is still
-        understudied. How is schooling being reconfigured through new
-        educational technologies in different regions of the world? In what ways
-        are these changes exacerbating, reproducing or creating new forms of
-        inequality and/or promoting equality?
-      </p>
-      <span>
-        You can read more about the project <a>here</a>
-      </span>
+      <h1>{title}</h1>
+      <BlockContent blocks={description} />
     </AboutContainer>
   )
 }
 
 const SectionsContainer = styled.div`
   position: relative;
-  margin-top: 150px;
+  margin-top: 50px;
   width: 100%;
   height: 1000px;
   background-color: black;
@@ -103,27 +93,23 @@ const Section = styled.div`
   }
 `
 
-const Sections = () => {
+const Sections = ({ sections }) => {
+  if (!sections || !sections.length) return null
   return (
     <SectionsContainer>
-      <Section>
-        <h1>How does it work?</h1>
-        <p>
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-          culpa qui officia deserunt mollit anim id est laborum."
-        </p>
-        <a href="/proxy-guide">Setup the proxy</a>
-      </Section>
+      {sections.map((section) => (
+        <Section>
+          <h1>{section.title}</h1>
+          <BlockContent blocks={section.bodyRaw} />
+        </Section>
+      ))}
     </SectionsContainer>
   )
 }
 
 const Landing = () => {
+  const content = useRecoilValue(cmsContentAtom)
+
   return (
     <Container>
       <Header>
@@ -135,11 +121,15 @@ const Landing = () => {
         <GlobeContainer>
           <Globe />
         </GlobeContainer>
-        <About />
+        <About
+          title={content.mainHeading}
+          description={content.descriptionRaw}
+        />
         <div style={{ pointerEvents: 'none' }}></div>
-        <SessionList />
+        <SessionList title={content.sessionsTitle} />
       </Content>
-      <Sections></Sections>
+      <Sections sections={content.sections} />
+      <LanguageSelect />
     </Container>
   )
 }

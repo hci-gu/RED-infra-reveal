@@ -15,6 +15,7 @@
     "@antv/l7-draw": "^2.4.1",
     "@antv/l7-maps": "^2.3.9",
     "@antv/l7-react": "^2.3.0",
+    "@sanity/block-content-to-react": "^3.0.0",
     "@turf/turf": "5.1.6",
     "antd": "^4.15.0",
     "axios": "^0.21.1",

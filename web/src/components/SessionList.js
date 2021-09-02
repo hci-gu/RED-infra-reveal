@@ -17,32 +17,37 @@ const Container = styled.div`
   display: grid;
 
   > h1 {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     font-family: 'Josefin Sans', sans-serif;
+    text-transform: uppercase;
+  }
+
+  > div {
+    display: flex;
+    overflow-x: scroll;
   }
 `
 
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 24px;
-`
-
 const SessionContainer = styled.div`
+  width: 240px;
+  height: 190px;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  border-radius: 16px;
+  border-radius: 8px;
   overflow: hidden;
   color: #000;
   background-color: #ece5f0;
 
+  > div > img {
+  }
+
   > div {
-    padding: 8px;
+    padding: 4px 8px;
     font-size: 12px;
     > span {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 500;
     }
   }
@@ -71,8 +76,9 @@ const Session = ({ session }) => {
       <div>
         <span>{session.name ? session.name : `Session ${session.id}`}</span>
         <br></br>
-        {moment(session.start).format('YYYY-MM-DD HH:mm')}
-        {session.end && ` - ${moment(session.end).format('YYYY-MM-DD HH:mm')}`}
+        {moment(session.start).format('YYYY-MM-DD')}
+        {session.end &&
+          ` - ${moment(session.end).diff(moment(session.start), 'minutes')}min`}
         <div>
           {!session.end && (
             <Button
@@ -98,7 +104,7 @@ const Session = ({ session }) => {
   )
 }
 
-const SessionList = () => {
+const SessionList = ({ title }) => {
   const sessions = api.useSessions()
   const [, createSession] = api.useCreateSession()
   const allSessionsDone = sessions.every((s) => !!s.end)
@@ -108,20 +114,16 @@ const SessionList = () => {
 
   return (
     <Container>
-      <h1>EXPLORE SESSIONS</h1>
-      <Grid>
+      <h1>{title}</h1>
+      <div>
+        {activeSessions.length > 0 &&
+          activeSessions.map((s) => (
+            <Session session={s} key={`Session_${s.id}`} />
+          ))}
         {oldSessions.map((s) => (
           <Session session={s} key={`Session_${s.id}`} />
         ))}
-      </Grid>
-      {activeSessions.length > 0 && <h1>Active session</h1>}
-      {activeSessions.length > 0 && (
-        <Grid>
-          {activeSessions.map((s) => (
-            <Session session={s} key={`Session_${s.id}`} />
-          ))}
-        </Grid>
-      )}
+      </div>
       {allSessionsDone && (
         <Button
           style={{ marginTop: 24, width: 200, height: 44 }}

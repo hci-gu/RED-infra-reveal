@@ -1,35 +1,45 @@
 import { useEffect } from 'react'
-import { useRecoilState } from 'recoil'
-import { useQuery, useClient } from 'urql'
-import { cmsContentAtom } from '../state'
-
-const API_URL = `${process.env.REACT_APP_SANITY_API_URL}`
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { useQuery } from 'urql'
+import { cmsContentAtom, languageAtom } from '../state'
 
 const CmsContentQuery = `
-query content($id: ID!, $lang: String = "en_GB") {
-    allLandingPage(where:{_id: {matches:$id} i18n_lang: { eq: $lang }}) {
-      _id
+query content($id: ID!, $language: String = "en") {
+  allLandingPage(where:{_id: {matches:$id} i18n_lang: { eq: $language }}) {
+    _id
+    title
+    mainHeading
+    descriptionRaw
+    sessionsTitle
+    sections {
       title
-      i18n_lang
+      bodyRaw
     }
+  }
 }
 `
 
 export const useCmsContent = () => {
-  const [cmsContent, setCmsContent] = useRecoilState(cmsContentAtom)
+  const [, setCmsContent] = useRecoilState(cmsContentAtom)
+  const language = useRecoilValue(languageAtom)
   const [result] = useQuery({
     query: CmsContentQuery,
     variables: {
-      id: '3674f7ee-021c-4f79-9091-caf74411e6bd',
+      id: 'ca4e0c06-8e2b-4a11-b1fd-206e290f9cfa',
+      language,
     },
   })
-  console.log(result)
 
-  //   useEffect(() => {
-  //     if (!!result.data) {
-  //       setCmsContent(result.data)
-  //     }
-  //   }, [result, setCmsContent])
+  useEffect(() => {
+    if (
+      !!result.data &&
+      result.data.allLandingPage &&
+      result.data.allLandingPage.length
+    ) {
+      console.log(result.data.allLandingPage[0])
+      setCmsContent(result.data.allLandingPage[0])
+    }
+  }, [result, setCmsContent])
 
   return result.data
 }

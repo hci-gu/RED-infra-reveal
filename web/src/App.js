@@ -4,11 +4,8 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import ProxyGuide from './pages/ProxyGuide'
 import Dashboard from './pages/Dashboard'
 import Landing from './pages/Landing'
-import * as api from './hooks/api'
 
 const App = () => {
-  api.useSessions()
-
   return (
     <Router>
       <Switch>

@@ -8,6 +8,11 @@ export const cmsContentAtom = atom({
   default: {},
 })
 
+export const languageAtom = atom({
+  key: 'language',
+  default: 'en',
+})
+
 export const sessionsAtom = atom({
   key: 'sessions',
   default: [],
