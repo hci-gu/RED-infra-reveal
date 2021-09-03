@@ -24,14 +24,25 @@ export default {
       title: 'Sessions Title',
       type: 'string',
     },
+    {
+      title: 'Sections',
+      name: 'sections',
+      type: 'array',
+      of: [{ type: 'section' }],
+    },
+    {
+      title: 'Guides',
+      name: 'guides',
+      type: 'array',
+      of: [{ type: 'guide' }],
+    },
   ],
-
   preview: {
-    // select: {
-    //   title: 'title',
-    //   author: 'author.name',
-    //   media: 'mainImage',
-    // },
+    select: {
+      title: 'title',
+      author: 'author.name',
+      media: 'mainImage',
+    },
     // prepare(selection) {
     //   const { author } = selection
     //   return Object.assign({}, selection, {

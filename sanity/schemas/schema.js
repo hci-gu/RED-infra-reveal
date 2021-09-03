@@ -12,6 +12,8 @@ import blockContent from './objects/blockContent'
 // Documents
 import landingPage from './documents/landingPage'
 import section from './documents/section'
+import guide from './documents/guide'
+import guideImage from './documents/guideImage'
 
 const addLocalizationToDocumentType = (schemaType) => {
   if (schemaType.type !== 'document') {
@@ -60,7 +62,7 @@ const addLocalizationToSchemaType = (schemaType) => {
   }
 }
 
-const customSchemaTypes = [landingPage, section]
+const customSchemaTypes = [landingPage, section, guide, guideImage]
 
 const i18n_refs_object = {
   name: 'i18n_refs_object',
