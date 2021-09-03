@@ -6,14 +6,24 @@ import { cmsContentAtom, languageAtom } from '../state'
 const CmsContentQuery = `
 query content($id: ID!, $language: String = "en") {
   allLandingPage(where:{_id: {matches:$id} i18n_lang: { eq: $language }}) {
-    _id
     title
-    mainHeading
     descriptionRaw
     sessionsTitle
     sections {
       title
       bodyRaw
+    }
+    guides {
+      title
+      platform
+      images {
+        image {
+          asset {
+            url
+          }
+        }
+        descriptionRaw
+      }
     }
   }
 }
@@ -36,7 +46,6 @@ export const useCmsContent = () => {
       result.data.allLandingPage &&
       result.data.allLandingPage.length
     ) {
-      console.log(result.data.allLandingPage[0])
       setCmsContent(result.data.allLandingPage[0])
     }
   }, [result, setCmsContent])

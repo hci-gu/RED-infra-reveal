@@ -16,6 +16,40 @@ import { useSocket } from '../hooks/socket'
 import { activeSessionIdAtom } from '../state'
 import DebugButton from '../components/DebugButton'
 import useApplyFilters from '../hooks/useApplyFilters'
+import { SettingOutlined } from '@ant-design/icons'
+
+const SettingsAndFilter = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+`
+
+const Logo = styled.h1`
+  margin: 0;
+  padding: 0;
+  font-family: 'Josefin Sans', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #fff;
+
+  > strong {
+    color: #a71d31;
+    font-size: 26px;
+  }
+`
+
+const Filters = styled.div`
+  display: flex;
+
+  > div {
+    width: 100%;
+  }
+
+  > div:nth-child(2) {
+    margin-left: 10px;
+  }
+`
 
 const Container = styled.div`
   width: 100%;
@@ -55,15 +89,23 @@ const Dashboard = () => {
   }, [])
 
   api.useTags()
+  api.useSessions()
   const defaultGutter = [12, 12]
 
   return (
     <Container>
       <Row gutter={defaultGutter}>
         <Col span={4}>
-          <SelectFilter field="method" />
-          <br></br>
-          <SelectFilter field="host" exclude />
+          <SettingsAndFilter>
+            <Logo>
+              <strong>RED</strong> INFRA REVEAL{` `}
+              <SettingOutlined />
+            </Logo>
+            <Filters>
+              <SelectFilter field="host" exclude />
+              <SelectFilter field="method" />
+            </Filters>
+          </SettingsAndFilter>
         </Col>
         <Col span={14}>
           <TimeHistogram />

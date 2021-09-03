@@ -129,7 +129,6 @@ export const filteredPackets = selector({
   get: ({ get }) => {
     const mutation = get(mutationAtom)
     const packets = get(packetsAtom)
-    const mapFilters = get(mapFiltersAtom)
     const filter = get(packetsFilters)
 
     const filteredPackets = packets
@@ -148,8 +147,8 @@ export const filteredPackets = selector({
         return filter.host.length === 0 || filter.host.indexOf(p.host) == -1
       })
       .filter((p) => {
-        if (mapFilters) {
-          return packetIsInFilters(p, mapFilters)
+        if (mutation.filters) {
+          return packetIsInFilters(p, mutation.filters)
         }
         return true
       })
