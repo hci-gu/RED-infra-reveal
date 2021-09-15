@@ -9,6 +9,7 @@ query content($id: ID!, $language: String = "en") {
     title
     descriptionRaw
     sessionsTitle
+    mainHeading
     sections {
       title
       bodyRaw

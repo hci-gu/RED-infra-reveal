@@ -83,7 +83,7 @@ export const mutationAtom = atom({
     allPackets: [],
     time: new Date(),
     packets: [],
-    filters: [],
+    filters: null,
     recentPackets: [],
   },
 })
@@ -117,11 +117,6 @@ export const packetsFilters = atom({
     host: [],
     timeRange: [0, 1],
   },
-})
-
-export const mapFiltersAtom = atom({
-  key: 'map-filters',
-  default: null,
 })
 
 export const filteredPackets = selector({

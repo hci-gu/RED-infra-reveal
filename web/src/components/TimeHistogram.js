@@ -136,7 +136,6 @@ const TimeSlider = ({ session }) => {
 
 const TimeHistogram = () => {
   const session = useRecoilValue(activeSession)
-  console.log('TimeHistogram', session)
 
   return (
     <Container>

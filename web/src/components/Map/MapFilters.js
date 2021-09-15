@@ -22,7 +22,7 @@ const MapFilters = ({ scene }) => {
       mutation.filters = drawControl.getAllData()
     })
     drawControl.on('draw.delete', () => {
-      mutation.filters = []
+      mutation.filters = null
       drawControl.removeAllData()
     })
     scene.addControl(drawControl)

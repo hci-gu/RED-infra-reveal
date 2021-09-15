@@ -73,7 +73,7 @@ export const isValidCoordinate = (p) => {
 }
 
 export const packetIsInFilters = (p, filters) => {
-  if (!filters.length) return true
+  if (!filters) return true
   if (!isValidCoordinate(p)) return false
   const points = turf.pointsWithinPolygon(
     turf.points([[p.lon, p.lat]]),
