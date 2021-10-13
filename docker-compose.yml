@@ -38,3 +38,13 @@ services:
     # privileged: true
     ports:
       - 8888:8888
+  pgadmin:
+    image: 'dpage/pgadmin4:latest'
+    links:
+      - postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'user@email.com'
+      PGADMIN_DEFAULT_PASSWORD: 'password'
+      PGADMIN_LISTEN_PORT: 8001
+    ports:
+      - 8001:8001
