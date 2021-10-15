@@ -32,6 +32,9 @@ const Heatmap = () => {
         values: 'heatmap3d',
       }}
       style={{
+        overage: 0.8,
+        angle: 0,
+        opacity: 1.0,
         intensity: 0.25,
         radius: 15,
         opacity: 0.75,

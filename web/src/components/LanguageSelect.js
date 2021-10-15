@@ -19,11 +19,7 @@ const availableLanguages = [
   },
 ]
 
-const Container = styled.div`
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-`
+const Container = styled.div``
 
 const LanguageSelect = () => {
   const [language, setLanguage] = useRecoilState(languageAtom)
@@ -32,6 +28,7 @@ const LanguageSelect = () => {
     <Container>
       <Select
         style={{ width: 130, fontSize: 15 }}
+        size="large"
         defaultValue={language}
         onChange={(val) =>
           setLanguage(

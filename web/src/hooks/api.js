@@ -1,8 +1,13 @@
-import { useEffect } from 'react'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { useMutation, useQuery } from 'urql'
 import { packetsAtom, sessionsAtom, tagsAtom } from '../state'
 import { calculateSessionPositions } from '../utils/session'
+
+const api = axios.create({
+  baseURL: process.env.REACT_APP_API_URL,
+})
 
 const SessionQuery = `
 {
@@ -161,4 +166,38 @@ export const useUpdateSession = () => {
   }, [result])
 
   return [result, updateSession]
+}
+
+export const useFireWallSettings = () => {
+  const [isLoading, setIsLoading] = useState(true)
+  const [isAdded, setIsAdded] = useState(false)
+
+  useEffect(() => {
+    const run = async () => {
+      const response = await api.get(`/firewall/is-added`)
+      setIsAdded(response.data)
+      setIsLoading(false)
+    }
+    run()
+  }, [])
+
+  const toggle = async () => {
+    if (isLoading) return
+    const message = isAdded
+      ? 'Are you sure you want to remove yourself?'
+      : 'By adding yourself and updating your network settings you accept that all traffic will pass trough the infra reveal service.'
+    if (!confirm(message)) {
+      return
+    }
+    setIsLoading(true)
+    if (isAdded) {
+      await api.delete(`/firewall/allow-list`)
+    } else {
+      await api.post(`/firewall/allow-list`, {})
+    }
+    setIsAdded(!isAdded)
+    setIsLoading(false)
+  }
+
+  return [isLoading, isAdded, toggle]
 }

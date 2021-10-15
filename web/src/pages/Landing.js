@@ -5,31 +5,10 @@ import Globe from '../components/Globe'
 import BlockContent from '@sanity/block-content-to-react'
 import { useRecoilValue } from 'recoil'
 import { cmsContentAtom } from '../state'
-import LanguageSelect from '../components/LanguageSelect'
+import Header from '../components/Header'
 
 const Container = styled.div`
   background: none;
-`
-
-const Header = styled.div`
-  z-index: 1;
-  margin: auto;
-  margin-top: 50px;
-  width: 90%;
-
-  > h1 {
-    margin: 0;
-    padding: 0;
-    font-family: 'Josefin Sans', sans-serif;
-    font-weight: 700;
-    font-size: 64px;
-    color: #fff;
-
-    > strong {
-      color: #a71d31;
-      font-size: 78px;
-    }
-  }
 `
 
 const Content = styled.div`
@@ -70,10 +49,9 @@ const SectionsContainer = styled.div`
   margin-top: 50px;
   width: 100%;
   height: 1000px;
-  background-color: black;
+  background-color: #0d0d0d;
   z-index: 100;
   border-top: 2px solid #a71d31;
-  /* background-color: orange; */
   padding: 32px 64px;
 
   display: flex;
@@ -112,11 +90,7 @@ const Landing = () => {
 
   return (
     <Container>
-      <Header>
-        <h1>
-          <strong>RED</strong> INFRA REVEAL
-        </h1>
-      </Header>
+      <Header />
       <Content>
         <GlobeContainer>
           <Globe />
@@ -129,7 +103,6 @@ const Landing = () => {
         <SessionList title={content.sessionsTitle} />
       </Content>
       <Sections sections={content.sections} />
-      <LanguageSelect />
     </Container>
   )
 }

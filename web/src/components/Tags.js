@@ -1,15 +1,19 @@
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
-import { packetTags } from '../state'
+import { packetTags, packetTagsForType } from '../state'
+import { Select } from 'antd'
 import { Pie } from '@ant-design/charts'
 import { Card } from 'antd'
+import { useState } from 'react'
 
 const Container = styled.div`
   height: 200px;
 `
 
+const values = ['provider', 'function']
 const Tags = () => {
-  const data = useRecoilValue(packetTags)
+  const [type, setType] = useState(values[0])
+  const data = useRecoilValue(packetTagsForType(type))
   const config = {
     data,
     angleField: 'value',
@@ -25,6 +29,15 @@ const Tags = () => {
   return (
     <Container>
       <Card>
+        <Select
+          style={{ width: '100%' }}
+          value={type}
+          onChange={(value) => setType(value)}
+        >
+          {values.map((v) => (
+            <Select.Option key={v}>{v}</Select.Option>
+          ))}
+        </Select>
         <Pie {...config} />
       </Card>
     </Container>

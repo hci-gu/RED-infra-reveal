@@ -169,11 +169,11 @@ export const packetClients = selector({
   },
 })
 
-export const packetTags = selector({
-  key: 'packet-tags',
-  get: ({ get }) => {
+export const packetTagsForType = selectorFamily({
+  key: 'packe-tags-for-type',
+  get: (type) => ({ get }) => {
     const packets = get(filteredPackets)
-    const tags = get(tagsOfType('provider'))
+    const tags = get(tagsOfType(type))
 
     if (!tags.length || !packets.length) {
       return [
