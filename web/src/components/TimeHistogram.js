@@ -9,7 +9,6 @@ import {
   FastForwardOutlined,
 } from '@ant-design/icons'
 import styled from 'styled-components'
-import moment from 'moment'
 
 const Container = styled.div`
   height: 180px;
@@ -32,24 +31,30 @@ const SliderHandle = styled.div`
 
 const packetsToBuckets = (packets) => {
   const buckets = packets.reduce((acc, curr) => {
-    const start = moment(curr.timestamp)
-    const remainder = 15 - (start.second() % 15)
+    const time = new Date(curr.timestamp)
+    const seconds = time.getSeconds()
+    const remainder = 15 - (seconds % 15)
 
-    const time = moment(start).add(remainder, 'seconds').format('HH:mm:ss')
-    if (!acc[time]) {
-      acc[time] = {
+    time.setSeconds(seconds + remainder)
+    const key = time.toLocaleTimeString()
+    if (!acc[key]) {
+      acc[key] = {
+        date: time,
         value: 1,
       }
     } else {
-      acc[time].value++
+      acc[key].value++
     }
     return acc
   }, {})
 
-  return Object.keys(buckets).map((time) => ({
-    time,
-    value: buckets[time].value,
-  }))
+  return Object.keys(buckets)
+    .map((time) => ({
+      time,
+      date: buckets[time].date,
+      value: buckets[time].value,
+    }))
+    .sort((a, b) => a.date - b.date)
 }
 
 const LineChart = () => {
@@ -112,7 +117,7 @@ const TimeSlider = ({ session }) => {
         max={max.valueOf()}
         tooltipVisible
         tipFormatter={(value) => (
-          <SliderHandle>{moment(value).format('HH:mm:ss')}</SliderHandle>
+          <SliderHandle>{new Date(value).toLocaleTimeString()}</SliderHandle>
         )}
       ></Slider>
       <Space>

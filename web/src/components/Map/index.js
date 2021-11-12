@@ -66,9 +66,7 @@ const Map = () => {
             >
               <strong>
                 {popupInfo.feature &&
-                  moment(popupInfo.feature.timestamp).format(
-                    'YYYY-MM-DD HH:mm:ss'
-                  )}
+                  new Date(popupInfo.feature.timestamp).toLocaleTimeString()}
               </strong>
               <span>Host: {popupInfo.feature && popupInfo.feature.host}</span>
               <span>

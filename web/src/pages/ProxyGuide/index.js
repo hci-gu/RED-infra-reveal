@@ -5,6 +5,7 @@ import Header from '../../components/Header'
 import { useFireWallSettings } from '../../hooks/api'
 import { cmsContentAtom } from '../../state'
 import Guide from './Guide'
+import PlatformSelect, { platformAtom } from './PlatformSelect'
 import Steps from './Steps'
 
 const Container = styled.div`
@@ -43,8 +44,15 @@ const Guides = styled.div`
   margin-top: 80px;
 `
 
+const comparePlatform = (guide, platform) => {
+  const key = guide.platform.split(' ').join('').toLowerCase()
+  return key.indexOf(platform) !== -1
+}
+
 const ProxyGuide = () => {
   const content = useRecoilValue(cmsContentAtom)
+  console.log(content)
+  const platform = useRecoilValue(platformAtom)
   useFireWallSettings()
 
   if (!content.guides) return null
@@ -59,15 +67,22 @@ const ProxyGuide = () => {
             This guide will show you how to connect to the infra reveal proxy so
             that you can view your traffic in the dashboard. please read through
             the information below before connecting.
+            <br></br>
+            <br></br>
+            Start by selecting the platform you want to use.
           </p>
+          <PlatformSelect />
         </Intro>
-        <Steps />
-        <Guides>
-          <h1>Guides</h1>
-          {content.guides.map((guide, i) => (
-            <Guide {...guide} key={`Guide_${i}`} />
-          ))}
-        </Guides>
+        {platform && <Steps />}
+        {platform && (
+          <Guides>
+            {content.guides
+              .filter((guide) => comparePlatform(guide, platform))
+              .map((guide, i) => (
+                <Guide {...guide} key={`Guide_${i}`} />
+              ))}
+          </Guides>
+        )}
       </Container>
     </>
   )

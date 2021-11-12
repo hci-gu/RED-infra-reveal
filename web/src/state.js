@@ -63,6 +63,11 @@ export const packetsAtom = atom({
   default: [],
 })
 
+export const categoriesAtom = atom({
+  key: 'categories',
+  default: [],
+})
+
 export const tagsAtom = atom({
   key: 'tags',
   default: [],
@@ -73,7 +78,7 @@ export const tagsOfType = selectorFamily({
   get: (key) => ({ get }) => {
     const tags = get(tagsAtom)
 
-    return tags.filter((t) => t.tagType === key)
+    return tags.filter((t) => t.tagType && t.tagType.name === key)
   },
 })
 
@@ -174,6 +179,7 @@ export const packetTagsForType = selectorFamily({
   get: (type) => ({ get }) => {
     const packets = get(filteredPackets)
     const tags = get(tagsOfType(type))
+    console.log('tags', tags)
 
     if (!tags.length || !packets.length) {
       return [

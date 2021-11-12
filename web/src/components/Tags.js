@@ -5,15 +5,17 @@ import { Select } from 'antd'
 import { Pie } from '@ant-design/charts'
 import { Card } from 'antd'
 import { useState } from 'react'
+import { useCategories } from '../hooks/api'
 
 const Container = styled.div`
   height: 200px;
 `
 
-const values = ['provider', 'function']
 const Tags = () => {
-  const [type, setType] = useState(values[0])
+  const categories = useCategories()
+  const [type, setType] = useState('Provider')
   const data = useRecoilValue(packetTagsForType(type))
+
   const config = {
     data,
     angleField: 'value',
@@ -34,8 +36,8 @@ const Tags = () => {
           value={type}
           onChange={(value) => setType(value)}
         >
-          {values.map((v) => (
-            <Select.Option key={v}>{v}</Select.Option>
+          {categories.map(({ name }) => (
+            <Select.Option key={name}>{name}</Select.Option>
           ))}
         </Select>
         <Pie {...config} />

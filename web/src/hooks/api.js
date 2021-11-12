@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { useMutation, useQuery } from 'urql'
-import { packetsAtom, sessionsAtom, tagsAtom } from '../state'
+import { categoriesAtom, packetsAtom, sessionsAtom, tagsAtom } from '../state'
 import { calculateSessionPositions } from '../utils/session'
 
 const api = axios.create({
@@ -91,7 +91,9 @@ query getList($where: TagWhereInput) {
       id
       name
     }
-    tagType
+    tagType {
+      name
+    }
   }
 }
 `
@@ -110,6 +112,29 @@ export const useTags = () => {
   }, [data, setTags])
 
   return tags
+}
+
+const CategoriesQuery = `
+query getList($where: CategoryWhereInput) {
+  allCategories(where: $where) {
+    id
+    name
+  }
+}
+`
+
+export const useCategories = () => {
+  const [categories, setCategories] = useRecoilState(categoriesAtom)
+  const [result] = useQuery({
+    query: CategoriesQuery,
+    variables: { where: {} },
+  })
+  const { data } = result
+  useEffect(() => {
+    if (!!data) setCategories(data.allCategories)
+  }, [data, setCategories])
+
+  return categories
 }
 
 const CreateSessionQuery = `

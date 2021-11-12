@@ -1,5 +1,4 @@
 import * as turf from '@turf/turf'
-import moment from 'moment'
 
 const myPos = [11.91737, 57.69226]
 const packetPosition = (p) => (p.clientLat ? [p.clientLon, p.clientLat] : myPos)

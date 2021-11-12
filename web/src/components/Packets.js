@@ -3,7 +3,6 @@ import { useRecoilValue } from 'recoil'
 import { Card, List, Space } from 'antd'
 import styled from 'styled-components'
 import { filteredPackets, mutationAtom } from '../state'
-import moment from 'moment'
 
 const Container = styled.div`
   color: white;
@@ -24,7 +23,7 @@ const Packets = () => {
 
   const items = packets.map((p, index) => ({
     title: p.host,
-    timestamp: moment(p.timestamp).format('HH:mm:ss'),
+    timestamp: new Date(p.timestamp).toLocaleTimeString(),
     index,
   }))
 

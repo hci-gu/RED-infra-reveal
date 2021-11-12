@@ -4,6 +4,8 @@ import { ReactSVG } from 'react-svg'
 import { Button } from 'antd'
 import Firewall from './Firewall'
 import { DownOutlined } from '@ant-design/icons'
+import { useRecoilValue } from 'recoil'
+import { platformAtom } from './PlatformSelect'
 
 const Container = styled.div``
 
@@ -46,6 +48,30 @@ const StepContent = styled.div`
   }
 `
 
+const DownloadCertButton = () => {
+  const platform = useRecoilValue(platformAtom)
+
+  const certName =
+    platform === 'firefox'
+      ? 'infrareveal-firefox-ca-cert.pem'
+      : 'infrareveal-ca-cert.pem'
+
+  return (
+    <StepContent>
+      <span>{certName}</span>
+      <Button
+        style={{ fontSize: 16 }}
+        size="large"
+        onClick={() => {
+          location.href = `/cert/${certName}`
+        }}
+      >
+        Download
+      </Button>
+    </StepContent>
+  )
+}
+
 const Steps = () => {
   return (
     <Container>
@@ -60,18 +86,7 @@ const Steps = () => {
             the button. Once downloaded double click the file to install it.
           </p>
         </div>
-        <StepContent>
-          <span>infrareveal-ca-cert.pem</span>
-          <Button
-            style={{ fontSize: 16 }}
-            size="large"
-            onClick={() => {
-              location.href = '/cert/infrareveal-ca-cert.pem'
-            }}
-          >
-            Download
-          </Button>
-        </StepContent>
+        <DownloadCertButton />
       </Step>
       <Step>
         <div>
