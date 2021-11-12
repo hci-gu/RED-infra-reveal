@@ -40,8 +40,9 @@ class WebSocketAdapter:
                           metadata_size, metadata_bytes)
         self.queue.put(msg)
 
-    def request(self, flow):
+    def response(self, flow):
         request = flow.request
+        response = flow.response
         self.send_message({
             'client': {
                 'address': flow.client_conn.address,
@@ -51,7 +52,11 @@ class WebSocketAdapter:
             'url': request.url,
             'scheme': request.scheme,
             'host': request.host,
-            'headers': list(request.headers.items(True))
+            'timestamp': {
+                'start': response.timestamp_start,
+                'end': response.timestamp_end
+            },
+            'headers': list(request.headers.items(True)) + list(response.headers.items(True)),
         })
         return
 

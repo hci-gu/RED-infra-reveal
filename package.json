@@ -8,7 +8,12 @@
     "build-admin": "cross-env NODE_ENV=production keystone build --entry=./lib/adminUI.js --out=./dist",
     "prod-start": "npm run build-admin && npm start",
     "create-tables": "cross-env CREATE_TABLES=true keystone create-tables --entry=./lib/keystone.js",
-    "initialize": "npm run create-tables && npm run build-admin && npm start"
+    "initialize": "npm run create-tables && npm run build-admin && npm start",
+    "analyze": "keystone upgrade-relationships --entry=./lib/keystone.js --migration",
+    "backup": "node ./lib/migration/backup",
+    "drop": "node ./lib/migration/drop",
+    "restore": "node ./lib/migration/restore",
+    "migrate": "npm run backup && npm run drop && npm run restore"
   },
   "keywords": [],
   "author": "",

@@ -1,5 +1,7 @@
 node_modules
 dist
+tmp
+tmp.json
 .http-mitm-proxy
 .DS_Store
 .env

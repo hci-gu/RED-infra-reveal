@@ -2341,11 +2341,6 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-10.17.51.tgz"
   integrity sha512-KANw+MkL626tq90l++hGelbl67irOJzGhUJk6a1Bt8QHOeh9tztJx+L0AqttraWKinmZn7Qi5lJZJzx45Gq0dg==
 
-"@types/node@^7.0.44":
-  version "7.10.14"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-7.10.14.tgz#06fa7319b8131b969a8da4a14c487e6f28abacf7"
-  integrity sha512-29GS75BE8asnTno3yB6ubOJOO0FboExEqNJy4bpz0GSmW/8wPTNL4h9h63c6s1uTrOopCmJYe/4yJLh5r92ZUA==
-
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
   resolved "https://registry.npmjs.org/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz"
@@ -2434,13 +2429,6 @@
     "@types/uglify-js" "*"
     "@types/webpack-sources" "*"
     source-map "^0.6.0"
-
-"@types/ws@^3.2.0":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-3.2.1.tgz#b0c1579e58e686f83ce0a97bb9463d29705827fb"
-  integrity sha512-t5n0/iHoavnX1MqeYmKJgWc1W6yX4BXsNxQg7M5862RWrfN9S5k8yaWbDMGJSTCzbH7+q5QS8chjymd+ND9gMw==
-  dependencies:
-    "@types/node" "*"
 
 "@types/ws@^7.0.0":
   version "7.4.0"
@@ -6811,15 +6799,6 @@ mississippi@^3.0.0:
     stream-each "^1.1.0"
     through2 "^2.0.0"
 
-mitmproxy@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/mitmproxy/-/mitmproxy-2.1.2.tgz#a9f57da359303da348e3036729690370cccee622"
-  integrity sha512-uHkiRk38vPJB6RjWs7rLJFWmxZibveJr1BS+/Zrn923yxVLX71Vm2sU5fisRdSC6rU6mvJbyQC/TMhHgxaCpEQ==
-  dependencies:
-    "@types/node" "^7.0.44"
-    "@types/ws" "^3.2.0"
-    ws "^3.2.0"
-
 mixin-deep@^1.2.0:
   version "1.3.2"
   resolved "https://registry.npmjs.org/mixin-deep/-/mixin-deep-1.3.2.tgz"
@@ -9849,7 +9828,7 @@ wrappy@1:
   resolved "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz"
   integrity sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
 
-ws@^3.2.0, ws@^3.3.3:
+ws@^3.3.3:
   version "3.3.3"
   resolved "https://registry.npmjs.org/ws/-/ws-3.3.3.tgz"
   integrity sha512-nnWLa/NwZSt4KQJu51MYlCcSQ5g7INpOrOMt4XV8j4dqTXdmlUmSHQ8/oLC069ckre0fRsgfvsKwbTdtKLCDkA==
