@@ -11,9 +11,26 @@ function clamp(number, min, max) {
   return Math.floor(Math.max(min, Math.min(number, max)))
 }
 
+export const seed = 1
+function seededRand() {
+  var x = Math.sin(seed) * 10000
+  return x - Math.floor(x)
+}
+const randomizeLocationWithinRadius = (lng, lat, radius = 0.1) => {
+  const angle = seededRand() * 2 * Math.PI
+  const radiusOffset = seededRand() * radius
+  return [
+    lng + radiusOffset * Math.cos(angle),
+    lat + radiusOffset * Math.sin(angle),
+  ]
+}
+
 export const packetOrigin = (p) => {
   return {
     type: 'Feature',
+    properties: {
+      value: 1000,
+    },
     geometry: {
       crs: {
         type: 'name',
@@ -22,7 +39,7 @@ export const packetOrigin = (p) => {
         },
       },
       type: 'Point',
-      coordinates: [p.lon, p.lat, 0.0],
+      coordinates: randomizeLocationWithinRadius(p.lon, p.lat),
     },
   }
 }
@@ -33,6 +50,13 @@ export const pointAlongTrajectory = (p, timestamp) => {
   const timeDiff = timestamp - new Date(p.timestamp)
   const index = clamp(timeDiff / 100, 0, points.length)
 
+  let type = 'default'
+  if (p.accept && p.accept.indexOf('image') > -1) {
+    type = 'image'
+  } else if (p.accept && p.accept.indexOf('text/html') > -1) {
+    type = 'html'
+  }
+
   return {
     type: 'Feature',
     properties: {
@@ -40,6 +64,8 @@ export const pointAlongTrajectory = (p, timestamp) => {
       method: p.method,
       timestamp: p.timestamp,
       client: p.userId,
+      contentLength: p.contentLength,
+      type,
     },
     geometry: {
       type: 'Point',

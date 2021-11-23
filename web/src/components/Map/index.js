@@ -47,7 +47,13 @@ const Map = () => {
           height: '100%',
           // transform: 'scaleY(-1)',
         }}
-        onSceneLoaded={(scene) => setMapScene(scene)}
+        onSceneLoaded={(scene) => {
+          scene.addImage('plain_text', '/svg/plain_text.svg')
+          scene.addImage('image', '/svg/image.svg')
+          scene.addImage('html', '/svg/html.svg')
+          scene.addImage('default', '/svg/default.svg')
+          setMapScene(scene)
+        }}
       >
         {trajectories && <Trajectories />}
         {packets && <Points setPopupInfo={setPopupInfo} />}

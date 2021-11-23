@@ -29,7 +29,19 @@ export function getColorFromId(id) {
   }
   var color = Math.abs(hash).toString(16).substring(0, 6)
 
-  return '#' + '000000'.substring(0, 6 - color.length) + color
+  return lightenHexColor('#' + '000000'.substring(0, 6 - color.length) + color)
+}
+
+export function lightenHexColor(hex) {
+  const color = hex.replace('#', '')
+  const r = parseInt(color.substring(0, 2), 16)
+  const g = parseInt(color.substring(2, 4), 16)
+  const b = parseInt(color.substring(4, 6), 16)
+
+  const newColor =
+    '#' + ((0.3 * r) | 0) + ((0.3 * g) | 0) + ((0.3 * b) | 0).toString(16)
+
+  return newColor
 }
 
 export function applyFiltersToPackets(packets, filter) {
