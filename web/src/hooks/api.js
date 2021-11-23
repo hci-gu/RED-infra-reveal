@@ -56,6 +56,8 @@ query getList($where: PacketWhereInput) {
     userId
     clientLat
     clientLon
+    contentLength
+    responseTime
   }
 }
 `

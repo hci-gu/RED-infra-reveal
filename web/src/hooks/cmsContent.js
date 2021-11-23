@@ -36,7 +36,7 @@ export const useCmsContent = () => {
   const [result] = useQuery({
     query: CmsContentQuery,
     variables: {
-      id: 'ca4e0c06-8e2b-4a11-b1fd-206e290f9cfa',
+      id: 'cca52899-d12c-4796-b3df-d40ba9b0fa14',
       language,
     },
   })
