@@ -28,27 +28,23 @@ const Packets = () => {
   }))
 
   return (
-    <Container>
-      <Card title={`Packets - ${packets.length}`}>
-        <List
-          bordered
-          itemLayout="vertical"
-          dataSource={items}
-          pagination={{
-            pageSize: 13,
-          }}
-          size={items.length}
-          renderItem={(item) => (
-            <List.Item key={`${item.title} ${item.index}`}>
-              <Space>
-                <span>{item.title}</span>
-                <span>{item.timestamp}</span>
-              </Space>
-            </List.Item>
-          )}
-        />
-      </Card>
-    </Container>
+    <List
+      bordered
+      itemLayout="vertical"
+      dataSource={items}
+      pagination={{
+        pageSize: 13,
+      }}
+      size={items.length}
+      renderItem={(item) => (
+        <List.Item key={`${item.title} ${item.index}`}>
+          <Space>
+            <span>{item.title}</span>
+            <span>{item.timestamp}</span>
+          </Space>
+        </List.Item>
+      )}
+    />
   )
 }
 

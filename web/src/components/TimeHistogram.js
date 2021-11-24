@@ -12,11 +12,15 @@ import styled from 'styled-components'
 
 const Container = styled.div`
   height: 180px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 8px;
 `
 
 const SliderContainer = styled.div`
   width: 100%;
   display: flex;
+  padding-top: 4px;
 
   > div:nth-child(1) {
     flex: 1;
@@ -57,6 +61,14 @@ const packetsToBuckets = (packets) => {
     .sort((a, b) => a.date - b.date)
 }
 
+const LineChartContainer = styled.div`
+  height: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #434343;
+  background-color: #141414;
+`
+
 const LineChart = () => {
   const [graph, setGraph] = useState()
   const mutation = useRecoilValue(mutationAtom)
@@ -76,7 +88,11 @@ const LineChart = () => {
     theme: 'dark',
   }
 
-  return <Line {...config} onReady={setGraph} />
+  return (
+    <LineChartContainer>
+      <Line {...config} onReady={setGraph} />
+    </LineChartContainer>
+  )
 }
 
 const TIME_INC = 100

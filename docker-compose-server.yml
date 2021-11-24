@@ -69,11 +69,11 @@ services:
     depends_on:
       - api
     ports:
-      - 8080:8080
+      - 8888:8888
     environment:
       WEBSOCKET_HOST: api
     volumes:
-      - ~/.mitmproxy:/home/mitmproxy/.mitmproxy
+      - /mnt/mitmproxy:/home/mitmproxy/.mitmproxy
     logging:
       driver: 'json-file'
       options:

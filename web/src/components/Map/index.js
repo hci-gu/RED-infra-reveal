@@ -3,7 +3,7 @@ import moment from 'moment'
 import styled from 'styled-components'
 import { AMapScene, Popup } from '@antv/l7-react'
 import { useRecoilValue } from 'recoil'
-import { mapToggles } from '../../state'
+import { mapToggles, settingsAtom } from '../../state'
 import MapToggles from './MapToggles'
 import Clients from '../Clients'
 import MapFilters from './MapFilters'
@@ -17,6 +17,7 @@ const Container = styled.div`
 `
 
 const Map = () => {
+  const settings = useRecoilValue(settingsAtom)
   const { heatmap, trajectories, packets } = useRecoilValue(mapToggles)
   const [popupInfo, setPopupInfo] = useState()
   const [mapScene, setMapScene] = useState()
@@ -45,7 +46,7 @@ const Map = () => {
           bottom: 0,
           width: '100%',
           height: '100%',
-          // transform: 'scaleY(-1)',
+          transform: settings.flipMap ? 'scaleY(-1)' : undefined,
         }}
         onSceneLoaded={(scene) => {
           scene.addImage('plain_text', '/svg/plain_text.svg')
