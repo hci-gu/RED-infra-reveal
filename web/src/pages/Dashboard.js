@@ -14,9 +14,8 @@ import { useParams } from 'react-router-dom'
 import { useRecoilState } from 'recoil'
 import { useSocket } from '../hooks/socket'
 import { activeSessionIdAtom } from '../state'
-import DebugButton from '../components/DebugButton'
-import useApplyFilters from '../hooks/useApplyFilters'
-import { SettingOutlined } from '@ant-design/icons'
+import Statistics from '../components/Statistics'
+import DashboardSettings from '../components/DashboardSettings'
 
 const SettingsAndFilter = styled.div`
   display: flex;
@@ -25,17 +24,20 @@ const SettingsAndFilter = styled.div`
   height: 100%;
 `
 
-const Logo = styled.h1`
-  margin: 0;
-  padding: 0;
-  font-family: 'Josefin Sans', sans-serif;
-  font-weight: 700;
-  font-size: 24px;
-  color: #fff;
+const Logo = styled.div`
+  display: flex;
 
-  > strong {
-    color: #a71d31;
-    font-size: 26px;
+  > h1 {
+    margin: 0;
+    padding: 0;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: #fff;
+    > strong {
+      color: #a71d31;
+      font-size: 26px;
+    }
   }
 `
 
@@ -68,9 +70,11 @@ const PacketsColumn = ({ id }) => {
 
   return (
     <Col span={6}>
-      <Packets />
+      <Statistics />
       <Spacer />
       <Tags />
+      <div style={{ height: 265 }} />
+      <Packets />
     </Col>
   )
 }
@@ -98,8 +102,10 @@ const Dashboard = () => {
         <Col span={4}>
           <SettingsAndFilter>
             <Logo>
-              <strong>RED</strong> INFRA REVEAL{` `}
-              <SettingOutlined />
+              <h1>
+                <strong>RED</strong> INFRA REVEAL
+              </h1>
+              <DashboardSettings />
             </Logo>
             <Filters>
               <SelectFilter field="host" exclude />

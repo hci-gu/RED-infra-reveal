@@ -21,6 +21,14 @@ export const activeSessionIdAtom = atom({
   key: 'active-session-id',
   default: null,
 })
+
+export const settingsAtom = atom({
+  key: 'settings',
+  default: {
+    flipMap: true,
+  },
+})
+
 export const activeSession = selector({
   key: 'active-session',
   get: ({ get }) => {
@@ -227,5 +235,24 @@ export const packetValuesForKey = selectorFamily({
     const packets = get(packetsAtom)
 
     return [...new Set(packets.map((packet) => packet[key]))]
+  },
+})
+
+export const packetContentSize = selector({
+  key: 'packet-content-size',
+  get: ({ get }) => {
+    const packets = get(packetsAtom)
+    console.log('contentSize', packets.length)
+    console.log(
+      'sizes',
+      packets.map((p) => p.contentLength)
+    )
+
+    return packets.reduce((acc, curr) => {
+      if (curr.contentLength) {
+        return acc + curr.contentLength
+      }
+      return acc
+    }, 0)
   },
 })
