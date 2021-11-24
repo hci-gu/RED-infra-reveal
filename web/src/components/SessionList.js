@@ -25,14 +25,16 @@ const Container = styled.div`
   }
 
   > div {
+    width: 100%;
     display: flex;
-    overflow-x: scroll;
+    overflow-x: auto;
   }
 `
 
 const SessionContainer = styled.div`
   margin-left: 10px;
   width: 240px;
+  min-width: 240px;
   height: 190px;
   cursor: pointer;
   display: flex;

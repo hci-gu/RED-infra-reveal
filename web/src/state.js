@@ -25,7 +25,7 @@ export const activeSessionIdAtom = atom({
 export const settingsAtom = atom({
   key: 'settings',
   default: {
-    flipMap: true,
+    flipMap: false,
   },
 })
 
@@ -254,5 +254,21 @@ export const packetContentSize = selector({
       }
       return acc
     }, 0)
+  },
+})
+
+export const averageResponseTime = selector({
+  key: 'avg-response-time',
+  get: ({ get }) => {
+    const packets = get(packetsAtom)
+
+    return (
+      packets.reduce((acc, curr) => {
+        if (curr.responseTime) {
+          return acc + curr.responseTime
+        }
+        return acc
+      }, 0) / packets.length
+    )
   },
 })

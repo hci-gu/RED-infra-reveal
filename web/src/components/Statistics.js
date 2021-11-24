@@ -1,11 +1,16 @@
 import { Col, Divider, Row, Statistic } from 'antd'
 import React from 'react'
 import { useRecoilValue } from 'recoil'
-import { filteredPackets, packetContentSize } from '../state'
+import {
+  averageResponseTime,
+  filteredPackets,
+  packetContentSize,
+} from '../state'
 import { displayBytes } from '../utils'
 
 const Statistics = () => {
   const totalContentSize = useRecoilValue(packetContentSize)
+  const responseTime = useRecoilValue(averageResponseTime)
   const packets = useRecoilValue(filteredPackets)
 
   return (
@@ -22,7 +27,10 @@ const Statistics = () => {
           />
         </Col>
         <Col>
-          <Statistic title="Average response time" value={`- ms`} />
+          <Statistic
+            title="Average response time"
+            value={`${responseTime.toFixed(1)} ms`}
+          />
         </Col>
       </Row>
       <Divider style={{ margin: 4 }} />
