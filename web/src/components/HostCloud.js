@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { WordCloud } from '@ant-design/charts'
 import { useRecoilValue } from 'recoil'
-import { mutationAtom } from '../state'
+import { mutationAtom } from '../state/packets'
 
 const hostsFromPackets = (packets) => {
   const hosts = packets.reduce((acc, curr) => {

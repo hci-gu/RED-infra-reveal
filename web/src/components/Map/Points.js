@@ -1,7 +1,7 @@
 import { LayerEvent, PointLayer } from '@antv/l7-react'
 import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { mutationAtom } from '../../state'
+import { mutationAtom } from '../../state/packets'
 import { getColorFromId } from '../../utils'
 import { pointAlongTrajectory } from '../../utils/geo'
 

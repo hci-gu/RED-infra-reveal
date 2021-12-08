@@ -1,7 +1,7 @@
 import { LineLayer } from '@antv/l7-react'
 import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
-import { mutationAtom } from '../../state'
+import { mutationAtom } from '../../state/packets'
 import { trajectoriesForPackets } from '../../utils/geo'
 
 const Trajectories = () => {

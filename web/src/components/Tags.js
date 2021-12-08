@@ -1,6 +1,6 @@
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
-import { packetTags, packetTagsForType } from '../state'
+import { packetTags, packetTagsForType } from '../state/tags'
 import { Select } from 'antd'
 import { Pie } from '@ant-design/charts'
 import { Card } from 'antd'

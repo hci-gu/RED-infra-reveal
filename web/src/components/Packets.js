@@ -1,13 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useRecoilValue } from 'recoil'
-import { Card, List, Space } from 'antd'
+import { List, Space } from 'antd'
 import styled from 'styled-components'
-import { filteredPackets, mutationAtom } from '../state'
-
-const Container = styled.div`
-  color: white;
-  max-height: 600px;
-`
+import { filteredPackets, mutationAtom } from '../state/packets'
 
 const Packets = () => {
   const mutation = useRecoilValue(mutationAtom)

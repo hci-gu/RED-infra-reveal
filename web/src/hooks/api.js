@@ -2,7 +2,9 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
 import { useMutation, useQuery } from 'urql'
-import { categoriesAtom, packetsAtom, sessionsAtom, tagsAtom } from '../state'
+import { sessionsAtom } from '../state'
+import { packetsAtom } from '../state/packets'
+import { categoriesAtom, tagsAtom } from '../state/tags'
 import { calculateSessionPositions } from '../utils/session'
 
 const api = axios.create({

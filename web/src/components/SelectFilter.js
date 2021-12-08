@@ -1,6 +1,6 @@
 import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { packetsFilters, packetValuesForKey } from '../state'
+import { packetsFilters, packetValuesForKey } from '../state/packets'
 
 import { Card, Select } from 'antd'
 const { Option } = Select

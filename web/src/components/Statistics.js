@@ -5,7 +5,7 @@ import {
   averageResponseTime,
   filteredPackets,
   packetContentSize,
-} from '../state'
+} from '../state/packets'
 import { displayBytes } from '../utils'
 
 const Statistics = () => {

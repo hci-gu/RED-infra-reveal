@@ -1,7 +1,7 @@
 const { useEffect } = require('react')
 import { DrawControl } from '@antv/l7-draw'
 import { useRecoilValue } from 'recoil'
-import { mutationAtom } from '../../state'
+import { mutationAtom } from '../../state/packets'
 
 const MapFilters = ({ scene }) => {
   const mutation = useRecoilValue(mutationAtom)

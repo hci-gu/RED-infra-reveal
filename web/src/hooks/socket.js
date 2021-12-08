@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useRecoilState } from 'recoil'
-import { packetsAtom } from '../state'
+import { packetsAtom } from '../state/packets'
 
 export const useSocket = () => {
   const [, setPackets] = useRecoilState(packetsAtom)
