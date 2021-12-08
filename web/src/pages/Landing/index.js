@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import SessionList from '../components/SessionList'
-import Globe from '../components/Globe'
+import SessionList from './SessionList'
+import Globe from './Globe'
 import BlockContent from '@sanity/block-content-to-react'
 import { useRecoilValue } from 'recoil'
-import { cmsContentAtom } from '../state'
-import Header from '../components/Header'
+import { cmsContentAtom } from '../../state'
+import Header from '../../components/Header'
 
 const Container = styled.div`
   background: none;

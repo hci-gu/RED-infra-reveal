@@ -1,9 +1,9 @@
 import React from 'react'
 import { useRecoilValue } from 'recoil'
-import { packetClients } from '../state'
+import { packetClients } from '../../state'
 import { Card } from 'antd'
 import styled from 'styled-components'
-import { getColorFromId } from '../utils'
+import { getColorFromId } from '../../utils'
 
 const Container = styled.div`
   position: absolute;

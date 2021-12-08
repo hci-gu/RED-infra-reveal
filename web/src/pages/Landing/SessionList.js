@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
-import * as api from '../hooks/api'
+import * as api from '../../hooks/api'
 import { useHistory } from 'react-router-dom'
 import humanizeDuration from 'humanize-duration'
 

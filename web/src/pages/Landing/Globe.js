@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import GlobeGl from 'react-globe.gl'
 import styled from 'styled-components'
 import { SizeMe } from 'react-sizeme'
-import routesJSON from '../data/routes.json'
+import routesJSON from './globeRoutes.json'
 
 const GlobeContainer = styled.div`
   position: absolute;
