@@ -22,7 +22,6 @@ const Heatmap = () => {
   }, [layer])
 
   function showPopup(args) {
-    console.log(args)
     if (args.feature && args.feature.properties) {
       setPopupInfo({
         lnglat: args.lngLat,
@@ -83,20 +82,6 @@ const Heatmap = () => {
           coverage: 0.8,
           angle: 0,
           opacity: 1.0,
-          // intensity: 0.25,
-          // radius: 15,
-          // opacity: 0.75,
-          // rampColors: {
-          //   colors: [
-          //     '#FF4818',
-          //     '#F7B74A',
-          //     '#FFF598',
-          //     '#91EABC',
-          //     '#2EA9A1',
-          //     '#206C7C',
-          //   ].reverse(),
-          //   positions: [0, 0.2, 0.4, 0.6, 0.8, 1.0],
-          // },
         }}
       >
         <LayerEvent type="mousemove" handler={showPopup} />
