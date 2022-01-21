@@ -10,11 +10,13 @@ const client = createClient({
   url: `${process.env.REACT_APP_API_URL}/admin/api`,
 })
 const cmsClient = createClient({
-  url: process.env.REACT_APP_SANITY_API_URL,
+  url: process.env.REACT_APP_PRISMIC_URL,
+  preferGetMethod: true,
   fetchOptions: () => {
     return {
       headers: {
-        authorization: `Bearer ${process.env.REACT_APP_SANITY_TOKEN}`,
+        authorization: `Token ${process.env.REACT_APP_PRISMIC_TOKEN}`,
+        'prismic-ref': `YbmxOhUAAC0AqI_H`,
       },
     }
   },

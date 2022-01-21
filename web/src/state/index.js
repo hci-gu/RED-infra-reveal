@@ -9,7 +9,7 @@ export const cmsContentAtom = atom({
 
 export const languageAtom = atom({
   key: 'language',
-  default: 'en',
+  default: 'en-us',
 })
 
 export const sessionsAtom = atom({

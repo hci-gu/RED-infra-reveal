@@ -3,6 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { useQuery } from 'urql'
 import { cmsContentAtom, languageAtom } from '../state'
 
+/*
 const CmsContentQuery = `
 query content($id: ID!, $language: String = "en") {
   allLandingPage(where:{_id: {matches:$id} i18n_lang: { eq: $language }}) {
@@ -24,6 +25,36 @@ query content($id: ID!, $language: String = "en") {
           }
         }
         descriptionRaw
+      }
+    }
+  }
+}
+`*/
+
+const CmsContentQuery = `
+query content($id: ID!, $language: String = "en-us") {
+  allPagecontents(lang: $language) {
+    edges {
+      node {
+        title
+        description
+        sessions_title
+        sections {
+          section_title
+          text
+        }
+        guides {
+          link {
+            ... on Guide {
+              title
+              platform
+              steps {
+                text
+                image
+              }
+            }
+          }
+        }
       }
     }
   }
