@@ -2,10 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import SessionList from '../components/SessionList'
 import Globe from '../components/Globe'
-import BlockContent from '@sanity/block-content-to-react'
+import { RichText } from 'prismic-reactjs'
 import { useRecoilValue } from 'recoil'
 import { cmsContentAtom } from '../state'
-import Header from '../components/Header'
+import Header, { Logo } from '../components/Header'
 
 const Container = styled.div`
   background: none;
@@ -22,12 +22,14 @@ const GlobeContainer = styled.div`
 
 const AboutContainer = styled.div`
   z-index: 2;
-  width: 70%;
+  width: 90%;
+  margin: 0 auto;
 
   > h1 {
+    margin: 0 8px;
     font-family: 'Josefin Sans', sans-serif;
-    font-weight: 700;
-    font-size: 32px;
+    font-weight: 200;
+    font-size: 24px;
   }
 
   > p {
@@ -38,8 +40,7 @@ const AboutContainer = styled.div`
 const About = ({ title, description }) => {
   return (
     <AboutContainer>
-      <h1>{title}</h1>
-      <BlockContent blocks={description} />
+      <RichText render={title} />
     </AboutContainer>
   )
 }
@@ -48,37 +49,39 @@ const SectionsContainer = styled.div`
   position: relative;
   margin-top: 50px;
   width: 100%;
-  height: 1000px;
+  min-height: 1000px;
   background-color: #0d0d0d;
   z-index: 100;
   border-top: 2px solid #a71d31;
-  padding: 32px 64px;
 
   display: flex;
   flex-direction: column;
 `
 
 const Section = styled.div`
+  margin: 16px auto;
+  width: 70%;
+
   > h1 {
-    /* font-family: 'Josefin Sans', sans-serif; */
     font-weight: 700;
     font-size: 48px;
     color: #fff;
   }
 
   > p {
-    width: 40%;
+    font-size: 14px;
   }
 `
 
 const Sections = ({ sections }) => {
   if (!sections || !sections.length) return null
+  console.log(sections)
   return (
     <SectionsContainer>
-      {sections.map((section) => (
-        <Section>
-          <h1>{section.title}</h1>
-          <BlockContent blocks={section.bodyRaw} />
+      {sections.map((section, i) => (
+        <Section key={`Section_${i}`}>
+          <RichText render={section.section_title} />
+          <RichText render={section.text} />
         </Section>
       ))}
     </SectionsContainer>
@@ -86,23 +89,25 @@ const Sections = ({ sections }) => {
 }
 
 const Landing = () => {
-  const content = useRecoilValue(cmsContentAtom)
+  const { landing } = useRecoilValue(cmsContentAtom)
+  if (!landing) {
+    return <div>Loading...</div>
+  }
 
   return (
     <Container>
       <Header />
+      <About title={landing.title} description={landing.description} />
       <Content>
         <GlobeContainer>
           <Globe />
         </GlobeContainer>
-        <About
-          title={content.mainHeading}
-          description={content.descriptionRaw}
-        />
+        <div></div>
+        {/* <About title={landing.title} description={landing.description} /> */}
         <div style={{ pointerEvents: 'none' }}></div>
-        <SessionList title={content.sessionsTitle} />
+        <SessionList title={landing.sessions_title} />
       </Content>
-      <Sections sections={content.sections} />
+      <Sections sections={landing.sections} />
     </Container>
   )
 }

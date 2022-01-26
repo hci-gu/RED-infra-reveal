@@ -7,11 +7,11 @@ import { languageAtom } from '../state'
 const availableLanguages = [
   {
     name: '🇬🇧 English',
-    value: 'en',
+    value: 'en-us',
   },
   {
     name: '🇸🇪 Svenska',
-    value: 'sv',
+    value: 'sv-se',
   },
   {
     name: '🇪🇸 Español',

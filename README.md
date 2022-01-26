@@ -1,9 +1,8 @@
 # RED-infra-reveal
 
-Start Postgres
+Start Postgres/Proxy
 
 ```
-cd postgres
 docker-compose up
 ```
 
@@ -12,13 +11,13 @@ Run server
 ```
 cd ..
 yarn install
-npm run initialize
+yarn run initialize
 ```
 
 Run web client
 
 ```
 cd web
-npm install
-npm start
+yarn install
+yarn start
 ```

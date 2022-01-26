@@ -51,7 +51,6 @@ const comparePlatform = (guide, platform) => {
 
 const ProxyGuide = () => {
   const content = useRecoilValue(cmsContentAtom)
-  console.log(content)
   const platform = useRecoilValue(platformAtom)
   useFireWallSettings()
 

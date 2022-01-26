@@ -7,11 +7,13 @@ import humanizeDuration from 'humanize-duration'
 
 import { PlusOutlined, CheckOutlined } from '@ant-design/icons'
 import { Card, Button, List, Space } from 'antd'
+import { RichText } from 'prismic-reactjs'
 
 const Container = styled.div`
   z-index: 2;
   width: 100%;
   height: 100%;
+  min-height: 450px;
   padding: 32px 0;
   padding-right: 24px;
 
@@ -196,7 +198,7 @@ const SessionList = ({ title }) => {
 
   return (
     <Container>
-      <h1>{title}</h1>
+      <RichText render={title} />
       <div>
         {activeSessions.length > 0 &&
           activeSessions.map((s) => (

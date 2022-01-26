@@ -5,12 +5,15 @@ import { packetsInTag } from './utils/tag'
 
 export const cmsContentAtom = atom({
   key: 'cms-content',
-  default: {},
+  default: {
+    landing: null,
+    guide: null
+  },
 })
 
 export const languageAtom = atom({
   key: 'language',
-  default: 'en',
+  default: 'en-us',
 })
 
 export const sessionsAtom = atom({
