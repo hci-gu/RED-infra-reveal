@@ -3,6 +3,8 @@ import GlobeGl from 'react-globe.gl'
 import styled from 'styled-components'
 import { SizeMe } from 'react-sizeme'
 import routesJSON from '../data/routes.json'
+import { useRecoilState } from 'recoil'
+import { globeAtom } from '../state'
 
 const GlobeContainer = styled.div`
   position: absolute;
@@ -17,6 +19,7 @@ const GlobeContainer = styled.div`
 
 function GlobeElement({ size }) {
   const { useEffect, useRef } = React
+  const [globeSettings] = useRecoilState(globeAtom)
   const [routes, setRoutes] = useState([])
   const globeEl = useRef()
 
@@ -27,6 +30,11 @@ function GlobeElement({ size }) {
     globeEl.current.controls().autoRotateSpeed = 0.25
     setRoutes(routesJSON)
   }, [])
+
+  useEffect(() => {
+    globeEl.current.pointOfView({ altitude: globeSettings.altitude })
+    globeEl.current.controls().autoRotate = globeSettings.autoRotate
+  }, [globeSettings])
 
   return (
     <GlobeGl

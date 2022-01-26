@@ -7,7 +7,7 @@ export const cmsContentAtom = atom({
   key: 'cms-content',
   default: {
     landing: null,
-    guide: null
+    guide: null,
   },
 })
 
@@ -23,6 +23,14 @@ export const sessionsAtom = atom({
 export const activeSessionIdAtom = atom({
   key: 'active-session-id',
   default: null,
+})
+
+export const globeAtom = atom({
+  key: 'globe',
+  default: {
+    autoRotate: true,
+    altitude: 3.5,
+  },
 })
 
 export const settingsAtom = atom({

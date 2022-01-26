@@ -5,7 +5,7 @@ import { RecoilRoot } from 'recoil'
 import { createClient, Provider } from 'urql'
 import App from './App'
 import 'antd/dist/antd.less'
-import { useCmsContent, useGuideContent, useLandingPageContent } from './hooks/cmsContent'
+import { useGuideContent, useLandingPageContent } from './hooks/cmsContent'
 import axios from 'axios'
 
 const client = createClient({
@@ -17,14 +17,16 @@ const GetPrismicRef = () => {
 
   useEffect(() => {
     const run = async () => {
-      const response = await axios.get('https://infra-reveal.cdn.prismic.io/api/v2')
+      const response = await axios.get(
+        'https://infra-reveal.cdn.prismic.io/api/v2'
+      )
       setPrismicRef(response.data.refs[0].ref)
     }
     run()
   }, [setPrismicRef])
 
   if (!prismicRef) {
-    return <div>Fetching prismic ref...</div>
+    return null
   }
 
   const cmsClient = createClient({
@@ -43,17 +45,23 @@ const GetPrismicRef = () => {
   return (
     <Provider value={cmsClient}>
       <Router>
-        <Route path="/proxy-guide" component={() => {
-          useGuideContent()
-          return null
-        }} />
-        <Route path="/" component={() => {
-          useLandingPageContent()
-          return null
-        }} />
+        <Route
+          path="/proxy-guide"
+          component={() => {
+            useGuideContent()
+            return null
+          }}
+        />
+        <Route
+          path="/"
+          component={() => {
+            useLandingPageContent()
+            return null
+          }}
+        />
       </Router>
-  </Provider>
-)
+    </Provider>
+  )
 }
 
 ReactDOM.render(

@@ -5,7 +5,7 @@ import * as api from '../hooks/api'
 import { useHistory } from 'react-router-dom'
 import humanizeDuration from 'humanize-duration'
 
-import { PlusOutlined, CheckOutlined } from '@ant-design/icons'
+import { PlusOutlined, CheckOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Card, Button, List, Space } from 'antd'
 import { RichText } from 'prismic-reactjs'
 
@@ -13,17 +13,18 @@ const Container = styled.div`
   z-index: 2;
   width: 100%;
   height: 100%;
-  min-height: 450px;
-  padding: 32px 0;
+  margin-top: 50px;
+  min-height: 400px;
+  padding-bottom: 150px;
   padding-right: 24px;
 
   display: grid;
 
   > h1 {
-    font-size: 20px;
-    font-weight: 700;
-    font-family: 'Josefin Sans', sans-serif;
-    text-transform: uppercase;
+    max-width: 750px;
+    font-size: 24px;
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
   }
 
   > div {
@@ -34,7 +35,7 @@ const Container = styled.div`
 `
 
 const SessionContainer = styled.div`
-  margin-left: 10px;
+  margin-right: 10px;
   width: 240px;
   min-width: 240px;
   height: 190px;
@@ -45,9 +46,6 @@ const SessionContainer = styled.div`
   overflow: hidden;
   color: #000;
   background-color: #ece5f0;
-
-  > div > img {
-  }
 
   > div {
     padding: 4px 8px;
@@ -61,13 +59,20 @@ const SessionContainer = styled.div`
     }
   }
 `
+const bboxToString = (bbox) => `[${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}]`
 
 const IMAGE_URL = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/11.9092,57.6807,4,0/320x180?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`
 const imageUrlForSession = (session) => {
-  if (session.clientPositions && session.clientPositions.length) {
+  if (session.clientPositions && session.clientPositions.length === 1) {
     return `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/${session.clientPositions.map(
       (p) => `pin-s+a71d31(${p.lon},${p.lat})`
     )}/${session.center.lon},${session.center.lat},1,0/320x180?access_token=${
+      process.env.REACT_APP_MAPBOX_TOKEN
+    }`
+  } else if (session.clientPositions && session.clientPositions.length) {
+    return `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/${session.clientPositions.map(
+      (p) => `pin-s+a71d31(${p.lon},${p.lat})`
+    )}/${bboxToString(session.bbox)}/320x180?padding=50&access_token=${
       process.env.REACT_APP_MAPBOX_TOKEN
     }`
   }
@@ -188,30 +193,58 @@ const Session = ({ session }) => {
   )
 }
 
+const LoadingIndicator = styled.div`
+  margin-right: 10px;
+  width: 240px;
+  min-width: 240px;
+  height: 190px;
+  border-radius: 8px;
+  color: #ece5f0;
+  background-color: none;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 190px;
+
+  font-size: 18px;
+  font-weight: 300;
+
+  > span {
+    margin-top: 10px;
+    font-size: 28px;
+  }
+`
+
 const SessionList = ({ title }) => {
   const sessions = api.useSessions()
   const [, createSession] = api.useCreateSession()
   const allSessionsDone = sessions.every((s) => !!s.end)
 
-  const oldSessions = sessions.filter((s) => !!s.end).reverse()
-  const activeSessions = sessions.filter((s) => !s.end).reverse()
-
   return (
     <Container>
       <RichText render={title} />
       <div>
-        {activeSessions.length > 0 &&
-          activeSessions.map((s) => (
-            <Session session={s} key={`Session_${s.id}`} />
-          ))}
-        {oldSessions.map((s) => (
-          <Session session={s} key={`Session_${s.id}`} />
-        ))}
+        {sessions.length > 0
+          ? sessions.map((s) => <Session session={s} key={`Session_${s.id}`} />)
+          : Array.from({ length: 5 }).map((_, i) => (
+              <LoadingIndicator key={`Session_loading_${i}`}>
+                <LoadingOutlined />
+              </LoadingIndicator>
+            ))}
       </div>
       {allSessionsDone && (
         <Button
-          style={{ marginTop: 24, width: 200, height: 44 }}
-          shape="round"
+          type="primary"
+          style={{
+            marginTop: 24,
+            width: 180,
+            height: 44,
+            borderRadius: 8,
+            borderColor: '#a71d31',
+            backgroundColor: '#a71d31',
+          }}
           icon={<PlusOutlined />}
           onClick={(e) => {
             e.preventDefault()

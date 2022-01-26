@@ -11,6 +11,8 @@ module.exports = {
             modifyVars: getThemeVariables({
               dark: true,
               compact: true,
+              'border-radius-base': '8px',
+              'primary-color': '#a71d31',
             }),
             javascriptEnabled: true,
           },

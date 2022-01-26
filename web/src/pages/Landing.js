@@ -47,8 +47,9 @@ const About = ({ title, description }) => {
 
 const SectionsContainer = styled.div`
   position: relative;
-  margin-top: 50px;
   width: 100%;
+  padding-top: 24px;
+  padding-bottom: 100px;
   min-height: 1000px;
   background-color: #0d0d0d;
   z-index: 100;
@@ -60,22 +61,26 @@ const SectionsContainer = styled.div`
 
 const Section = styled.div`
   margin: 16px auto;
-  width: 70%;
+  width: 60%;
 
   > h1 {
-    font-weight: 700;
-    font-size: 48px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    font-size: 42px;
     color: #fff;
   }
 
-  > p {
-    font-size: 14px;
+  > p,
+  > li,
+  > ul {
+    font-weight: 300;
+    font-size: 16px;
+    text-align: justify;
   }
 `
 
 const Sections = ({ sections }) => {
   if (!sections || !sections.length) return null
-  console.log(sections)
   return (
     <SectionsContainer>
       {sections.map((section, i) => (
@@ -90,24 +95,22 @@ const Sections = ({ sections }) => {
 
 const Landing = () => {
   const { landing } = useRecoilValue(cmsContentAtom)
-  if (!landing) {
-    return <div>Loading...</div>
-  }
 
   return (
     <Container>
       <Header />
-      <About title={landing.title} description={landing.description} />
+      {landing && (
+        <About title={landing.title} description={landing.description} />
+      )}
       <Content>
         <GlobeContainer>
           <Globe />
         </GlobeContainer>
-        <div></div>
-        {/* <About title={landing.title} description={landing.description} /> */}
+        <div />
         <div style={{ pointerEvents: 'none' }}></div>
-        <SessionList title={landing.sessions_title} />
+        {landing && <SessionList title={landing.sessions_title} />}
       </Content>
-      <Sections sections={landing.sections} />
+      {landing && <Sections sections={landing.sections} />}
     </Container>
   )
 }

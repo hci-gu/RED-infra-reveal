@@ -32,7 +32,9 @@ export const useSessions = () => {
 
   useEffect(() => {
     if (!!result.data) {
-      setSessions(result.data.allSessions.map(calculateSessionPositions))
+      setSessions(
+        result.data.allSessions.map(calculateSessionPositions).reverse()
+      )
     }
   }, [result, setSessions])
 
