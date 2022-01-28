@@ -3,71 +3,94 @@ import { useRecoilState, useRecoilValue } from 'recoil'
 import { useQuery } from 'urql'
 import { cmsContentAtom, languageAtom } from '../state'
 
-/*
-const CmsContentQuery = `
-query content($id: ID!, $language: String = "en") {
-  allLandingPage(where:{_id: {matches:$id} i18n_lang: { eq: $language }}) {
-    title
-    descriptionRaw
-    sessionsTitle
-    mainHeading
-    sections {
-      title
-      bodyRaw
-    }
-    guides {
-      title
-      platform
-      images {
-        image {
-          asset {
-            url
+const LandingPageQuery = `
+query content($language: String = "en-us") {
+    allPagecontents(lang: $language) {
+      edges {
+        node {
+          _meta {
+            id
+          }
+          title
+          description
+          sessions_title
+          sections {
+            section_title
+            text
+          }
+          concepts_header
+          concepts {
+            concept_title
+            concept_description
           }
         }
-        descriptionRaw
       }
     }
-  }
 }
-`*/
+`
 
-const CmsContentQuery = `
-query content($id: ID!, $language: String = "en-us") {
-  allPagecontents(lang: $language) {
+const GuideQuery = `
+query content($language: String = "en-us") {
+  allGuide_pages(lang: $language) {
     edges {
       node {
+        _meta {
+          id
+        }
         title
         description
-        sessions_title
-        sections {
-          section_title
-          text
-        }
+        select_placeholder
         guides {
-          link {
-            ... on Guide {
-              title
-              platform
-              steps {
-                text
-                image
+            link {
+              ... on Guide {
+                title
+                platform
+                steps {
+                  text
+                  image
+                }
               }
             }
           }
-        }
       }
     }
   }
 }
 `
 
-export const useCmsContent = () => {
+export const useLandingPageContent = () => {
   const [, setCmsContent] = useRecoilState(cmsContentAtom)
   const language = useRecoilValue(languageAtom)
   const [result] = useQuery({
-    query: CmsContentQuery,
+    query: LandingPageQuery,
     variables: {
-      id: 'cca52899-d12c-4796-b3df-d40ba9b0fa14',
+      language,
+    },
+  })
+
+  if (result.data) console.log(result.data.allPagecontents.edges)
+  useEffect(() => {
+    if (
+      !!result.data &&
+      result.data.allPagecontents &&
+      result.data.allPagecontents.edges.length
+    ) {
+      setCmsContent((s) => ({
+        ...s,
+        landing: result.data.allPagecontents.edges[0].node,
+      }))
+    }
+  }, [result, setCmsContent])
+
+  return result.data
+}
+
+export const useGuideContent = () => {
+  const [, setCmsContent] = useRecoilState(cmsContentAtom)
+  const language = useRecoilValue(languageAtom)
+  const [result] = useQuery({
+    query: GuideQuery,
+    variables: {
       language,
     },
   })
@@ -78,7 +101,7 @@ export const useCmsContent = () => {
       result.data.allLandingPage &&
       result.data.allLandingPage.length
     ) {
-      setCmsContent(result.data.allLandingPage[0])
+      setCmsContent((s) => ({ ...s, landing: result.data.allLandingPage[0] }))
     }
   }, [result, setCmsContent])
 

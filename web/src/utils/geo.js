@@ -113,6 +113,12 @@ export const centerOfPositions = (positions) => {
   return turf.center(features)
 }
 
+export const bboxForPositions = (positions) => {
+  var features = turf.points(positions.map((p) => [p.lon, p.lat]))
+
+  return turf.bbox(features)
+}
+
 export const trajectoriesForPackets = (packets) => {
   const trajectoryMap = {}
   const trajectories = packets.map(trajectoryForPacket)
