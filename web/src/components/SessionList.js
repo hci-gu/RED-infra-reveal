@@ -8,6 +8,7 @@ import humanizeDuration from 'humanize-duration'
 import { PlusOutlined, CheckOutlined, LoadingOutlined } from '@ant-design/icons'
 import { Card, Button, List, Space } from 'antd'
 import { RichText } from 'prismic-reactjs'
+import { mobile } from '../utils/layout'
 
 const Container = styled.div`
   z-index: 2;
@@ -31,6 +32,16 @@ const Container = styled.div`
     width: 100%;
     display: flex;
     overflow-x: auto;
+  }
+
+  ${mobile()} {
+    margin-top: 25px;
+    padding: 0.5rem;
+
+    > h1 {
+      font-size: 18px;
+    }
+    padding-bottom: 50px;
   }
 `
 

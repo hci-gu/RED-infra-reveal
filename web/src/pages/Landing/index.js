@@ -8,6 +8,7 @@ import { cmsContentAtom } from '../../state'
 import Header from '../../components/Header'
 import Sections from './Sections'
 import Concepts from './Concepts'
+import { mobile } from '../../utils/layout'
 
 const Container = styled.div`
   background: none;
@@ -16,6 +17,10 @@ const Container = styled.div`
 const TopSection = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+
+  ${mobile()} {
+    grid-template-columns: 1fr;
+  }
 `
 
 const Content = styled.div`
@@ -33,10 +38,20 @@ const Content = styled.div`
     margin: 0 auto;
     width: 60%;
   }
+
+  ${mobile()} {
+    > div {
+      width: 90%;
+    }
+  }
 `
 
 const GlobeContainer = styled.div`
   pointer-events: none;
+
+  ${mobile()} {
+    display: none;
+  }
 `
 
 const AboutContainer = styled.div`
@@ -53,6 +68,14 @@ const AboutContainer = styled.div`
 
   > p {
     font-size: 14px;
+  }
+
+  ${mobile()} {
+    > h1 {
+      margin: 0;
+      font-size: 16px;
+      text-align: center;
+    }
   }
 `
 
@@ -77,8 +100,8 @@ const Landing = () => {
         <GlobeContainer>
           <Globe />
         </GlobeContainer>
-        <div />
-        <div style={{ pointerEvents: 'none' }}></div>
+        <GlobeContainer />
+        <GlobeContainer />
         {landing && <SessionList title={landing.sessions_title} />}
       </TopSection>
       <Content>

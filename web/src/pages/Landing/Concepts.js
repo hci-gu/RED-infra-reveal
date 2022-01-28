@@ -4,6 +4,7 @@ import { RichText } from 'prismic-reactjs'
 import { useSpring, animated } from 'react-spring'
 import { useMeasure } from './useMeasure'
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons'
+import { mobile } from '../../utils/layout'
 
 const Container = styled.div`
   display: flex;
@@ -28,12 +29,33 @@ const ConceptTitle = styled.div`
   > h1 {
     margin: 0;
     margin-left: 10px;
+    font-weight: 600;
   }
 `
 const ConceptDescription = styled(animated.div)`
   padding: 10px 10px;
   padding-bottom: 0px;
   overflow: hidden;
+
+  > div {
+    > p,
+    > li,
+    > ul {
+      font-weight: 200;
+      font-size: 16px;
+      text-align: justify;
+    }
+  }
+
+  ${mobile()} {
+    > div {
+      > p,
+      > li,
+      > ul {
+        text-align: left;
+      }
+    }
+  }
 `
 
 const Concept = ({ concept }) => {

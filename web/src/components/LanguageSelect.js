@@ -3,6 +3,7 @@ import React from 'react'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
 import { languageAtom } from '../state'
+import { mobile } from '../utils/layout'
 
 const availableLanguages = [
   {
@@ -19,7 +20,13 @@ const availableLanguages = [
   },
 ]
 
-const Container = styled.div``
+const Container = styled.div`
+  ${mobile()} {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+  }
+`
 
 const LanguageSelect = () => {
   const [language, setLanguage] = useRecoilState(languageAtom)

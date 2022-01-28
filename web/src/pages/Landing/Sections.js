@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { RichText } from 'prismic-reactjs'
+import { mobile } from '../../utils/layout'
 
 const SectionsContainer = styled.div`
   padding-top: 24px;
@@ -24,9 +25,22 @@ const Section = styled.div`
   > p,
   > li,
   > ul {
-    font-weight: 300;
+    font-weight: 200;
     font-size: 16px;
     text-align: justify;
+  }
+
+  ${mobile()} {
+    > h1 {
+      font-size: 32px;
+      text-align: center;
+    }
+
+    > p,
+    > li,
+    > ul {
+      text-align: left;
+    }
   }
 `
 

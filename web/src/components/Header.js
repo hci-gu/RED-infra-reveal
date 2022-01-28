@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { mobile } from '../utils/layout'
 import LanguageSelect from './LanguageSelect'
 
 const LogoText = styled.h1`
@@ -17,6 +18,17 @@ const LogoText = styled.h1`
     font-size: 78px;
     ${({ small }) => small && `font-size: 34px;`}
   }
+
+  ${mobile()} {
+    text-align: center;
+    height: 36px;
+    font-size: 28px;
+    margin: 0;
+
+    > strong {
+      font-size: 30px;
+    }
+  }
 `
 
 const Container = styled.div`
@@ -26,6 +38,14 @@ const Container = styled.div`
   width: 90%;
   display: flex;
   justify-content: space-between;
+
+  ${mobile()} {
+    width: 100%;
+    padding: 0.5rem;
+
+    display: flex;
+    flex-direction: column;
+  }
 `
 
 export const Logo = () => {
