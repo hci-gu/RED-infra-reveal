@@ -28,8 +28,10 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "react-sizeme": "^3.0.1",
+    "react-spring": "^9.4.2",
     "react-svg": "^12.1.0",
     "recoil": "^0.2.0",
+    "resize-observer-polyfill": "^1.5.1",
     "styled-components": "^5.2.3",
     "urql": "^2.0.2"
   },

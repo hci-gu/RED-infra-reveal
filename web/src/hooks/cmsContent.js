@@ -18,6 +18,11 @@ query content($language: String = "en-us") {
             section_title
             text
           }
+          concepts_header
+          concepts {
+            concept_title
+            concept_description
+          }
         }
       }
     }
@@ -71,7 +76,10 @@ export const useLandingPageContent = () => {
       result.data.allPagecontents &&
       result.data.allPagecontents.edges.length
     ) {
-      setCmsContent(s => ({ ...s, landing: result.data.allPagecontents.edges[0].node }))
+      setCmsContent((s) => ({
+        ...s,
+        landing: result.data.allPagecontents.edges[0].node,
+      }))
     }
   }, [result, setCmsContent])
 
@@ -84,8 +92,8 @@ export const useGuideContent = () => {
   const [result] = useQuery({
     query: GuideQuery,
     variables: {
-      language
-    }
+      language,
+    },
   })
 
   useEffect(() => {
@@ -94,7 +102,7 @@ export const useGuideContent = () => {
       result.data.allLandingPage &&
       result.data.allLandingPage.length
     ) {
-      setCmsContent(s => ({ ...s, landing: result.data.allLandingPage[0] }))
+      setCmsContent((s) => ({ ...s, landing: result.data.allLandingPage[0] }))
     }
   }, [result, setCmsContent])
 

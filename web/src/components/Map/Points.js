@@ -41,8 +41,7 @@ const Points = ({ setPopupInfo }) => {
           },
         }}
         shape={{
-          field: 'type',
-          values: (type) => type,
+          values: 'dot',
         }}
         color={{
           field: 'client',
@@ -54,10 +53,7 @@ const Points = ({ setPopupInfo }) => {
           },
         }}
         size={{
-          field: 'contentLength',
-          values: (arg) => {
-            return Math.max(3, Math.min(arg / 1000, 10))
-          },
+          values: 2,
         }}
         style={{
           values: {

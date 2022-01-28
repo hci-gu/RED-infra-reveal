@@ -46,21 +46,44 @@ const SessionContainer = styled.div`
   overflow: hidden;
   color: #000;
   background-color: #ece5f0;
+`
 
-  > div {
-    padding: 4px 8px;
-    font-size: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    > span {
-      font-size: 14px;
-      font-weight: 400;
-    }
+const TextContainer = styled.div`
+  padding: 4px 8px;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: 100;
+  line-height: 1.25;
+  font-family: 'Roboto', sans-serif;
+`
+
+const ImageContainer = styled.div`
+  padding: 0;
+  margin: 0;
+  position: relative;
+  width: 240px;
+  min-width: 240px;
+  height: auto;
+
+  > img {
+    width: 100%;
+  }
+  > span {
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px;
+    font-size: 11px;
+
+    position: absolute;
   }
 `
 const bboxToString = (bbox) => `[${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}]`
-
 const IMAGE_URL = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/11.9092,57.6807,4,0/320x180?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`
 const imageUrlForSession = (session) => {
   if (session.clientPositions && session.clientPositions.length === 1) {
@@ -151,43 +174,40 @@ const Session = ({ session }) => {
 
   return (
     <SessionContainer onClick={() => history.push(`/session/${session.id}`)}>
-      <img src={imageUrlForSession(session)}></img>
-      <div>
-        <span>
-          {!session.end && (
-            <LiveIndicator>
-              <div />
-            </LiveIndicator>
-          )}
-          <strong>
-            {session.name ? session.name : `Session ${session.id}`}
-          </strong>
-          <br></br>
-          {moment(session.start).format('YYYY-MM-DD')}
-          <span style={{ fontWeight: 200 }}>
-            {session.end && ` ${displayDuration(session)}`}
-          </span>
+      <ImageContainer>
+        <img src={imageUrlForSession(session)}></img>
+        <span style={{ fontWeight: 200 }}>
+          {moment(session.start).format('YYYY-MM-DD')} -
+          {session.end && ` ${displayDuration(session)}`}
         </span>
-        <div>
-          {!session.end && (
-            <Button
-              shape="round"
-              style={{ color: '#000' }}
-              icon={<CheckOutlined />}
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                updateSession({
-                  id: session.id,
-                  data: { end: new Date().toISOString() },
-                })
-              }}
-              size="small"
-            >
-              Stop
-            </Button>
-          )}
-        </div>
+      </ImageContainer>
+      <TextContainer>
+        {!session.end && (
+          <LiveIndicator>
+            <div />
+          </LiveIndicator>
+        )}
+        <strong>{session.name ? session.name : `Session ${session.id}`}</strong>
+      </TextContainer>
+      <div>
+        {!session.end && (
+          <Button
+            shape="round"
+            style={{ color: '#000' }}
+            icon={<CheckOutlined />}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              updateSession({
+                id: session.id,
+                data: { end: new Date().toISOString() },
+              })
+            }}
+            size="small"
+          >
+            Stop
+          </Button>
+        )}
       </div>
     </SessionContainer>
   )
