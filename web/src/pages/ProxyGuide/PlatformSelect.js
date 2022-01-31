@@ -25,7 +25,7 @@ const platforms = [
 
 const Container = styled.div``
 
-const PlatformSelect = () => {
+const PlatformSelect = ({ placeholder }) => {
   const [platform, setPlatform] = useRecoilState(platformAtom)
 
   return (
@@ -33,7 +33,7 @@ const PlatformSelect = () => {
       <Select
         style={{ width: 200, fontSize: 16 }}
         size="large"
-        placeholder="Select a platform"
+        placeholder={placeholder}
         defaultValue={platform}
         onChange={(val) =>
           setPlatform(

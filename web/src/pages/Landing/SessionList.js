@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import * as api from '../../hooks/api'
@@ -6,9 +6,9 @@ import { useHistory } from 'react-router-dom'
 import humanizeDuration from 'humanize-duration'
 
 import { PlusOutlined, CheckOutlined, LoadingOutlined } from '@ant-design/icons'
-import { Card, Button, List, Space } from 'antd'
+import { Button } from 'antd'
 import { RichText } from 'prismic-reactjs'
-import { mobile } from '../utils/layout'
+import { mobile } from '../../utils/layout'
 
 const Container = styled.div`
   z-index: 2;

@@ -48,9 +48,9 @@ const Container = styled.div`
   }
 `
 
-export const Logo = () => {
+export const Logo = ({ small }) => {
   return (
-    <LogoText>
+    <LogoText small={small}>
       <strong>RED</strong> INFRA REVEAL
     </LogoText>
   )
@@ -59,7 +59,7 @@ export const Logo = () => {
 const Header = ({ small = false, hideLogo = false }) => {
   return (
     <Container small={small}>
-      {hideLogo ? <div /> : <Logo />}
+      {hideLogo ? <div /> : <Logo small={small} />}
       <LanguageSelect />
     </Container>
   )

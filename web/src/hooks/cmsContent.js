@@ -68,7 +68,6 @@ export const useLandingPageContent = () => {
     },
   })
 
-  if (result.data) console.log(result.data.allPagecontents.edges)
   useEffect(() => {
     if (
       !!result.data &&
@@ -98,10 +97,13 @@ export const useGuideContent = () => {
   useEffect(() => {
     if (
       !!result.data &&
-      result.data.allLandingPage &&
-      result.data.allLandingPage.length
+      result.data.allGuide_pages &&
+      result.data.allGuide_pages.edges.length
     ) {
-      setCmsContent((s) => ({ ...s, landing: result.data.allLandingPage[0] }))
+      setCmsContent((s) => ({
+        ...s,
+        guide: result.data.allGuide_pages.edges[0].node,
+      }))
     }
   }, [result, setCmsContent])
 

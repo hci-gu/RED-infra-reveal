@@ -1,3 +1,4 @@
+import { RichText } from 'prismic-reactjs'
 import React from 'react'
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
@@ -50,32 +51,28 @@ const comparePlatform = (guide, platform) => {
 }
 
 const ProxyGuide = () => {
-  const content = useRecoilValue(cmsContentAtom)
+  const { guide } = useRecoilValue(cmsContentAtom)
   const platform = useRecoilValue(platformAtom)
   useFireWallSettings()
 
-  if (!content.guides) return null
+  console.log('guide', guide)
+
+  if (!guide) return null
 
   return (
     <>
       <Header small />
       <Container>
         <Intro>
-          <h2>Connecting to the infra reveal proxy</h2>
-          <p>
-            This guide will show you how to connect to the infra reveal proxy so
-            that you can view your traffic in the dashboard. please read through
-            the information below before connecting.
-            <br></br>
-            <br></br>
-            Start by selecting the platform you want to use.
-          </p>
-          <PlatformSelect />
+          <RichText render={guide.title} />
+          <RichText render={guide.description} />
+          <PlatformSelect placeholder={guide.select_placeholder} />
         </Intro>
         {platform && <Steps />}
         {platform && (
           <Guides>
-            {content.guides
+            {guide.guides
+              .map((g) => g.link)
               .filter((guide) => comparePlatform(guide, platform))
               .map((guide, i) => (
                 <Guide {...guide} key={`Guide_${i}`} />

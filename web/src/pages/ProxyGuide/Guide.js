@@ -4,6 +4,7 @@ import { Button, Carousel, Image } from 'antd'
 
 import { LeftOutlined, RightOutlined } from '@ant-design/icons'
 import BlockContent from '@sanity/block-content-to-react'
+import { RichText } from 'prismic-reactjs'
 
 const Container = styled.div`
   position: relative;
@@ -45,18 +46,18 @@ const Step = styled.div`
 const GuideStep = ({ img, description }) => {
   return (
     <Step>
-      <BlockContent blocks={description} />
+      <RichText render={description} />
       <Image src={img} width={600} />
     </Step>
   )
 }
 
-const Guide = ({ title, images }) => {
+const Guide = ({ title, steps }) => {
   const carouselRef = useRef(null)
 
   return (
     <>
-      <h1>{title}</h1>
+      <RichText render={title} />
       <Container>
         <Button onClick={() => carouselRef.current.prev()}>
           <LeftOutlined />
@@ -65,9 +66,9 @@ const Guide = ({ title, images }) => {
           <RightOutlined />
         </Button>
         <Carousel dots={{ className: 'carousel-dots' }} ref={carouselRef}>
-          {images.map(({ image, descriptionRaw }) => (
-            <GuideStep img={image.asset.url} description={descriptionRaw} />
-          ))}
+          {steps.map(({ image, text }) =>
+            image ? <GuideStep img={image.url} description={text} /> : null
+          )}
         </Carousel>
       </Container>
     </>
