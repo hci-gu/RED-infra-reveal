@@ -1,108 +1,110 @@
 import React from 'react'
 import styled from 'styled-components'
-import SessionList from './SessionList'
-import Globe from './Globe'
-import BlockContent from '@sanity/block-content-to-react'
+import SessionList from '../../components/SessionList'
+import Globe from '../../components/Globe'
+import { RichText } from 'prismic-reactjs'
 import { useRecoilValue } from 'recoil'
 import { cmsContentAtom } from '../../state'
 import Header from '../../components/Header'
+import Sections from './Sections'
+import Concepts from './Concepts'
+import { mobile } from '../../utils/layout'
 
 const Container = styled.div`
   background: none;
 `
 
-const Content = styled.div`
+const TopSection = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+  ${mobile()} {
+    grid-template-columns: 1fr;
+  }
+`
+
+const Content = styled.div`
+  border-top: 2px solid #a71d31;
+  position: relative;
+  z-index: 100;
+  width: 100%;
+  background-color: #0d0d0d;
+  padding-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  > div {
+    margin: 0 auto;
+    width: 60%;
+  }
+  ${mobile()} {
+    > div {
+      width: 90%;
+    }
+  }
 `
 
 const GlobeContainer = styled.div`
   pointer-events: none;
+  ${mobile()} {
+    display: none;
+  }
 `
 
 const AboutContainer = styled.div`
   z-index: 2;
-  width: 70%;
-
+  width: 90%;
+  margin: 0 auto;
   > h1 {
+    margin: 0 8px;
     font-family: 'Josefin Sans', sans-serif;
-    font-weight: 700;
-    font-size: 32px;
+    font-weight: 200;
+    font-size: 24px;
   }
-
   > p {
     font-size: 14px;
+  }
+  ${mobile()} {
+    > h1 {
+      margin: 0;
+      font-size: 16px;
+      text-align: center;
+    }
   }
 `
 
 const About = ({ title, description }) => {
   return (
     <AboutContainer>
-      <h1>{title}</h1>
-      <BlockContent blocks={description} />
+      <RichText render={title} />
     </AboutContainer>
   )
 }
 
-const SectionsContainer = styled.div`
-  position: relative;
-  margin-top: 50px;
-  width: 100%;
-  height: 1000px;
-  background-color: #0d0d0d;
-  z-index: 100;
-  border-top: 2px solid #a71d31;
-  padding: 32px 64px;
-
-  display: flex;
-  flex-direction: column;
-`
-
-const Section = styled.div`
-  > h1 {
-    /* font-family: 'Josefin Sans', sans-serif; */
-    font-weight: 700;
-    font-size: 48px;
-    color: #fff;
-  }
-
-  > p {
-    width: 40%;
-  }
-`
-
-const Sections = ({ sections }) => {
-  if (!sections || !sections.length) return null
-  return (
-    <SectionsContainer>
-      {sections.map((section) => (
-        <Section>
-          <h1>{section.title}</h1>
-          <BlockContent blocks={section.bodyRaw} />
-        </Section>
-      ))}
-    </SectionsContainer>
-  )
-}
-
 const Landing = () => {
-  const content = useRecoilValue(cmsContentAtom)
+  const { landing } = useRecoilValue(cmsContentAtom)
 
   return (
     <Container>
       <Header />
-      <Content>
+      {landing && (
+        <About title={landing.title} description={landing.description} />
+      )}
+      <TopSection>
         <GlobeContainer>
           <Globe />
         </GlobeContainer>
-        <About
-          title={content.mainHeading}
-          description={content.descriptionRaw}
-        />
-        <div style={{ pointerEvents: 'none' }}></div>
-        <SessionList title={content.sessionsTitle} />
+        <GlobeContainer />
+        <GlobeContainer />
+        {landing && <SessionList title={landing.sessions_title} />}
+      </TopSection>
+      <Content>
+        {landing && <Sections sections={landing.sections} />}
+        {landing && (
+          <Concepts
+            title={landing.concepts_header}
+            concepts={landing.concepts}
+          />
+        )}
       </Content>
-      <Sections sections={content.sections} />
     </Container>
   )
 }

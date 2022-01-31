@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { SizeMe } from 'react-sizeme'
 import routesJSON from './globeRoutes.json'
 import { useRecoilState } from 'recoil'
-import { globeAtom } from '../state'
+import { globeAtom } from '../../state'
 
 const GlobeContainer = styled.div`
   position: absolute;
