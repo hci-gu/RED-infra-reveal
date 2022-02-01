@@ -27,6 +27,7 @@ const Content = styled.div`
   position: relative;
   z-index: 100;
   width: 100%;
+  min-height: 50vh;
   background-color: #0d0d0d;
   padding-bottom: 100px;
   display: flex;
@@ -94,7 +95,7 @@ const Landing = () => {
         </GlobeContainer>
         <GlobeContainer />
         <GlobeContainer />
-        {landing && <SessionList title={landing.sessions_title} />}
+        <SessionList title={landing ? landing.sessions_title : ''} />
       </TopSection>
       <Content>
         {landing && <Sections sections={landing.sections} />}

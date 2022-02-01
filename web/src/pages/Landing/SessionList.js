@@ -23,6 +23,7 @@ const Container = styled.div`
 
   > h1 {
     max-width: 750px;
+    min-height: 40px;
     font-size: 24px;
     font-weight: 300;
     font-family: 'Roboto', sans-serif;
@@ -57,6 +58,12 @@ const SessionContainer = styled.div`
   overflow: hidden;
   color: #000;
   background-color: #ece5f0;
+
+  > button {
+    align-self: center;
+    width: 100px;
+    margin-bottom: 8px;
+  }
 `
 
 const TextContainer = styled.div`
@@ -193,33 +200,33 @@ const Session = ({ session }) => {
         </span>
       </ImageContainer>
       <TextContainer>
-        {!session.end && (
-          <LiveIndicator>
-            <div />
-          </LiveIndicator>
-        )}
-        <strong>{session.name ? session.name : `Session ${session.id}`}</strong>
+        <strong>
+          {!session.end && (
+            <LiveIndicator>
+              <div />
+            </LiveIndicator>
+          )}
+          {session.name ? session.name : `Session ${session.id}`}
+        </strong>
       </TextContainer>
-      <div>
-        {!session.end && (
-          <Button
-            shape="round"
-            style={{ color: '#000' }}
-            icon={<CheckOutlined />}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              updateSession({
-                id: session.id,
-                data: { end: new Date().toISOString() },
-              })
-            }}
-            size="small"
-          >
-            Stop
-          </Button>
-        )}
-      </div>
+      {!session.end && (
+        <Button
+          shape="round"
+          style={{ color: '#000' }}
+          icon={<CheckOutlined />}
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            updateSession({
+              id: session.id,
+              data: { end: new Date().toISOString() },
+            })
+          }}
+          size="small"
+        >
+          Stop
+        </Button>
+      )}
     </SessionContainer>
   )
 }
