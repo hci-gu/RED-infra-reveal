@@ -18,9 +18,9 @@ RUN pip3 install mitmproxy
 ENV LANG en_US.UTF-8 
 
 ADD ./mitm/scripts /scripts
-ADD ./mitm/cert /cert
+ADD ./mitm/certs /cert
 
-RUN pip install -r /scripts/requirements.txt
+RUN pip3 install -r /scripts/requirements.txt
 
 ADD hostapd.conf /etc/hostapd/hostapd.conf
 ADD hostapd /etc/default/hostapd
