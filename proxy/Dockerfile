@@ -18,7 +18,7 @@ RUN pip3 install mitmproxy
 ENV LANG en_US.UTF-8 
 
 ADD ./mitm/scripts /scripts
-ADD ./mitm/certs /cert
+ADD ./mitm/certs /certs
 
 RUN pip3 install -r /scripts/requirements.txt
 
