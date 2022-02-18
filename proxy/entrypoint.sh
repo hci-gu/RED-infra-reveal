@@ -98,7 +98,7 @@ trap term_handler SIGTERM
 trap term_handler SIGKILL
 
 # start mitmproxy in the background, but keep its output in this session
-mitmdump --mode transparent -s /scripts/proxy.py --listen-host 0.0.0.0 -p 1337 -w "$CAPTURE_FILE" &
+mitmdump --set confdir=/certs -s /scripts/proxy.py --listen-host 0.0.0.0 -p 1337 -w "$CAPTURE_FILE" &
 MITMDUMP_PID=$!
 
 # wait forever
