@@ -14,7 +14,6 @@ from mitmproxy import ctx
 
 websocket_host = os.getenv('WEBSOCKET_HOST', 'localhost')
 
-
 def convert_body_to_bytes(body):
     if body is None:
         return bytes()
@@ -72,7 +71,7 @@ class WebSocketAdapter:
         while not self.finished:
             time.sleep(1)
             try:
-                async with websockets.connect(f'wss://{websocket_host}:8765', max_size=None) as ws:
+                async with websockets.connect(f'ws://{websocket_host}:8765', max_size=None) as ws:
                     while True:
                         try:
                             msg = self.queue.get(timeout=1)
