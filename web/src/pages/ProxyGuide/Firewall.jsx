@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, WarningOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
+import { Button } from '@mantine/core'
 import React from 'react'
 import styled from 'styled-components'
 import { useFireWallSettings } from '../../hooks/api'

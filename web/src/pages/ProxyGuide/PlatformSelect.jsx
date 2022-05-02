@@ -1,4 +1,4 @@
-import { Select } from 'antd'
+import { Select } from '@mantine/core'
 import React from 'react'
 import { atom, useRecoilState } from 'recoil'
 import styled from 'styled-components'
@@ -10,15 +10,15 @@ export const platformAtom = new atom({
 
 const platforms = [
   {
-    name: 'Mac / OS X',
+    label: 'Mac / OS X',
     value: 'mac',
   },
   {
-    name: 'PC / Windows',
+    label: 'PC / Windows',
     value: 'windows',
   },
   {
-    name: 'Firefox',
+    label: 'Firefox',
     value: 'firefox',
   },
 ]
@@ -31,22 +31,15 @@ const PlatformSelect = ({ placeholder }) => {
   return (
     <Container>
       <Select
-        style={{ width: 200, fontSize: 16 }}
-        size="large"
         placeholder={placeholder}
-        defaultValue={platform}
+        value={platform}
         onChange={(val) =>
           setPlatform(
             platforms.find((platform) => platform.value === val).value
           )
         }
-      >
-        {platforms.map(({ name, value }) => (
-          <Select.Option value={value} key={`Platform_${value}`}>
-            <span>{name}</span>
-          </Select.Option>
-        ))}
-      </Select>
+        data={platforms}
+      />
     </Container>
   )
 }

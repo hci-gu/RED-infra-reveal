@@ -34,8 +34,6 @@ const LanguageSelect = () => {
   return (
     <Container>
       <Select
-        style={{ width: 130, fontSize: 15 }}
-        size="large"
         value={language}
         onChange={(val) =>
           setLanguage(

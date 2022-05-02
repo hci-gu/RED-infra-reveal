@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { ReactSVG } from 'react-svg'
-import { Button } from 'antd'
 import Firewall from './Firewall'
 import { DownOutlined } from '@ant-design/icons'
 import { useRecoilValue } from 'recoil'
 import { platformAtom } from './PlatformSelect'
+import { Button } from '@mantine/core'
 
 const Container = styled.div``
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { RichText } from 'prismic-reactjs'
+import { Text } from '@mantine/core'
 import { mobile } from '../../utils/layout'
 
 const SectionsContainer = styled.div`
@@ -14,6 +15,10 @@ const SectionsContainer = styled.div`
 
 const Section = styled.div`
   margin: 16px auto;
+
+  a {
+    color: #1c7ed6;
+  }
 
   > h1 {
     font-family: 'Roboto', sans-serif;

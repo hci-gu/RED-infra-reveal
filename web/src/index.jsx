@@ -69,7 +69,7 @@ root.render(
   <RecoilRoot>
     <Provider value={client}>
       <MantineProvider
-        theme={{ colorScheme: 'dark' }}
+        theme={{ colorScheme: 'dark', fontFamily: 'Josefin Sans' }}
         withGlobalStyles
         withNormalizeCSS
       >
