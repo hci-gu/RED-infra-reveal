@@ -9,7 +9,6 @@ const LogoText = styled.h1`
   font-family: 'Josefin Sans', sans-serif;
   font-weight: 700;
   font-size: 64px;
-  color: #fff;
   height: 92px;
   ${({ small }) => small && `font-size: 32px;`}
 

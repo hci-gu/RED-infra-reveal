@@ -1,4 +1,4 @@
-import { Select } from 'antd'
+import { Select } from '@mantine/core'
 import React from 'react'
 import { useRecoilState } from 'recoil'
 import styled from 'styled-components'
@@ -36,25 +36,17 @@ const LanguageSelect = () => {
       <Select
         style={{ width: 130, fontSize: 15 }}
         size="large"
-        defaultValue={language}
+        value={language}
         onChange={(val) =>
           setLanguage(
             availableLanguages.find((locale) => locale.value === val).value
           )
         }
-      >
-        {availableLanguages.map(({ name, value }) => (
-          <Select.Option value={value} key={`Locale_${value}`}>
-            <span>
-              {name.split(' ').map((s, i) => (
-                <span style={{ paddingRight: i === 0 ? 10 : 0 }} key={`${s}_i`}>
-                  {s}
-                </span>
-              ))}
-            </span>
-          </Select.Option>
-        ))}
-      </Select>
+        data={availableLanguages.map(({ name, value }) => ({
+          label: name,
+          value,
+        }))}
+      />
     </Container>
   )
 }

@@ -15,11 +15,13 @@ const Container = styled.div`
 `
 
 const TopSection = styled.div`
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   ${mobile()} {
     grid-template-columns: 1fr;
   }
+  overflow: hidden;
 `
 
 const Content = styled.div`
@@ -28,7 +30,6 @@ const Content = styled.div`
   z-index: 100;
   width: 100%;
   min-height: 50vh;
-  background-color: #0d0d0d;
   padding-bottom: 100px;
   display: flex;
   flex-direction: column;

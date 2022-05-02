@@ -4,12 +4,12 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { RecoilRoot } from 'recoil'
 import { createClient, Provider } from 'urql'
 import App from './App'
-import 'antd/dist/antd.less'
 import { useGuideContent, useLandingPageContent } from './hooks/cmsContent'
 import axios from 'axios'
+import { MantineProvider } from '@mantine/core'
 
 const client = createClient({
-  url: `${process.env.REACT_APP_API_URL}/admin/api`,
+  url: `${import.meta.env.VITE_API_URL}/admin/api`,
 })
 
 const FetchGuideContent = () => {
@@ -46,7 +46,7 @@ const GetPrismicRef = () => {
       return {
         headers: {
           'Prismic-Ref': prismicRef,
-          Authorization: `Token ${process.env.REACT_APP_PRISMIC_TOKEN}`,
+          Authorization: `Token ${import.meta.env.VITE_PRISMIC_TOKEN}`,
         },
       }
     },
@@ -68,7 +68,13 @@ const root = ReactDOMClient.createRoot(document.getElementById('root'))
 root.render(
   <RecoilRoot>
     <Provider value={client}>
-      <App />
+      <MantineProvider
+        theme={{ colorScheme: 'dark' }}
+        withGlobalStyles
+        withNormalizeCSS
+      >
+        <App />
+      </MantineProvider>
     </Provider>
     <GetPrismicRef />
   </RecoilRoot>

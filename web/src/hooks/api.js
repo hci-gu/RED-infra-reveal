@@ -8,7 +8,7 @@ import { categoriesAtom, tagsAtom } from '../state/tags'
 import { calculateSessionPositions } from '../utils/session'
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL,
+  baseURL: import.meta.env.VITE_API_URL,
 })
 
 const SessionQuery = `

@@ -6,9 +6,9 @@ import { useLinkClickHandler } from 'react-router-dom'
 import humanizeDuration from 'humanize-duration'
 
 import { PlusOutlined, CheckOutlined, LoadingOutlined } from '@ant-design/icons'
-import { Button } from 'antd'
 import { RichText } from 'prismic-reactjs'
 import { mobile } from '../../utils/layout'
+import { Button } from '@mantine/core'
 
 const Container = styled.div`
   z-index: 2;
@@ -102,19 +102,21 @@ const ImageContainer = styled.div`
   }
 `
 const bboxToString = (bbox) => `[${bbox[0]},${bbox[1]},${bbox[2]},${bbox[3]}]`
-const IMAGE_URL = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/11.9092,57.6807,4,0/320x180?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`
+const IMAGE_URL = `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/11.9092,57.6807,4,0/320x180?access_token=${
+  import.meta.env.VITE_MAPBOX_TOKEN
+}`
 const imageUrlForSession = (session) => {
   if (session.clientPositions && session.clientPositions.length === 1) {
     return `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/${session.clientPositions.map(
       (p) => `pin-s+a71d31(${p.lon},${p.lat})`
     )}/${session.center.lon},${session.center.lat},1,0/320x180?access_token=${
-      process.env.REACT_APP_MAPBOX_TOKEN
+      import.meta.env.VITE_MAPBOX_TOKEN
     }`
   } else if (session.clientPositions && session.clientPositions.length) {
     return `https://api.mapbox.com/styles/v1/mapbox/dark-v10/static/${session.clientPositions.map(
       (p) => `pin-s+a71d31(${p.lon},${p.lat})`
     )}/${bboxToString(session.bbox)}/320x180?padding=50&access_token=${
-      process.env.REACT_APP_MAPBOX_TOKEN
+      import.meta.env.VITE_MAPBOX_TOKEN
     }`
   }
 
