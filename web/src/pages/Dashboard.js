@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import styled from 'styled-components'
 import { Col, Row, Space } from 'antd'
 
@@ -70,7 +70,7 @@ const PacketsColumn = ({ id }) => {
 
   return (
     <Col span={6}>
-      <Statistics />
+      {/* <Statistics /> */}
       <Spacer />
       <Tags />
       <div style={{ height: 265 }} />

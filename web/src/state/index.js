@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil'
-import { filteredPackets, mutationAtom } from './packets'
+import { filteredPackets } from './packets'
 import moment from 'moment'
 
 export const cmsContentAtom = atom({
@@ -10,6 +10,14 @@ export const cmsContentAtom = atom({
 export const languageAtom = atom({
   key: 'language',
   default: 'en-us',
+})
+
+export const globeAtom = atom({
+  key: 'globe',
+  default: {
+    autoRotate: true,
+    altitude: 3.5,
+  },
 })
 
 export const sessionsAtom = atom({
@@ -24,6 +32,7 @@ export const activeSessionIdAtom = atom({
 export const settingsAtom = atom({
   key: 'settings',
   default: {
+    darkMode: true,
     flipMap: false,
   },
 })

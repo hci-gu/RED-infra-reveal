@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import ReactDOM from 'react-dom'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import * as ReactDOMClient from 'react-dom/client'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { RecoilRoot } from 'recoil'
 import { createClient, Provider } from 'urql'
 import App from './App'
@@ -11,6 +11,16 @@ import axios from 'axios'
 const client = createClient({
   url: `${process.env.REACT_APP_API_URL}/admin/api`,
 })
+
+const FetchGuideContent = () => {
+  useGuideContent()
+  return null
+}
+
+const FetchLandingContent = () => {
+  useLandingPageContent()
+  return null
+}
 
 const GetPrismicRef = () => {
   const [prismicRef, setPrismicRef] = useState()
@@ -45,33 +55,21 @@ const GetPrismicRef = () => {
   return (
     <Provider value={cmsClient}>
       <Router>
-        <Route
-          path="/proxy-guide"
-          component={() => {
-            useGuideContent()
-            return null
-          }}
-        />
-        <Route
-          path="/"
-          component={() => {
-            useLandingPageContent()
-            return null
-          }}
-        />
+        <Routes>
+          <Route path="/proxy-guide" element={<FetchGuideContent />} />
+          <Route path="/" element={<FetchLandingContent />} />
+        </Routes>
       </Router>
     </Provider>
   )
 }
 
-ReactDOM.render(
-  <React.StrictMode>
-    <RecoilRoot>
-      <Provider value={client}>
-        <App />
-      </Provider>
-      <GetPrismicRef />
-    </RecoilRoot>
-  </React.StrictMode>,
-  document.getElementById('root')
+const root = ReactDOMClient.createRoot(document.getElementById('root'))
+root.render(
+  <RecoilRoot>
+    <Provider value={client}>
+      <App />
+    </Provider>
+    <GetPrismicRef />
+  </RecoilRoot>
 )

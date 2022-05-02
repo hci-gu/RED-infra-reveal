@@ -41,6 +41,7 @@ export const mutationAtom = atom({
     filters: null,
     recentPackets: [],
   },
+  dangerouslyAllowMutability: true,
 })
 
 export const packetValuesForKey = selectorFamily({

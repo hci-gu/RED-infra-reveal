@@ -16,6 +16,17 @@ const SettingsPanel = () => {
     <div>
       <h2>Settings</h2>
       <Row gutter={24}>
+        <Col>Dark mode</Col>
+        <Col>
+          <Switch
+            checked={settings.darkMode}
+            onChange={() =>
+              setSettings({ ...settings, darkMode: !settings.darkMode })
+            }
+          />
+        </Col>
+      </Row>
+      <Row gutter={24}>
         <Col>Flip Map</Col>
         <Col>
           <Switch

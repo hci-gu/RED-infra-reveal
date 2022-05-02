@@ -10,6 +10,7 @@ import MapFilters from './MapFilters'
 import Trajectories from './Trajectories'
 import Heatmap from './Heatmap'
 import Points from './Points'
+import { darkModeAtom } from '../../state'
 
 const Container = styled.div`
   width: 100%;
@@ -31,7 +32,7 @@ const Map = () => {
           center: [11.91737, 57.69226],
           pitch: 45,
           // rotation: 180,
-          style: 'dark',
+          style: settings.darkMode ? 'dark' : 'fresh',
           zoom: 1,
           features: ['bg'],
         }}

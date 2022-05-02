@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import moment from 'moment'
 import * as api from '../../hooks/api'
-import { useHistory } from 'react-router-dom'
+import { useLinkClickHandler } from 'react-router-dom'
 import humanizeDuration from 'humanize-duration'
 
 import { PlusOutlined, CheckOutlined, LoadingOutlined } from '@ant-design/icons'
@@ -187,11 +187,11 @@ const displayDuration = (session) =>
   })
 
 const Session = ({ session }) => {
-  const history = useHistory()
+  const handleClick = useLinkClickHandler(`/session/${session.id}`)
   const [, updateSession] = api.useUpdateSession()
 
   return (
-    <SessionContainer onClick={() => history.push(`/session/${session.id}`)}>
+    <SessionContainer onClick={handleClick}>
       <ImageContainer>
         <img src={imageUrlForSession(session)}></img>
         <span style={{ fontWeight: 200 }}>
