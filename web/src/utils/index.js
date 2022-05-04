@@ -22,26 +22,22 @@ export function debounce(func, wait, immediate) {
   }
 }
 
-export function getColorFromId(id) {
-  var hash = 0
-  for (var i = 0; i < id.length; i++) {
-    hash = id.charCodeAt(i) + ((hash << 3) - hash)
-  }
-  var color = Math.abs(hash).toString(16).substring(0, 6)
-
-  return lightenHexColor('#' + '000000'.substring(0, 6 - color.length) + color)
+const randomInt = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export function lightenHexColor(hex) {
-  const color = hex.replace('#', '')
-  const r = parseInt(color.substring(0, 2), 16)
-  const g = parseInt(color.substring(2, 4), 16)
-  const b = parseInt(color.substring(4, 6), 16)
+const randomColor = () => {
+  return `#${randomInt(0, 255).toString(16)}${randomInt(0, 255).toString(
+    16
+  )}${randomInt(0, 255).toString(16)}`
+}
 
-  const newColor =
-    '#' + ((0.3 * r) | 0) + ((0.3 * g) | 0) + ((0.3 * b) | 0).toString(16)
-
-  return newColor
+let idMap = {}
+export function getColorFromId(id) {
+  if (!idMap[id]) {
+    idMap[id] = randomColor()
+  }
+  return idMap[id]
 }
 
 export function applyFiltersToPackets(packets, filter) {

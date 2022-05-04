@@ -1,9 +1,9 @@
 import React from 'react'
 import { useRecoilValue } from 'recoil'
 import { packetClients } from '../../state'
-import { Card } from 'antd'
 import styled from 'styled-components'
 import { getColorFromId } from '../../utils'
+import { Card, Text } from '@mantine/core'
 
 const Container = styled.div`
   position: absolute;
@@ -47,8 +47,8 @@ const Clients = () => {
 
   return (
     <Container>
-      <Card size="small">
-        <h2>{clients.length} clients</h2>
+      <Card p="xs" shadow="sm">
+        <Text>{clients.length} clients</Text>
         <ClientList>
           {clients.map((c, i) => (
             <Client key={c}>

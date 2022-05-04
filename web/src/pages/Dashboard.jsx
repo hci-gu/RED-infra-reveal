@@ -1,19 +1,18 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
-import { Col, Row, Space } from 'antd'
+import { Card, Grid, Space, Title } from '@mantine/core'
 
 import Map from '../components/Map'
 import Packets from '../components/Packets'
 import Tags from '../components/Tags'
-import Panel from '../components/Panel'
 import TimeHistogram from '../components/TimeHistogram'
 import SelectFilter from '../components/SelectFilter'
 import HostCloud from '../components/HostCloud'
 import * as api from '../hooks/api'
 import { useParams } from 'react-router-dom'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { useSocket } from '../hooks/socket'
-import { activeSessionIdAtom } from '../state'
+import { activeSessionIdAtom, settingsAtom } from '../state'
 import Statistics from '../components/Statistics'
 import DashboardSettings from '../components/DashboardSettings'
 
@@ -26,14 +25,14 @@ const SettingsAndFilter = styled.div`
 
 const Logo = styled.div`
   display: flex;
+  justify-content: space-between;
 
   > h1 {
     margin: 0;
     padding: 0;
     font-family: 'Josefin Sans', sans-serif;
     font-weight: 700;
-    font-size: 24px;
-    color: #fff;
+    font-size: 20px;
     > strong {
       color: #a71d31;
       font-size: 26px;
@@ -43,39 +42,55 @@ const Logo = styled.div`
 
 const Filters = styled.div`
   display: flex;
-
-  > div {
-    width: 100%;
-  }
+  flex-direction: column;
 
   > div:nth-child(2) {
-    margin-left: 10px;
+    margin-top: 10px;
   }
-`
-
-const Container = styled.div`
-  width: 100%;
-  height: 100%;
-
-  padding: 16px;
-`
-
-const Spacer = styled.div`
-  width: 10px;
-  height: 10px;
 `
 
 const PacketsColumn = ({ id }) => {
   api.usePackets(id)
 
   return (
-    <Col span={6}>
-      {/* <Statistics /> */}
-      <Spacer />
+    <>
+      <Statistics />
+      <Space h="md" />
       <Tags />
-      <div style={{ height: 265 }} />
+      <Space h="md" />
       <Packets />
-    </Col>
+    </>
+  )
+}
+
+const TopRow = () => {
+  return (
+    <>
+      <Grid.Col span={2}>
+        <Card style={{ height: '100%' }} shadow="sm">
+          <SettingsAndFilter>
+            <Logo>
+              <Title>
+                <strong>RED</strong> INFRA REVEAL
+              </Title>
+              <DashboardSettings />
+            </Logo>
+            <Filters>
+              <SelectFilter field="host" exclude />
+              <SelectFilter field="method" />
+            </Filters>
+          </SettingsAndFilter>
+        </Card>
+      </Grid.Col>
+      <Grid.Col span={7}>
+        <TimeHistogram />
+      </Grid.Col>
+      <Grid.Col span={3}>
+        <Card shadow="sm">
+          <HostCloud />
+        </Card>
+      </Grid.Col>
+    </>
   )
 }
 
@@ -87,6 +102,7 @@ const SocketListener = () => {
 const Dashboard = () => {
   const { id } = useParams()
   const [, setSessionId] = useRecoilState(activeSessionIdAtom)
+  const settings = useRecoilValue(settingsAtom)
 
   useEffect(() => {
     setSessionId(id)
@@ -94,43 +110,20 @@ const Dashboard = () => {
 
   api.useTags()
   api.useSessions()
-  const defaultGutter = [12, 12]
 
   return (
-    <Container>
-      <Row gutter={defaultGutter}>
-        <Col span={4}>
-          <SettingsAndFilter>
-            <Logo>
-              <h1>
-                <strong>RED</strong> INFRA REVEAL
-              </h1>
-              <DashboardSettings />
-            </Logo>
-            <Filters>
-              <SelectFilter field="host" exclude />
-              <SelectFilter field="method" />
-            </Filters>
-          </SettingsAndFilter>
-        </Col>
-        <Col span={14}>
-          <TimeHistogram />
-        </Col>
-        <Col span={6}>
-          <HostCloud />
-        </Col>
-      </Row>
-      <Spacer />
-      <Row gutter={defaultGutter}>
-        <Col span={18}>
-          <Panel>
-            <Map />
-          </Panel>
-        </Col>
-        <PacketsColumn id={id} />
-      </Row>
+    <Grid columns={12} p="md" gutter="md">
+      {!settings.focusOnMap && <TopRow />}
+      <Grid.Col span={settings.focusOnMap ? 12 : 9}>
+        <Map />
+      </Grid.Col>
+      {!settings.focusOnMap && (
+        <Grid.Col span={3}>
+          <PacketsColumn id={id} />
+        </Grid.Col>
+      )}
       <SocketListener />
-    </Container>
+    </Grid>
   )
 }
 

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { activeSession } from '../state'
+import { activeSession, settingsAtom } from '../state'
 import { mutationAtom } from '../state/packets'
 import { useRecoilValue } from 'recoil'
 import { Line } from '@ant-design/charts'
-import { Button, Slider, Space } from 'antd'
+import { Button, Card, Slider, Space } from '@mantine/core'
 import {
   PauseOutlined,
   CaretRightOutlined,
@@ -64,19 +64,21 @@ const packetsToBuckets = (packets) => {
 
 const LineChartContainer = styled.div`
   height: 100%;
-  padding: 12px;
   border-radius: 4px;
-  border: 1px solid #434343;
-  background-color: #141414;
 `
 
-const LineChart = () => {
+const LineChart = ({ min, max }) => {
   const [graph, setGraph] = useState()
   const mutation = useRecoilValue(mutationAtom)
+  const { darkMode } = useRecoilValue(settingsAtom)
 
   useEffect(() => {
     let interval = setInterval(() => {
-      graph.changeData(packetsToBuckets(mutation.packets))
+      graph.changeData([
+        { time: min, value: 0 },
+        ...packetsToBuckets(mutation.packets),
+        { time: max, value: 0 },
+      ])
     }, 1000)
     return () => clearInterval(interval)
   }, [graph])
@@ -86,7 +88,10 @@ const LineChart = () => {
     padding: 'auto',
     xField: 'time',
     yField: 'value',
-    theme: 'dark',
+    xAxis: {
+      tickCount: 10,
+    },
+    theme: darkMode ? 'dark' : 'light',
   }
 
   return (
@@ -97,7 +102,7 @@ const LineChart = () => {
 }
 
 const TIME_INC = 100
-const TimeSlider = ({ session }) => {
+const TimeSlider = ({ session, min, max }) => {
   const mutation = useRecoilValue(mutationAtom)
   const [time, setTime] = useState(Date.now())
   const [isPlaying, setIsPlaying] = useState(session.end ? false : true)
@@ -122,9 +127,6 @@ const TimeSlider = ({ session }) => {
     })
   }, [time])
 
-  const min = session.start ? new Date(session.start) : new Date()
-  const max = session.end ? new Date(session.end) : new Date()
-
   return (
     <SliderContainer>
       <Slider
@@ -132,26 +134,24 @@ const TimeSlider = ({ session }) => {
         onChange={setTime}
         min={min.valueOf()}
         max={max.valueOf()}
-        tooltipVisible
-        tipFormatter={(value) => (
-          <SliderHandle>{new Date(value).toLocaleTimeString()}</SliderHandle>
-        )}
-      ></Slider>
-      <Space>
-        <Button size="small" onClick={() => setIsPlaying(!isPlaying)}>
-          {isPlaying ? <PauseOutlined /> : <CaretRightOutlined />}
+        labelAlwaysOn
+        label={(value) => new Date(value).toLocaleTimeString()}
+        size={3}
+      />
+      <Button ml={8} size="small" onClick={() => setIsPlaying(!isPlaying)}>
+        {isPlaying ? <PauseOutlined /> : <CaretRightOutlined />}
+      </Button>
+      {session.end && (
+        <Button
+          ml={8}
+          size="small"
+          onClick={() => {
+            mutation.time = Date.now()
+          }}
+        >
+          <FastForwardOutlined />
         </Button>
-        {session.end && (
-          <Button
-            size="small"
-            onClick={() => {
-              mutation.time = Date.now()
-            }}
-          >
-            <FastForwardOutlined />
-          </Button>
-        )}
-      </Space>
+      )}
     </SliderContainer>
   )
 }
@@ -159,11 +159,16 @@ const TimeSlider = ({ session }) => {
 const TimeHistogram = () => {
   const session = useRecoilValue(activeSession)
 
+  const min = session && session.start ? new Date(session.start) : new Date()
+  const max = session && session.end ? new Date(session.end) : new Date()
+
   return (
-    <Container>
-      <LineChart />
-      {session && <TimeSlider session={session} />}
-    </Container>
+    <Card shadow="sm" style={{ height: '100%' }}>
+      <Container>
+        <LineChart min={min} max={max} />
+        {session && <TimeSlider session={session} min={min} max={max} />}
+      </Container>
+    </Card>
   )
 }
 

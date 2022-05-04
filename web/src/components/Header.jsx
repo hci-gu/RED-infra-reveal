@@ -1,3 +1,4 @@
+import { Space, Title } from '@mantine/core'
 import React from 'react'
 import styled from 'styled-components'
 import { mobile } from '../utils/layout'
@@ -49,9 +50,9 @@ const Container = styled.div`
 
 export const Logo = ({ small }) => {
   return (
-    <LogoText small={small}>
-      <strong>RED</strong> INFRA REVEAL
-    </LogoText>
+    <Title order={1}>
+      <strong style={{ color: '#a71d31' }}>RED</strong> INFRA REVEAL
+    </Title>
   )
 }
 

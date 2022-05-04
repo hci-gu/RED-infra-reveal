@@ -1,4 +1,4 @@
-const { useEffect } = require('react')
+import React, { useEffect } from 'react'
 import { DrawControl } from '@antv/l7-draw'
 import { useRecoilValue } from 'recoil'
 import { mutationAtom } from '../../state/packets'

@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from 'react'
 import { HeatmapLayer, LayerEvent, Popup } from '@antv/l7-react'
-import { useEffect, useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import { mutationAtom } from '../../state/packets'
 import { packetOrigin } from '../../utils/geo'

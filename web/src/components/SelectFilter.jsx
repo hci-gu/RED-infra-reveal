@@ -1,9 +1,7 @@
 import React from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 import { packetsFilters, packetValuesForKey } from '../state/packets'
-
-import { Card, Select } from 'antd'
-const { Option } = Select
+import { MultiSelect } from '@mantine/core'
 
 const SelectFilter = ({ field, exclude = false }) => {
   const [filter, setFilter] = useRecoilState(packetsFilters)
@@ -17,18 +15,13 @@ const SelectFilter = ({ field, exclude = false }) => {
   }
 
   return (
-    <Card title={`${exclude ? 'Exclude ' : ''}${field}`}>
-      <Select
-        mode="multiple"
-        allowClear
-        style={{ width: '100%' }}
-        onChange={onChange}
-      >
-        {values.map((v) => (
-          <Option key={v}>{v}</Option>
-        ))}
-      </Select>
-    </Card>
+    <MultiSelect
+      mode="multiple"
+      style={{ width: '100%' }}
+      onChange={onChange}
+      placeholder={field}
+      data={values.map((value) => ({ value, label: value }))}
+    />
   )
 }
 

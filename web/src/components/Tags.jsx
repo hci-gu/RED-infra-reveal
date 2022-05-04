@@ -1,14 +1,14 @@
+import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
-import { packetTags, packetTagsForType } from '../state/tags'
-import { Select } from 'antd'
+import { packetTagsForType } from '../state/tags'
 import { Pie } from '@ant-design/charts'
-import { Card } from 'antd'
-import { useState } from 'react'
+import { Card, Center, Select } from '@mantine/core'
 import { useCategories } from '../hooks/api'
 
-const Container = styled.div`
-  height: 200px;
+const PieContainer = styled.div`
+  max-width: 300px;
+  height: 300px;
 `
 
 const Tags = () => {
@@ -20,7 +20,7 @@ const Tags = () => {
     data,
     angleField: 'value',
     colorField: 'type',
-    radius: 0.7,
+    radius: 0.8,
     label: {
       type: 'outer',
       content: '{name} {percentage}',
@@ -29,20 +29,21 @@ const Tags = () => {
   }
 
   return (
-    <Container>
-      <Card>
-        <Select
-          style={{ width: '100%' }}
-          value={type}
-          onChange={(value) => setType(value)}
-        >
-          {categories.map(({ name }) => (
-            <Select.Option key={name}>{name}</Select.Option>
-          ))}
-        </Select>
-        <Pie {...config} />
-      </Card>
-    </Container>
+    <Card shadow="sm">
+      <Select
+        value={type}
+        onChange={(value) => setType(value)}
+        data={categories.map(({ name }) => ({
+          value: name,
+          label: name,
+        }))}
+      />
+      <Center p={0}>
+        <PieContainer>
+          <Pie {...config} />
+        </PieContainer>
+      </Center>
+    </Card>
   )
 }
 

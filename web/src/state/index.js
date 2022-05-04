@@ -34,6 +34,7 @@ export const settingsAtom = atom({
   default: {
     darkMode: true,
     flipMap: false,
+    focusOnMap: false,
   },
 })
 

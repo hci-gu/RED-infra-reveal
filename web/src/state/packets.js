@@ -104,19 +104,3 @@ export const packetContentSize = selector({
     }, 0)
   },
 })
-
-export const averageResponseTime = selector({
-  key: 'avg-response-time',
-  get: ({ get }) => {
-    const packets = get(packetsAtom)
-
-    return (
-      packets.reduce((acc, curr) => {
-        if (curr.responseTime) {
-          return acc + curr.responseTime
-        }
-        return acc
-      }, 0) / packets.length
-    )
-  },
-})
