@@ -32,16 +32,29 @@ export const packetsFilters = atom({
   },
 })
 
+export const timeAtom = atom({
+  key: 'time',
+  default: Date.now(),
+})
+export const isPlayingAtom = atom({
+  key: 'is-playing',
+  default: false,
+})
+
 export const mutationAtom = atom({
   key: 'mutation',
   default: {
     allPackets: [],
     time: new Date(),
     packets: [],
-    filters: null,
     recentPackets: [],
   },
   dangerouslyAllowMutability: true,
+})
+
+export const mapFiltersAtom = atom({
+  key: 'map-filters',
+  default: null,
 })
 
 export const packetValuesForKey = selectorFamily({
@@ -59,6 +72,7 @@ export const filteredPackets = selector({
     const mutation = get(mutationAtom)
     const packets = get(packetsAtom)
     const filter = get(packetsFilters)
+    const mapFilters = get(mapFiltersAtom)
 
     const filteredPackets = packets
       .slice()
@@ -76,8 +90,8 @@ export const filteredPackets = selector({
         return filter.host.length === 0 || filter.host.indexOf(p.host) == -1
       })
       .filter((p) => {
-        if (mutation.filters) {
-          return packetIsInFilters(p, mutation.filters)
+        if (mapFilters) {
+          return packetIsInFilters(p, mapFilters)
         }
         return true
       })
@@ -90,11 +104,6 @@ export const packetContentSize = selector({
   key: 'packet-content-size',
   get: ({ get }) => {
     const packets = get(packetsAtom)
-    console.log('contentSize', packets.length)
-    console.log(
-      'sizes',
-      packets.map((p) => p.contentLength)
-    )
 
     return packets.reduce((acc, curr) => {
       if (curr.contentLength) {

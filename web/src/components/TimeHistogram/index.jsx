@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { activeSession, settingsAtom } from '../state'
-import { mutationAtom } from '../state/packets'
-import { useRecoilValue } from 'recoil'
+import { activeSession, settingsAtom } from '../../state'
+import { isPlayingAtom, mutationAtom, timeAtom } from '../../state/packets'
+import darkTheme from './darkTheme.json'
+import lightTheme from './darkTheme.json'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import { Line } from '@ant-design/charts'
 import { Button, Card, Slider, Space } from '@mantine/core'
 import {
@@ -28,30 +30,45 @@ const SliderContainer = styled.div`
     margin: 10px;
   }
 `
+const roundDate = (date) => {
+  const rounded = new Date(date)
+  rounded.setSeconds(0)
+  return rounded
+}
 
-const SliderHandle = styled.div`
-  display: flex;
-  justify-content: center;
-`
+const packetsToBuckets = (packets, start, end) => {
+  // generate 30 second buckets from start to end
+  const initialBuckets = {}
+  const startDate = roundDate(start)
+  const endDate = roundDate(end)
+  const bucketSize = 30000
+  const bucketCount = Math.floor((endDate - startDate) / bucketSize)
+  for (let i = 0; i < bucketCount; i++) {
+    const date = new Date(startDate.getTime() + i * bucketSize)
+    const key = date.toLocaleTimeString()
+    initialBuckets[key] = {
+      value: 0,
+      date: date,
+    }
+  }
 
-const packetsToBuckets = (packets) => {
   const buckets = packets.reduce((acc, curr) => {
     const time = new Date(curr.timestamp)
     const seconds = time.getSeconds()
-    const remainder = 15 - (seconds % 15)
+    const remainder = 30 - (seconds % 30)
 
     time.setSeconds(seconds + remainder)
     const key = time.toLocaleTimeString()
     if (!acc[key]) {
       acc[key] = {
-        date: time,
         value: 1,
+        date: time,
       }
     } else {
       acc[key].value++
     }
     return acc
-  }, {})
+  }, initialBuckets)
 
   return Object.keys(buckets)
     .map((time) => ({
@@ -67,31 +84,28 @@ const LineChartContainer = styled.div`
   border-radius: 4px;
 `
 
-const LineChart = ({ min, max }) => {
+const LineChart = ({ min, max, isLive }) => {
   const [graph, setGraph] = useState()
   const mutation = useRecoilValue(mutationAtom)
   const { darkMode } = useRecoilValue(settingsAtom)
 
   useEffect(() => {
     let interval = setInterval(() => {
-      graph.changeData([
-        { time: min, value: 0 },
-        ...packetsToBuckets(mutation.packets),
-        { time: max, value: 0 },
-      ])
+      graph.changeData(packetsToBuckets(mutation.allPackets, min, max))
     }, 1000)
     return () => clearInterval(interval)
-  }, [graph])
+  }, [min, max, graph])
 
   const config = {
-    data: packetsToBuckets(mutation.packets),
+    data: packetsToBuckets(mutation.allPackets, min, max),
     padding: 'auto',
     xField: 'time',
     yField: 'value',
     xAxis: {
-      tickCount: 10,
+      tickCount: 16,
     },
-    theme: darkMode ? 'dark' : 'light',
+    smooth: true,
+    theme: darkMode ? darkTheme : lightTheme,
   }
 
   return (
@@ -104,8 +118,8 @@ const LineChart = ({ min, max }) => {
 const TIME_INC = 100
 const TimeSlider = ({ session, min, max }) => {
   const mutation = useRecoilValue(mutationAtom)
-  const [time, setTime] = useState(Date.now())
-  const [isPlaying, setIsPlaying] = useState(session.end ? false : true)
+  const [time, setTime] = useRecoilState(timeAtom)
+  const [isPlaying, setIsPlaying] = useRecoilState(isPlayingAtom)
 
   useEffect(() => {
     let interval = setInterval(() => {
@@ -121,11 +135,19 @@ const TimeSlider = ({ session, min, max }) => {
 
   useEffect(() => {
     mutation.time = time
+    mutation.packets = mutation.allPackets.filter((p) => {
+      const diff = mutation.time - new Date(p.timestamp)
+      return diff > 0
+    })
     mutation.recentPackets = mutation.packets.filter((p) => {
       const diff = mutation.time - new Date(p.timestamp)
       return diff < 15000
     })
   }, [time])
+
+  useEffect(() => {
+    if (!session.end) setIsPlaying(true)
+  }, [setIsPlaying])
 
   return (
     <SliderContainer>
@@ -133,7 +155,7 @@ const TimeSlider = ({ session, min, max }) => {
         value={time}
         onChange={setTime}
         min={min.valueOf()}
-        max={max.valueOf()}
+        max={session.end ? max.valueOf() : Date.now()}
         labelAlwaysOn
         label={(value) => new Date(value).toLocaleTimeString()}
         size={3}
@@ -158,14 +180,14 @@ const TimeSlider = ({ session, min, max }) => {
 
 const TimeHistogram = () => {
   const session = useRecoilValue(activeSession)
-
+  console.log(session)
   const min = session && session.start ? new Date(session.start) : new Date()
   const max = session && session.end ? new Date(session.end) : new Date()
 
   return (
     <Card shadow="sm" style={{ height: '100%' }}>
       <Container>
-        <LineChart min={min} max={max} />
+        <LineChart min={min} max={max} isLive={session && !session.end} />
         {session && <TimeSlider session={session} min={min} max={max} />}
       </Container>
     </Card>

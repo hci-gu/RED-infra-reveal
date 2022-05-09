@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { HeatmapLayer, LayerEvent, Popup } from '@antv/l7-react'
+import { Card, Grid, Space } from '@mantine/core'
 import { useRecoilValue } from 'recoil'
 import { mutationAtom } from '../../state/packets'
 import { packetOrigin } from '../../utils/geo'
@@ -16,15 +17,17 @@ const Heatmap = () => {
         type: 'FeatureCollection',
         features: mutation.packets.map(packetOrigin),
       })
-    }, 2500)
+    }, 1000)
     return () => clearInterval(interval)
   }, [layer])
 
   function showPopup(args) {
     if (args.feature && args.feature.properties) {
+      const geo = args.feature.properties.rawData[0].geo
       setPopupInfo({
         lnglat: args.lngLat,
         numPackets: args.feature.properties.count,
+        geo,
       })
     }
   }
@@ -32,9 +35,6 @@ const Heatmap = () => {
   return (
     <>
       <HeatmapLayer
-        select={(a, b, c) => {
-          console.log('select', a, b, c)
-        }}
         onLayerLoaded={setLayer}
         source={{
           data: {
@@ -86,10 +86,18 @@ const Heatmap = () => {
         <LayerEvent type="mousemove" handler={showPopup} />
       </HeatmapLayer>
       {popupInfo && (
-        <Popup lnglat={popupInfo.lnglat}>
-          <span style={{ color: '#000', fontWeight: 600, fontSize: 16 }}>
-            Packets: {popupInfo.numPackets}
-          </span>
+        <Popup lnglat={popupInfo.lnglat} option={{ closeButton: false }}>
+          <Card>
+            <Grid>
+              <Grid.Col>Packets: {popupInfo.numPackets}</Grid.Col>
+              {popupInfo.geo.city && (
+                <Grid.Col>City: {popupInfo.geo.city}</Grid.Col>
+              )}
+              {!popupInfo.geo.city && (
+                <Grid.Col>Country: {popupInfo.geo.country}</Grid.Col>
+              )}
+            </Grid>
+          </Card>
         </Popup>
       )}
     </>

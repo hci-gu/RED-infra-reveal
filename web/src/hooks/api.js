@@ -57,6 +57,9 @@ query getList($where: PacketWhereInput) {
     accept
     lat
     lon
+    country
+    region
+    city
     userId
     clientLat
     clientLon

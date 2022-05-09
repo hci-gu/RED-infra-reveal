@@ -29,13 +29,25 @@ export const activeSessionIdAtom = atom({
   default: null,
 })
 
+// get settings from localStorage
+const storedSettings = localStorage.getItem('settings')
+const startingSettings = localStorage.getItem('settings')
+  ? JSON.parse(storedSettings)
+  : {
+      darkMode: true,
+      flipMap: false,
+      focusOnMap: false,
+    }
 export const settingsAtom = atom({
   key: 'settings',
-  default: {
-    darkMode: true,
-    flipMap: false,
-    focusOnMap: false,
-  },
+  default: startingSettings,
+  effects: [
+    ({ onSet }) => {
+      onSet((newSettings) => {
+        localStorage.setItem('settings', JSON.stringify(newSettings))
+      })
+    },
+  ],
 })
 
 export const activeSession = selector({

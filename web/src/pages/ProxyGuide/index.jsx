@@ -55,8 +55,6 @@ const ProxyGuide = () => {
   const platform = useRecoilValue(platformAtom)
   useFireWallSettings()
 
-  console.log('guide', guide)
-
   if (!guide) return null
 
   return (

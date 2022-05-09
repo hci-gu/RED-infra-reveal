@@ -3,9 +3,11 @@ import { LineLayer } from '@antv/l7-react'
 import { useRecoilValue } from 'recoil'
 import { mutationAtom } from '../../state/packets'
 import { trajectoriesForPackets } from '../../utils/geo'
+import { settingsAtom } from '../../state'
 
 const Trajectories = () => {
   const [layer, setLayer] = useState()
+  const { darkMode } = useRecoilValue(settingsAtom)
   const mutation = useRecoilValue(mutationAtom)
 
   useEffect(() => {
@@ -29,7 +31,7 @@ const Trajectories = () => {
       }}
       shape={{ values: 'line' }}
       color={{
-        values: ['#fff'],
+        values: [darkMode ? '#fff' : '#000'],
       }}
       scale={{
         value: 0.1,
@@ -38,7 +40,7 @@ const Trajectories = () => {
         values: 1,
       }}
       style={{
-        opacity: 0.1,
+        opacity: darkMode ? 0.1 : 0.2,
       }}
     />
   )

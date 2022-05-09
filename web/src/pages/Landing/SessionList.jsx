@@ -214,7 +214,7 @@ const Session = ({ session }) => {
       {!session.end && (
         <Button
           shape="round"
-          style={{ color: '#000' }}
+          style={{ backgroundColor: '#2d2d2d' }}
           icon={<CheckOutlined />}
           onClick={(e) => {
             e.preventDefault()

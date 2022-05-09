@@ -49,9 +49,7 @@ const Filters = styled.div`
   }
 `
 
-const PacketsColumn = ({ id }) => {
-  api.usePackets(id)
-
+const PacketsColumn = () => {
   return (
     <>
       <Statistics />
@@ -110,6 +108,7 @@ const Dashboard = () => {
 
   api.useTags()
   api.useSessions()
+  api.usePackets(id)
 
   return (
     <Grid columns={12} p="md" gutter="md">
@@ -120,6 +119,11 @@ const Dashboard = () => {
       {!settings.focusOnMap && (
         <Grid.Col span={3}>
           <PacketsColumn id={id} />
+        </Grid.Col>
+      )}
+      {settings.focusOnMap && (
+        <Grid.Col>
+          <TimeHistogram />
         </Grid.Col>
       )}
       <SocketListener />

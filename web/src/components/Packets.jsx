@@ -9,6 +9,7 @@ const Packets = () => {
   const [page, setPage] = useState(1)
 
   useEffect(() => {
+    mutation.allPackets = packets
     mutation.packets = packets
     mutation.recentPackets = mutation.packets.filter((p) => {
       const diff = mutation.time - new Date(p.timestamp)

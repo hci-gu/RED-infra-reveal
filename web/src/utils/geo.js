@@ -30,6 +30,11 @@ export const packetOrigin = (p) => {
     type: 'Feature',
     properties: {
       value: 1000,
+      geo: {
+        region: p.region,
+        country: p.country,
+        city: p.city,
+      },
     },
     geometry: {
       crs: {
@@ -39,7 +44,7 @@ export const packetOrigin = (p) => {
         },
       },
       type: 'Point',
-      coordinates: randomizeLocationWithinRadius(p.lon, p.lat),
+      coordinates: [p.lon, p.lat],
     },
   }
 }
