@@ -13,15 +13,11 @@ const api = axios.create({
 
 const SessionQuery = `
 {
-  allSessions {
+  sessions {
     id
     name
     start
     end
-    clientPositions {
-      lat
-      lon
-    }
   }
 }
 `
@@ -34,9 +30,7 @@ export const useSessions = () => {
 
   useEffect(() => {
     if (!!result.data) {
-      setSessions(
-        result.data.allSessions.map(calculateSessionPositions).reverse()
-      )
+      setSessions(result.data.sessions.map(calculateSessionPositions).reverse())
     }
   }, [result, setSessions])
 
@@ -46,8 +40,8 @@ export const useSessions = () => {
 export const createSession = () => {}
 
 const PacketQuery = `
-query getList($where: PacketWhereInput) {
-  allPackets(where: $where) {
+query getPackets($where: PacketWhereInput!) {
+  packets(where: $where) {
     id
     timestamp
     ip
@@ -77,14 +71,14 @@ export const usePackets = (sessionId) => {
   const [result] = useQuery({
     query: PacketQuery,
     variables: {
-      where: { session: { id: sessionId } },
+      where: { session: { id: { equals: sessionId } } },
     },
   })
   const { data } = result
 
   useEffect(() => {
     if (!!data) {
-      setPackets(data.allPackets)
+      setPackets(data.packets)
     }
   }, [data, setPackets])
 
@@ -92,17 +86,10 @@ export const usePackets = (sessionId) => {
 }
 
 const TagsQuery = `
-query getList($where: TagWhereInput) {
-  allTags(where: $where) {
+query getTags($where: TagWhereInput) {
+  tags(where: $where) {
     id
     name
-    domains {
-      id
-      name
-    }
-    tagType {
-      name
-    }
   }
 }
 `
@@ -117,15 +104,15 @@ export const useTags = () => {
   })
   const { data } = result
   useEffect(() => {
-    if (!!data) setTags(data.allTags)
+    if (!!data) setTags(data.tags)
   }, [data, setTags])
 
   return tags
 }
 
 const CategoriesQuery = `
-query getList($where: CategoryWhereInput) {
-  allCategories(where: $where) {
+query getCategories($where: CategoryWhereInput) {
+  categories(where: $where) {
     id
     name
   }
@@ -140,7 +127,7 @@ export const useCategories = () => {
   })
   const { data } = result
   useEffect(() => {
-    if (!!data) setCategories(data.allCategories)
+    if (!!data) setCategories(data.categories)
   }, [data, setCategories])
 
   return categories
@@ -153,10 +140,6 @@ mutation create($data: SessionCreateInput!) {
     name
     start
     end
-    clientPositions {
-      lat
-      lon
-    }
   }
 }
 `
@@ -176,15 +159,11 @@ export const useCreateSession = () => {
 
 const UpdateSessionQuery = `
 mutation update($id: ID!, $data: SessionUpdateInput) {
-  updateSession(id: $id, data: $data) {
+  updateSession(where: { id: $id }, data: $data) {
     id
     name
     start
     end
-    clientPositions {
-      lat
-      lon
-    }
   }
 }
 `

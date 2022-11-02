@@ -5,3 +5,7 @@ tmp.json
 .http-mitm-proxy
 .DS_Store
 .env
+.keystone
+.keystone/admin
+keystone.db
+*.log

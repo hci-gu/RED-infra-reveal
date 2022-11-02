@@ -6,7 +6,7 @@ export const useSocket = () => {
   const [, setPackets] = useRecoilState(packetsAtom)
 
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_API_URL, {
+    const socket = io(import.meta.env.VITE_SOCKET_URL, {
       transports: ['websocket'],
     })
     socket.on('packets', (incomingPackets) => {

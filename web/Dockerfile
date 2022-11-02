@@ -1,6 +1,6 @@
 FROM kyma/docker-nginx
 
-COPY build /var/www
+COPY dist /var/www
 COPY default /etc/nginx/sites-enabled/default
 
 EXPOSE 3000

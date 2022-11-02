@@ -18,6 +18,10 @@ const availableLanguages = [
     name: '🇪🇸 Español',
     value: 'es',
   },
+  {
+    name: '🇩🇪 Deutsch',
+    value: 'de-de',
+  },
 ]
 
 const Container = styled.div`

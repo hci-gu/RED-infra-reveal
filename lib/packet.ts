@@ -1,9 +1,10 @@
-const geoip = require('geoip-lite')
-const dns = require('dns')
-const { create: createPacket } = require('./db/Packet')
-const crypto = require('crypto')
+import geoip from 'geoip-lite'
+import dns from 'dns'
+import { create as createPacket } from './schema/Packet'
+import crypto from 'crypto'
+import { KeystoneContext } from '@keystone-6/core/types'
 
-const getIpFromHost = (host) => {
+const getIpFromHost = (host: string): Promise<string> => {
   return new Promise((resolve) => {
     dns.lookup(host, (err, ip, family) => {
       resolve(ip)
@@ -11,8 +12,9 @@ const getIpFromHost = (host) => {
   })
 }
 
-const save = async (
-  sessionId,
+const handlePacket = async (
+  context: KeystoneContext,
+  sessionId: string,
   {
     host,
     method,
@@ -24,17 +26,18 @@ const save = async (
     contentLength,
     start,
     end,
-  }
+  }: any
 ) => {
   const ip = await getIpFromHost(host)
   const geo = geoip.lookup(ip)
   let userId
   let clientGeo
   if (clientAddress) {
+    console.log('clientAddress', clientAddress)
     userId = crypto.createHash('md5').update(clientAddress).digest('hex')
     clientGeo = geoip.lookup(clientAddress)
   }
-  const data = {
+  const data: any = {
     session: { connect: { id: sessionId } },
     timestamp: new Date().toISOString(),
     host,
@@ -61,7 +64,7 @@ const save = async (
   }
 
   try {
-    await createPacket(data)
+    await createPacket(context, data)
   } catch (e) {
     console.log(e)
   }
@@ -69,6 +72,4 @@ const save = async (
   return data
 }
 
-module.exports = {
-  save,
-}
+export default handlePacket

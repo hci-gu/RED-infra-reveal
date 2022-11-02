@@ -1,25 +1,29 @@
-require('dotenv').config()
+import { KeystoneContext } from '@keystone-6/core/types'
+import WebSocket from 'ws'
+import {
+  addListener as addSessionListener,
+  getLatestActive,
+} from './schema/Session'
 
-const WebSocket = require('ws')
-const { attach: attachSession, getLatestActive } = require('./db/Session')
+// const { attach: attachSession, getLatestActive } = require('./db/Session')
 
-let currentSession
-attachSession('create', (session) => {
+let currentSession: any
+addSessionListener('create', (session: any) => {
   currentSession = session
 })
-attachSession('update', (session) => {
+addSessionListener('update', (session: any) => {
   if (session.id === currentSession.id && !!session.end) {
     currentSession = null
   }
 })
 
-const messageFromBuffer = (b) => {
+const messageFromBuffer = (b: Buffer): any => {
   const metadataSize = b.readInt32LE(0)
   const request = JSON.parse(b.toString('utf8', 4, 4 + metadataSize))
   return {
     ...request,
     headers: request.headers
-      ? request.headers.reduce((acc, curr) => {
+      ? request.headers.reduce((acc: any, curr: any) => {
           acc[curr[0]] = curr[1]
           return acc
         }, {})
@@ -27,9 +31,12 @@ const messageFromBuffer = (b) => {
   }
 }
 
-const start = async (packetCb) => {
+export default async (
+  context: KeystoneContext,
+  packetCb: (sid: string, p: any) => void
+) => {
   const wss = new WebSocket.Server({ port: 8765 })
-  const session = await getLatestActive()
+  const session = await getLatestActive(context)
   if (!!session) currentSession = session
 
   wss.on('connection', (ws) => {
@@ -37,7 +44,7 @@ const start = async (packetCb) => {
     ws.on('error', (e) => console.log(`WebSocket error: ${e}`))
 
     ws.on('message', (msg) => {
-      const request = messageFromBuffer(msg)
+      const request = messageFromBuffer(msg as Buffer)
       if (!currentSession) {
         return
       }
@@ -62,8 +69,8 @@ const start = async (packetCb) => {
         contentLength: request.headers['content-length']
           ? parseInt(request.headers['content-length'])
           : 0,
-        start: parseInt(request.timestamp.start * 1000),
-        end: parseInt(request.timestamp.end * 1000),
+        start: Math.round(request.timestamp.start * 1000),
+        end: Math.round(request.timestamp.end * 1000),
         clientAddress: request.client.address
           ? request.client.address[0]
           : undefined,
@@ -72,8 +79,4 @@ const start = async (packetCb) => {
   })
 
   wss.on('error', (e) => console.log(`WebSocket server error: ${e}`))
-}
-
-module.exports = {
-  start,
 }
