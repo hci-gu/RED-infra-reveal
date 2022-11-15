@@ -180,7 +180,6 @@ const TimeSlider = ({ session, min, max }) => {
 
 const TimeHistogram = () => {
   const session = useRecoilValue(activeSession)
-  console.log(session)
   const min = session && session.start ? new Date(session.start) : new Date()
   const max = session && session.end ? new Date(session.end) : new Date()
 
