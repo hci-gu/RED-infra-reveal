@@ -1,7 +1,7 @@
 version: '3'
 services:
   caddy:
-    image: 'sebastianandreas/red-caddy:latest'
+    image: 'appademin/red-caddy:latest'
     restart: always
     ports:
       - 80:80
@@ -9,6 +9,8 @@ services:
     links:
       - web
       - api
+      - mitmproxy
+      - adminer
     volumes:
       - /data/caddy:/root/.caddy
     logging:
@@ -21,17 +23,12 @@ services:
     restart: always
     ports:
       - 5432:5432
+    volumes:
+      - /mnt/db/postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: infrauser
       POSTGRES_PASSWORD: cyklatillmorgonkaffetgudvagott
       POSTGRES_DB: infra-reveal
-    volumes:
-      - /data/postgres:/var/lib/postgresql/data
-    logging:
-      driver: 'json-file'
-      options:
-        max-file: '5'
-        max-size: '50m'
   web:
     image: 'sebastianandreas/red-web:latest'
     restart: always
@@ -47,6 +44,8 @@ services:
     restart: always
     links:
       - postgres
+    ports:
+      - 8765:8765
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -56,6 +55,9 @@ services:
       COOKIE_SECRET: supersecret2
       ADMIN_USERNAME: admin
       ADMIN_PASSWORD: skrivbordetförkaffepausen
+      DIGITAL_OCEAN_TOKEN: 56cd20d1881c3d7a04f009d3b91e13050d1c6f1eab1e453df41c480e9188205c
+      FIREWALL_ID: c80915da-464e-4697-ad4f-8878bea9724f
+    command: npm run prod-start
     logging:
       driver: 'json-file'
       options:
@@ -79,3 +81,16 @@ services:
       options:
         max-file: '5'
         max-size: '50m'
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    links:
+      - postgres
+    # environment:
+    #   PGADMIN_DEFAULT_EMAIL: 'sebastian.andreasson@ait.gu.se'
+    #   PGADMIN_DEFAULT_PASSWORD: 'mugglunchtilltangenbordet'
+    #   PGADMIN_LISTEN_PORT: 8001
+    # ports:
+    #   - 8001:8001

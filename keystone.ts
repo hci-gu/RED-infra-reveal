@@ -1,9 +1,14 @@
 import 'dotenv/config'
+import express from 'express'
 import { config as keystoneConfig } from '@keystone-6/core'
 import { getContext } from '@keystone-6/core/context'
 import { lists } from './lib/schema'
 import { withAuth, session } from './lib/auth'
-import { BaseKeystoneTypeInfo, DatabaseConfig } from '@keystone-6/core/types'
+import {
+  BaseKeystoneTypeInfo,
+  DatabaseConfig,
+  KeystoneContext,
+} from '@keystone-6/core/types'
 import * as PrismaModule from '.prisma/client'
 import { version } from './package.json'
 import socket from './lib/socket'
@@ -29,6 +34,7 @@ function getDBConfig(): DatabaseConfig<BaseKeystoneTypeInfo> {
   }
 }
 
+let keystonceInstance: KeystoneContext<BaseKeystoneTypeInfo> | null = null
 export const config = keystoneConfig({
   db: {
     ...getDBConfig(),
@@ -43,9 +49,25 @@ export const config = keystoneConfig({
       origin: '*',
     },
     extendExpressApp: (app) => {
-      socket(app, getContext(config, PrismaModule))
+      if (!keystonceInstance) {
+        keystonceInstance = getContext(config, PrismaModule)
+        socket(app, keystonceInstance)
+      }
       app.get('/version', (req, res) => {
         res.send(version)
+      })
+
+      app.use(express.json())
+      app.post('/data/:type', async (req, res) => {
+        if (!keystonceInstance) return res.send('ok')
+        const { type } = req.params
+        const { data } = req.body
+        const { db } = keystonceInstance
+        console.log(db)
+        await db[type].createMany({
+          data,
+        })
+        res.send('ok')
       })
     },
   },

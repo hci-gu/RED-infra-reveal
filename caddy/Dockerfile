@@ -1,24 +1,12 @@
-FROM abiosoft/caddy:builder as builder
+FROM caddy:2.6.2-builder AS builder
 
-ARG version="1.0.3"
+RUN xcaddy build \
+    --with github.com/caddyserver/nginx-adapter \
+    --with github.com/hairyhenderson/caddy-teapot-module@v0.0.3-0
 
-RUN go get -v github.com/abiosoft/parent
+FROM caddy:2.6.2
 
-RUN VERSION=${version} /bin/sh /usr/bin/builder.sh
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
-FROM alpine:3.10
-
-RUN apk add --update ca-certificates \
-  && rm -rf /var/cache/apk/*
-
-COPY --from=builder /install/caddy /usr/bin/caddy
-
-EXPOSE 80 443
-VOLUME /root/.caddy
-WORKDIR /srv
-
-COPY Caddyfile /etc/Caddyfile
-COPY caddy.conf /etc/caddy.conf
-
-ENTRYPOINT ["/usr/bin/caddy"]
-CMD ["-conf", "/etc/Caddyfile", "-agree", "-log", "stdout", "-email", "registry@infrareveal.net"]
+COPY caddy.conf /etc/caddy/caddy.conf
+COPY Caddyfile /etc/caddy/Caddyfile

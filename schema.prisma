@@ -56,6 +56,7 @@ model Packet {
 model Domain {
   id                      String       @id @default(uuid()) @postgresql.Uuid
   name                    String       @unique @default("")
+  hits                    Int?         @default(1)
   tags                    Tag[]        @relation("Domain_tags")
   from_MainDomain_domains MainDomain[] @relation("MainDomain_domains")
 }

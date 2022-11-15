@@ -11,7 +11,7 @@ import { Global, MantineProvider } from '@mantine/core'
 import { settingsAtom } from './state'
 
 const client = createClient({
-  url: `${import.meta.env.VITE_API_URL}/admin/api`,
+  url: `${import.meta.env.VITE_API_URL}`,
 })
 
 const FetchGuideContent = () => {

@@ -322,6 +322,7 @@ input SessionRelateToOneForCreateInput {
 type Domain {
   id: ID!
   name: String
+  hits: Int
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
 }
@@ -337,7 +338,19 @@ input DomainWhereInput {
   NOT: [DomainWhereInput!]
   id: IDFilter
   name: StringFilter
+  hits: IntNullableFilter
   tags: TagManyRelationFilter
+}
+
+input IntNullableFilter {
+  equals: Int
+  in: [Int!]
+  notIn: [Int!]
+  lt: Int
+  lte: Int
+  gt: Int
+  gte: Int
+  not: IntNullableFilter
 }
 
 input TagManyRelationFilter {
@@ -349,10 +362,12 @@ input TagManyRelationFilter {
 input DomainOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  hits: OrderDirection
 }
 
 input DomainUpdateInput {
   name: String
+  hits: Int
   tags: TagRelateToManyForUpdateInput
 }
 
@@ -370,6 +385,7 @@ input DomainUpdateArgs {
 
 input DomainCreateInput {
   name: String
+  hits: Int
   tags: TagRelateToManyForCreateInput
 }
 

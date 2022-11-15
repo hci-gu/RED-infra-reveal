@@ -10,7 +10,7 @@
     "migrate": "keystone prisma migrate dev",
     "start": "keystone start",
     "build": "keystone build",
-    "postinstall": "keystone postinstall",
+    "run-postinstall": "keystone postinstall",
     "test": "NODE_ENV=test jest --runInBand --testTimeout=60000 --silent",
     "fix": "keystone postinstall --fix"
   },

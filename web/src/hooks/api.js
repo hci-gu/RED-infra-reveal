@@ -27,6 +27,7 @@ export const useSessions = () => {
   const [result] = useQuery({
     query: SessionQuery,
   })
+  console.log(result)
 
   useEffect(() => {
     if (!!result.data) {
@@ -158,7 +159,7 @@ export const useCreateSession = () => {
 }
 
 const UpdateSessionQuery = `
-mutation update($id: ID!, $data: SessionUpdateInput) {
+mutation update($id: ID!, $data: SessionUpdateInput!) {
   updateSession(where: { id: $id }, data: $data) {
     id
     name

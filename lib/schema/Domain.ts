@@ -1,7 +1,7 @@
 import { list } from '@keystone-6/core'
 import { allowAll } from '@keystone-6/core/access'
 
-import { text, relationship } from '@keystone-6/core/fields'
+import { text, relationship, integer } from '@keystone-6/core/fields'
 import { parseDomain, ParseResultType } from 'parse-domain'
 
 const fixEdgeCases = (domain: string, topLevelDomains: string[]) => {
@@ -19,6 +19,7 @@ const fixEdgeCases = (domain: string, topLevelDomains: string[]) => {
 const Domain = list({
   fields: {
     name: text({ validation: { isRequired: true }, isIndexed: 'unique' }),
+    hits: integer({ defaultValue: 1 }),
     tags: relationship({ ref: 'Tag', many: true }),
   },
   ui: {

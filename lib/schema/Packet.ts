@@ -50,11 +50,25 @@ const Packet = list({
         }
       })
       if (operation == 'create') {
-        context.db.Domain.createOne({
-          data: {
-            name: item.host,
-          },
-        }).catch((e) => {})
+        try {
+          // look up Domain and increment "hits" field
+          const domain = await context.db.Domain.findOne({
+            where: { name: item.host },
+          })
+          if (!domain) {
+            throw new Error('Domain not found')
+          }
+          await context.db.Domain.updateOne({
+            where: { name: item.host },
+            data: { hits: (domain.hits as any) + 1 },
+          })
+        } catch (e) {
+          context.db.Domain.createOne({
+            data: {
+              name: item.host,
+            },
+          }).catch((e) => {})
+        }
       }
     },
   },
