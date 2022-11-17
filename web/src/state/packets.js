@@ -28,6 +28,7 @@ export const packetsFilters = atom({
     method: [],
     accept: [],
     host: [],
+    tags: [],
     timeRange: [0, 1],
   },
 })
@@ -59,11 +60,13 @@ export const mapFiltersAtom = atom({
 
 export const packetValuesForKey = selectorFamily({
   key: 'packet-values-for-key',
-  get: (key) => ({ get }) => {
-    const packets = get(packetsAtom)
+  get:
+    (key) =>
+    ({ get }) => {
+      const packets = get(packetsAtom)
 
-    return [...new Set(packets.map((packet) => packet[key]))]
-  },
+      return [...new Set(packets.map((packet) => packet[key]))]
+    },
 })
 
 export const filteredPackets = selector({
@@ -87,7 +90,13 @@ export const filteredPackets = selector({
         )
       })
       .filter((p) => {
-        return filter.host.length === 0 || filter.host.indexOf(p.host) == -1
+        return filter.host.length === 0 || filter.host.indexOf(p.host) !== -1
+      })
+      .filter((p) => {
+        const tagDomains = filter.tags.reduce((domains, tag) => {
+          return [...domains, ...tag.domains]
+        }, [])
+        return filter.tags.length === 0 || tagDomains.indexOf(p.host) !== -1
       })
       .filter((p) => {
         if (mapFilters) {

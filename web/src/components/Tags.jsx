@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useRecoilValue } from 'recoil'
 import styled from 'styled-components'
-import { packetTagsForType } from '../state/tags'
+import { packetTagsForCategory } from '../state/tags'
 import { Pie } from '@ant-design/charts'
 import { Card, Center, Select } from '@mantine/core'
 import { useCategories } from '../hooks/api'
@@ -13,8 +13,8 @@ const PieContainer = styled.div`
 
 const Tags = () => {
   const categories = useCategories()
-  const [type, setType] = useState('Provider')
-  const data = useRecoilValue(packetTagsForType(type))
+  const [category, setCategory] = useState(null)
+  const data = useRecoilValue(packetTagsForCategory(category))
 
   const config = {
     data,
@@ -31,8 +31,9 @@ const Tags = () => {
   return (
     <Card shadow="sm">
       <Select
-        value={type}
-        onChange={(value) => setType(value)}
+        clearable
+        value={category}
+        onChange={(value) => setCategory(value)}
         data={categories.map(({ name }) => ({
           value: name,
           label: name,

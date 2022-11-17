@@ -87,10 +87,14 @@ export const usePackets = (sessionId) => {
 }
 
 const TagsQuery = `
-query getTags($where: TagWhereInput) {
-  tags(where: $where) {
+query getTags {
+  tags {
     id
     name
+    category {
+      name
+    }
+    domains
   }
 }
 `
@@ -99,9 +103,6 @@ export const useTags = () => {
   const [tags, setTags] = useRecoilState(tagsAtom)
   const [result] = useQuery({
     query: TagsQuery,
-    variables: {
-      where: {},
-    },
   })
   const { data } = result
   useEffect(() => {
@@ -112,8 +113,8 @@ export const useTags = () => {
 }
 
 const CategoriesQuery = `
-query getCategories($where: CategoryWhereInput) {
-  categories(where: $where) {
+query getCategories {
+  categories {
     id
     name
   }
@@ -124,7 +125,6 @@ export const useCategories = () => {
   const [categories, setCategories] = useRecoilState(categoriesAtom)
   const [result] = useQuery({
     query: CategoriesQuery,
-    variables: { where: {} },
   })
   const { data } = result
   useEffect(() => {

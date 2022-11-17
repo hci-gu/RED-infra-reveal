@@ -6,7 +6,7 @@ import Map from '../components/Map'
 import Packets from '../components/Packets'
 import Tags from '../components/Tags'
 import TimeHistogram from '../components/TimeHistogram'
-import SelectFilter from '../components/SelectFilter'
+import SelectFilter, { TagFilter } from '../components/SelectFilter'
 import HostCloud from '../components/HostCloud'
 import * as api from '../hooks/api'
 import { useParams } from 'react-router-dom'
@@ -74,8 +74,9 @@ const TopRow = () => {
               <DashboardSettings />
             </Logo>
             <Filters>
-              <SelectFilter field="host" exclude />
+              {/* <SelectFilter field="host" /> */}
               <SelectFilter field="method" />
+              <TagFilter />
             </Filters>
           </SettingsAndFilter>
         </Card>
