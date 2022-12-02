@@ -15,10 +15,10 @@
   "dependencies": {
     "@solidjs/meta": "^0.28.0",
     "@solidjs/router": "^0.5.0",
+    "@turf/turf": "^6.5.0",
     "@urql/core": "^3.0.5",
     "graphql": "^16.6.0",
-    "mapbox-gl": "npm:empty-npm-package@1.0.0",
-    "maplibre-gl": "^2.4.0",
+    "mapbox-gl": "^2.11.0",
     "solid-js": "^1.6.0",
     "solid-map-gl": "^1.5.1",
     "solid-start": "^0.2.0",

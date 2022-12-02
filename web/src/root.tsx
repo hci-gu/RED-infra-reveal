@@ -13,7 +13,6 @@ import {
   Scripts,
   Title,
 } from 'solid-start'
-import { createClient, Provider } from 'solid-urql'
 import { css, renderSheets, StyleRegistry } from 'solid-styled'
 
 function GlobalStyles() {
@@ -64,41 +63,32 @@ function GlobalStyles() {
   return null
 }
 
-const client = createClient({
-  url: 'https://api.infrareveal.net/api/graphql',
-})
-
 export default function Root() {
   const sheets = []
   useAssets(() => renderSheets(sheets))
 
   return (
-    <Provider value={client}>
-      <StyleRegistry styles={sheets}>
-        <Html lang="en">
-          <Head>
-            <Title>SolidStart - Bare</Title>
-            <Meta charset="utf-8" />
-            <Meta
-              name="viewport"
-              content="width=device-width, initial-scale=1"
-            />
-          </Head>
-          <Body>
-            <GlobalStyles />
-            <Suspense>
-              <ErrorBoundary>
-                <A href="/">Index</A>
-                <A href="/about">About</A>
-                <Routes>
-                  <FileRoutes />
-                </Routes>
-              </ErrorBoundary>
-            </Suspense>
-            <Scripts />
-          </Body>
-        </Html>
-      </StyleRegistry>
-    </Provider>
+    <StyleRegistry styles={sheets}>
+      <Html lang="en">
+        <Head>
+          <Title>SolidStart - Bare</Title>
+          <Meta charset="utf-8" />
+          <Meta name="viewport" content="width=device-width, initial-scale=1" />
+        </Head>
+        <Body>
+          <GlobalStyles />
+          <Suspense>
+            <ErrorBoundary>
+              <A href="/">Index</A>
+              <A href="/about">About</A>
+              <Routes>
+                <FileRoutes />
+              </Routes>
+            </ErrorBoundary>
+          </Suspense>
+          <Scripts />
+        </Body>
+      </Html>
+    </StyleRegistry>
   )
 }

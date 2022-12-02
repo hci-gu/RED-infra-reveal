@@ -1,8 +1,9 @@
 import { Component, createSignal } from 'solid-js'
 import MapGL, { Viewport, Source, Layer } from 'solid-map-gl'
-import * as maplibre from 'maplibre-gl'
-import 'maplibre-gl/dist/maplibre-gl.css'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import { css } from 'solid-styled'
+import packets from '~/state/packets'
+import { positionsForPacket } from '~/utils/geo'
 
 const Container = ({ children }) => {
   css`
@@ -20,15 +21,16 @@ const Map: Component = () => {
   const [viewport, setViewport] = createSignal({
     center: [-122.45, 37.78],
     zoom: 2,
+    pitch: 40,
   } as Viewport)
 
   return (
     <Container>
       <MapGL
         style={{ width: '100%', height: '100%' }}
-        mapLib={maplibre}
         options={{
-          style: 'https://demotiles.maplibre.org/style.json',
+          style: 'mb:sat_street',
+          //projection: 'globe'
         }}
         viewport={viewport()}
         onViewportChange={(evt: Viewport) => setViewport(evt)}
@@ -37,14 +39,26 @@ const Map: Component = () => {
           source={{
             type: 'geojson',
             data: {
-              type: 'Feature',
-              geometry: {
-                type: 'LineString',
-                coordinates: [
-                  [-122.414, 37.776],
-                  [-77.032, 38.913],
-                ],
-              },
+              type: 'FeatureCollection',
+              features: [
+                {
+                  type: 'Feature',
+                  geometry: {
+                    type: 'LineString',
+                    coordinates: [
+                      [-122.414, 37.776],
+                      [-77.032, 38.913],
+                    ],
+                  },
+                },
+                ...packets().map((packet) => ({
+                  type: 'Feature',
+                  geometry: {
+                    type: 'LineString',
+                    coordinates: positionsForPacket(packet),
+                  },
+                })),
+              ],
             },
           }}
         >
@@ -57,7 +71,7 @@ const Map: Component = () => {
               //   },
               paint: {
                 'line-color': '#F88',
-                'line-width': 8,
+                'line-width': 3,
               },
             }}
             beforeType="symbol"
