@@ -27,7 +27,6 @@ export const useSessions = () => {
   const [result] = useQuery({
     query: SessionQuery,
   })
-  console.log(result)
 
   useEffect(() => {
     if (!!result.data) {

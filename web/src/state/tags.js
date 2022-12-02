@@ -45,8 +45,6 @@ export const packetTagsForCategory = selectorFamily({
         return acc
       }, {})
 
-      console.log(packetsMap)
-
       const values = tags
         .map((t) => ({
           value: packetsInTag(t, packetsMap),
