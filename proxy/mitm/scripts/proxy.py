@@ -10,7 +10,7 @@ import struct
 import os
 import time
 import websockets
-from mitmproxy import ctx
+import logging
 
 websocket_host = os.getenv('WEBSOCKET_HOST', 'localhost')
 
@@ -44,15 +44,17 @@ class WebSocketAdapter:
         response = flow.response
         self.send_message({
             'client': {
-                'address': flow.client_conn.address,
-                'ip': flow.client_conn.ip_address
+                'id': flow.client_conn.id, # uuid from mitmproxy
+                'peername': flow.client_conn.peername, # The remote's (ip, port) tuple for this connection.
+                'sockname': flow.client_conn.sockname, # Our local (ip, port) tuple for this connection.
             },
             'method': request.method,
             'url': request.url,
             'scheme': request.scheme,
-            'host': request.host,
+            'host': request.pretty_host,
+            'ip': request.host,
             'timestamp': {
-                'start': response.timestamp_start,
+                'start': request.timestamp_start,
                 'end': response.timestamp_end
             },
             'headers': list(request.headers.items(True)) + list(response.headers.items(True)),
@@ -93,7 +95,7 @@ class WebSocketAdapter:
                 # disconnected from server mis-transfer
                 continue
             except:
-                ctx.log.error(
+                logging.error(
                     "[mitmproxy-websocket] Unexpected error:")
                 traceback.print_exc(file=sys.stdout)
 

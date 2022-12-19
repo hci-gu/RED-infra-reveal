@@ -31,11 +31,8 @@ const handlePacket = async (
   const ip = await getIpFromHost(host)
   const geo = geoip.lookup(ip)
   let userId
-  let clientGeo
   if (clientAddress) {
-    console.log('clientAddress', clientAddress)
     userId = crypto.createHash('md5').update(clientAddress).digest('hex')
-    clientGeo = geoip.lookup(clientAddress)
   }
   const data: any = {
     session: { connect: { id: sessionId } },
@@ -57,10 +54,6 @@ const handlePacket = async (
     data.country = geo.country
     data.region = geo.region
     data.city = geo.city
-  }
-  if (clientGeo && clientGeo.ll) {
-    data.clientLat = clientGeo.ll[0]
-    data.clientLon = clientGeo.ll[1]
   }
 
   try {
