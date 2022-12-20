@@ -10,7 +10,7 @@ import struct
 import os
 import time
 import websockets
-import logging
+from mitmproxy import ctx
 
 websocket_host = os.getenv('WEBSOCKET_HOST', 'localhost')
 
@@ -95,7 +95,7 @@ class WebSocketAdapter:
                 # disconnected from server mis-transfer
                 continue
             except:
-                logging.error(
+                ctx.log.error(
                     "[mitmproxy-websocket] Unexpected error:")
                 traceback.print_exc(file=sys.stdout)
 
