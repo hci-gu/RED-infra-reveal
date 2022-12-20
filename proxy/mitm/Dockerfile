@@ -1,4 +1,4 @@
-FROM mitmproxy/mitmproxy:6.0.2
+FROM mitmproxy/mitmproxy:9.0.1
 
 COPY scripts /scripts
 COPY certs /certs
