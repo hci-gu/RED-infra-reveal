@@ -71,8 +71,8 @@ export default async (
           : 0,
         start: Math.round(request.timestamp.start * 1000),
         end: Math.round(request.timestamp.end * 1000),
-        clientAddress: request.client.peername
-          ? request.client.peername[0]
+        clientAddress: request.client.sockname
+          ? request.client.sockname[0]
           : undefined,
       })
     })
