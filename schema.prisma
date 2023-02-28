@@ -24,6 +24,8 @@ model Session {
   name                String    @default("Session")
   start               DateTime
   end                 DateTime?
+  lat                 Float?
+  lon                 Float?
   from_Packet_session Packet[]  @relation("Packet_session")
 }
 

@@ -109,6 +109,8 @@ type Session {
   name: String
   start: DateTime
   end: DateTime
+  lat: Float
+  lon: Float
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
@@ -125,6 +127,8 @@ input SessionWhereInput {
   name: StringFilter
   start: DateTimeFilter
   end: DateTimeNullableFilter
+  lat: FloatNullableFilter
+  lon: FloatNullableFilter
 }
 
 input DateTimeFilter {
@@ -149,17 +153,32 @@ input DateTimeNullableFilter {
   not: DateTimeNullableFilter
 }
 
+input FloatNullableFilter {
+  equals: Float
+  in: [Float!]
+  notIn: [Float!]
+  lt: Float
+  lte: Float
+  gt: Float
+  gte: Float
+  not: FloatNullableFilter
+}
+
 input SessionOrderByInput {
   id: OrderDirection
   name: OrderDirection
   start: OrderDirection
   end: OrderDirection
+  lat: OrderDirection
+  lon: OrderDirection
 }
 
 input SessionUpdateInput {
   name: String
   start: DateTime
   end: DateTime
+  lat: Float
+  lon: Float
 }
 
 input SessionUpdateArgs {
@@ -171,6 +190,8 @@ input SessionCreateInput {
   name: String
   start: DateTime
   end: DateTime
+  lat: Float
+  lon: Float
 }
 
 type Packet {
@@ -224,17 +245,6 @@ input PacketWhereInput {
   userAgent: StringFilter
   contentLength: FloatNullableFilter
   responseTime: FloatNullableFilter
-}
-
-input FloatNullableFilter {
-  equals: Float
-  in: [Float!]
-  notIn: [Float!]
-  lt: Float
-  lte: Float
-  gt: Float
-  gte: Float
-  not: FloatNullableFilter
 }
 
 input PacketOrderByInput {
@@ -660,9 +670,10 @@ type KeystoneAdminUIListMeta {
   pageSize: Int!
   labelField: String!
   fields: [KeystoneAdminUIFieldMeta!]!
+  groups: [KeystoneAdminUIFieldGroupMeta!]!
   initialSort: KeystoneAdminUISort
   isHidden: Boolean!
-  isSingleton: Boolean
+  isSingleton: Boolean!
 }
 
 type KeystoneAdminUIFieldMeta {
@@ -700,12 +711,24 @@ enum KeystoneAdminUIFieldMetaListViewFieldMode {
 
 type KeystoneAdminUIFieldMetaItemView {
   fieldMode: KeystoneAdminUIFieldMetaItemViewFieldMode
+  fieldPosition: KeystoneAdminUIFieldMetaItemViewFieldPosition
 }
 
 enum KeystoneAdminUIFieldMetaItemViewFieldMode {
   edit
   read
   hidden
+}
+
+enum KeystoneAdminUIFieldMetaItemViewFieldPosition {
+  form
+  sidebar
+}
+
+type KeystoneAdminUIFieldGroupMeta {
+  label: String!
+  description: String
+  fields: [KeystoneAdminUIFieldMeta!]!
 }
 
 type KeystoneAdminUISort {

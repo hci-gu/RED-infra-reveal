@@ -7,6 +7,7 @@ import {
   checkbox,
   timestamp,
   virtual,
+  float,
 } from '@keystone-6/core/fields'
 import { KeystoneContext } from '@keystone-6/core/types'
 
@@ -28,6 +29,8 @@ const Session = list({
     end: timestamp({
       validation: { isRequired: false },
     }),
+    lat: float(),
+    lon: float(),
   },
   ui: {
     listView: {
